@@ -1,0 +1,193 @@
+/* ============================================================================
+   BOOKMATE - ESTILOS ESPECÍFICOS DEL CATÁLOGO
+   ============================================================================ */
+
+.catalog-container {
+    min-height: 80vh;
+    padding: 2rem 0;
+}
+
+/* Sidebar de filtros */
+.sidebar {
+    padding-right: 2rem;
+}
+
+.filters-card {
+    background: var(--bg-white);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+}
+
+.filters-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.filter-section {
+    margin-bottom: 1.5rem;
+}
+
+.filter-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.filter-label i {
+    color: var(--secondary-color);
+    margin-right: 0.5rem;
+}
+
+#searchInput {
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+}
+
+.genre-checkbox {
+    margin-bottom: 0.5rem;
+}
+
+.genre-checkbox label {
+    cursor: pointer;
+    font-weight: normal;
+    margin-left: 0.5rem;
+}
+
+/* Main content */
+.main-content {
+    padding-left: 2rem;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.results-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.results-info {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+/* Grid de libros */
+#booksGrid {
+    min-height: 400px;
+}
+
+/* No results */
+.no-results {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-white);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+/* Paginación */
+.pagination-container {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.pagination {
+    gap: 0.5rem;
+}
+
+.pagination .page-item .page-link {
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    color: var(--text-dark);
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+}
+
+.pagination .page-item:not(.active) .page-link:hover {
+    background-color: var(--bg-light);
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: var(--bg-light);
+    border-color: var(--border-color);
+    color: var(--text-light);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .sidebar {
+        padding-right: 0;
+        margin-bottom: 2rem;
+    }
+    
+    .filters-card {
+        position: static;
+        max-height: none;
+    }
+    
+    .main-content {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .results-title {
+        font-size: 1.5rem;
+    }
+    
+    .catalog-container {
+        padding: 1rem 0;
+    }
+}
+
+/* Custom scrollbar para sidebar */
+.filters-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.filters-card::-webkit-scrollbar-track {
+    background: var(--bg-light);
+    border-radius: 4px;
+}
+
+.filters-card::-webkit-scrollbar-thumb {
+    background: var(--text-light);
+    border-radius: 4px;
+}
+
+.filters-card::-webkit-scrollbar-thumb:hover {
+    background: var(--text-dark);
+}
+

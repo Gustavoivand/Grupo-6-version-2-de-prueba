@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Catálogo completo de libros en BookMate">
+    <title>Catálogo - BookMate</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/catalog.css">
+</head>
+<body>
+    <!-- HEADER / NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-book-reader"></i> BookMate
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="catalog.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="library.html">Mi Biblioteca</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">Acerca de</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="authButtons">
+                    <!-- Los botones de autenticación se cargarán aquí dinámicamente -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CATALOG CONTENT -->
+    <div class="catalog-container">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- SIDEBAR FILTROS -->
+                <aside class="col-lg-3 col-md-4 sidebar">
+                    <div class="filters-card">
+                        <h4 class="filters-title">
+                            <i class="fas fa-filter"></i> Filtros
+                        </h4>
+                        
+                        <!-- Búsqueda -->
+                        <div class="filter-section">
+                            <label class="filter-label">
+                                <i class="fas fa-search"></i> Buscar
+                            </label>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Título o autor...">
+                        </div>
+
+                        <!-- Género -->
+                        <div class="filter-section">
+                            <label class="filter-label">
+                                <i class="fas fa-tags"></i> Género
+                            </label>
+                            <div id="genreFilters">
+                                <!-- Se generarán dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Año -->
+                        <div class="filter-section">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar"></i> Año de Publicación
+                            </label>
+                            <select id="yearFilter" class="form-select">
+                                <option value="">Todos los años</option>
+                                <option value="2020-2024">2020-2024</option>
+                                <option value="2010-2019">2010-2019</option>
+                                <option value="2000-2009">2000-2009</option>
+                                <option value="1990-1999">1990-1999</option>
+                                <option value="1900-1989">1900-1989</option>
+                                <option value="ancient">Antes de 1900</option>
+                            </select>
+                        </div>
+
+                        <!-- Páginas -->
+                        <div class="filter-section">
+                            <label class="filter-label">
+                                <i class="fas fa-file-alt"></i> Número de Páginas
+                            </label>
+                            <select id="pagesFilter" class="form-select">
+                                <option value="">Todas</option>
+                                <option value="0-200">Menos de 200</option>
+                                <option value="200-400">200-400</option>
+                                <option value="400-600">400-600</option>
+                                <option value="600+">Más de 600</option>
+                            </select>
+                        </div>
+
+                        <!-- Ordenar -->
+                        <div class="filter-section">
+                            <label class="filter-label">
+                                <i class="fas fa-sort"></i> Ordenar por
+                            </label>
+                            <select id="sortBy" class="form-select">
+                                <option value="rating-desc">Rating (Mayor a Menor)</option>
+                                <option value="rating-asc">Rating (Menor a Mayor)</option>
+                                <option value="year-desc">Año (Más Reciente)</option>
+                                <option value="year-asc">Año (Más Antiguo)</option>
+                                <option value="title-asc">Título (A-Z)</option>
+                                <option value="title-desc">Título (Z-A)</option>
+                            </select>
+                        </div>
+
+                        <!-- Botón Limpiar -->
+                        <button id="clearFilters" class="btn btn-outline-secondary w-100 mt-3">
+                            <i class="fas fa-redo"></i> Limpiar Filtros
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- MAIN CONTENT -->
+                <main class="col-lg-9 col-md-8 main-content">
+                    <!-- Header de resultados -->
+                    <div class="results-header">
+                        <h2 class="results-title">Catálogo de Libros</h2>
+                        <div class="results-info">
+                            <span id="resultsCount">Cargando...</span>
+                        </div>
+                    </div>
+
+                    <!-- Loading -->
+                    <div id="catalogLoading" class="loading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-3">Cargando catálogo...</p>
+                    </div>
+
+                    <!-- Grid de libros -->
+                    <div id="booksGrid" class="row g-4" style="display: none;">
+                        <!-- Los libros se cargarán dinámicamente -->
+                    </div>
+
+                    <!-- No results -->
+                    <div id="noResults" class="no-results" style="display: none;">
+                        <i class="fas fa-search fa-5x text-muted mb-3"></i>
+                        <h4>No se encontraron resultados</h4>
+                        <p class="text-muted">Intenta ajustar los filtros o buscar con otros términos.</p>
+                    </div>
+
+                    <!-- Paginación -->
+                    <nav id="paginationContainer" class="pagination-container" style="display: none;">
+                        <ul class="pagination justify-content-center">
+                            <!-- Se generará dinámicamente -->
+                        </ul>
+                    </nav>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-book-reader"></i> BookMate</h5>
+                    <p class="text-muted-custom">
+                        Tu compañero de lectura inteligente. Descubre, organiza y disfruta 
+                        tus libros favoritos con recomendaciones personalizadas.
+                    </p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Enlaces</h5>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="catalog.html">Catálogo</a></li>
+                        <li><a href="about.html">Acerca de</a></li>
+                        <li><a href="#" onclick="alert('Disponible próximamente'); return false;">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Proyecto Académico</h5>
+                    <p class="text-muted-custom">
+                        CC341 - Ingeniería de Software<br>
+                        Universidad Nacional de Ingeniería (UNI)<br>
+                        Grupo 6.2 - 2024
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 BookMate. Proyecto Académico - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modals -->
+    <div id="auth-modals-container"></div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/library.js"></script>
+    <script src="assets/js/catalog.js"></script>
+    <script>
+        // Cargar modals
+        fetch('assets/includes/auth-modals.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('auth-modals-container').innerHTML = html;
+            });
+
+        // Actualizar UI de autenticación al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthUI();
+        });
+    </script>
+</body>
+</html>
