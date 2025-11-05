@@ -1,0 +1,24 @@
+@startuml c4_componentes
+!include ../../commons/plantuml_config.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+title Diagrama C4 - Nivel 3: Componentes (Web Service)
+
+Container_Boundary(web, "Web Application") {
+    Component(routes, "API Routes", "Flask Blueprint", "Rutas REST")
+    Component(auth, "Auth Service", "Python", "Autenticación JWT")
+    Component(library, "Library Service", "Python", "Gestión biblioteca")
+    Component(search, "Search Service", "Python", "Búsqueda de libros")
+}
+
+ContainerDb(db, "Database", "PostgreSQL")
+
+Rel(routes, auth, "Usa")
+Rel(routes, library, "Usa")
+Rel(routes, search, "Usa")
+Rel(library, db, "Lee/Escribe")
+Rel(search, db, "Consulta")
+
+@enduml
+

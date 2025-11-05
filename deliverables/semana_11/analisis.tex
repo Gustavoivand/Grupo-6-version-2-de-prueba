@@ -1,0 +1,68 @@
+% ============================================================================
+% MODELO DE ANÁLISIS - PROYECTO BOOKMATE
+% Curso: CC341 - Ingeniería de Software
+% Universidad Nacional de Ingeniería (UNI)
+% Semana: 11 - PC3 (40%)
+% ============================================================================
+
+\def\docTitle{Modelo de Análisis}
+\def\docSubtitle{Especificaciones de Casos de Uso}
+\def\docWeek{11}
+\def\docVersion{1.0}
+
+\input{../commons/preamble.tex}
+
+\begin{document}
+
+\makeUNIcover
+\versionTable
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+El presente documento describe el modelo de análisis del sistema BookMate.
+
+\section{Especificaciones de Casos de Uso}
+
+\subsection{UC01: Registrar Usuario}
+
+\textbf{Actores:} Usuario no registrado
+
+\textbf{Precondiciones:} El usuario no tiene cuenta.
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+    \item El usuario ingresa sus datos
+    \item El sistema valida los datos
+    \item El sistema crea la cuenta
+\end{enumerate}
+
+\section{Diagramas de Robustez}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{diagramas/robustez_uc01.png}
+    \caption{Diagrama de robustez - UC01}
+\end{figure}
+
+\section{Diagramas de Secuencia de Análisis}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{diagramas/secuencia_analisis_uc01.png}
+    \caption{Diagrama de secuencia - UC01}
+\end{figure}
+
+\section{Diagramas de Estado}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{diagramas/estados_usuario.png}
+    \caption{Diagrama de estados - Usuario}
+\end{figure}
+
+\printbibliography[heading=bibintoc,title={Referencias}]
+
+\end{document}
+

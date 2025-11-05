@@ -1,0 +1,21 @@
+@startuml estados_usuario
+!include ../../commons/plantuml_config.puml
+
+title Diagrama de Estados - Usuario
+
+[*] --> NoRegistrado
+
+NoRegistrado --> Registrado : registrarse()
+Registrado --> Autenticado : login()
+Autenticado --> Registrado : logout()
+Autenticado --> Activo : actividad()
+Activo --> Inactivo : timeout(30min)
+Inactivo --> Activo : login()
+
+Registrado --> Bloqueado : intentos_fallidos > 5
+Bloqueado --> Registrado : desbloquear()
+
+Registrado --> [*] : eliminar_cuenta()
+
+@enduml
+

@@ -1,0 +1,21 @@
+@startuml c4_contenedores
+!include ../../../commons/plantuml_config.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+title Diagrama C4 - Nivel 2: Contenedores
+
+Person(user, "Usuario Lector")
+
+System_Boundary(bookmate, "BookMate") {
+    Container(web_app, "Web Application", "Flask", "API REST")
+    ContainerDb(database, "Base de Datos", "PostgreSQL", "Almacena datos")
+    Container(ai_service, "AI Service", "Flask + ML", "Recomendaciones IA")
+}
+
+Rel(user, web_app, "Usa", "HTTPS")
+Rel(web_app, database, "Lee/Escribe")
+Rel(web_app, ai_service, "Solicita recomendaciones")
+
+@enduml
+

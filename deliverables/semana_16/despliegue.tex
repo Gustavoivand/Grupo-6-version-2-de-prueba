@@ -1,0 +1,58 @@
+% ============================================================================
+% PLAN DE DESPLIEGUE - PROYECTO BOOKMATE
+% Curso: CC341 - Ingeniería de Software
+% Universidad Nacional de Ingeniería (UNI)
+% Semana: 16 - Examen Final (100%)
+% ============================================================================
+
+\def\docTitle{Plan de Despliegue}
+\def\docSubtitle{Estrategia de Despliegue con Docker}
+\def\docWeek{16}
+\def\docVersion{1.0}
+
+\input{../commons/preamble.tex}
+
+\begin{document}
+
+\makeUNIcover
+\versionTable
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+El presente documento describe el plan de despliegue del sistema BookMate.
+
+\section{Arquitectura de Despliegue}
+
+\subsection{Track Básico}
+\begin{itemize}
+    \item Plataforma: GitHub Pages
+    \item Dominio: github.io
+    \item Tecnología: HTML/CSS/JS estático
+\end{itemize}
+
+\subsection{Track AI}
+\begin{itemize}
+    \item Plataforma: Docker Compose
+    \item Servicios: web, db, ai\_service
+    \item Puertos: 5000 (web), 5432 (db), 5001 (ai)
+\end{itemize}
+
+\section{Procedimiento de Despliegue}
+
+\subsection{Despliegue Local}
+
+\begin{verbatim}
+cd product/ai/
+docker-compose up --build
+\end{verbatim}
+
+\section{Verificación}
+
+Acceder a \texttt{http://localhost:5000}
+
+\printbibliography[heading=bibintoc,title={Referencias}]
+
+\end{document}
+

@@ -1,0 +1,29 @@
+@startuml clases_diseno
+!include ../../commons/plantuml_config.puml
+
+title Diagrama de Clases de Diseño - BookMate
+
+class Usuario {
+    - id: int
+    - email: string
+    - password_hash: string
+    + authenticate()
+}
+
+class Libro {
+    - id: int
+    - titulo: string
+    - autor: string
+    - genero: string
+}
+
+class Recomendador {
+    + generar_recomendaciones(usuario_id)
+}
+
+Usuario "1" -- "*" Libro : tiene >
+Recomendador ..> Usuario
+Recomendador ..> Libro
+
+@enduml
+

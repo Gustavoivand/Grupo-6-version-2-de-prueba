@@ -1,0 +1,103 @@
+<!-- ============================================================================
+     BOOKMATE - MODALS DE AUTENTICACIÓN
+     Para incluir en todas las páginas
+     ============================================================================ -->
+
+<!-- Modal de Login -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="loginEmail" required 
+                               placeholder="demo@bookmate.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="loginPassword" required 
+                               placeholder="demo123">
+                    </div>
+                    <div class="alert alert-info">
+                        <small>
+                            <strong>Usuarios de prueba:</strong><br>
+                            <strong>Usuario normal:</strong><br>
+                            Email: demo@bookmate.com | Contraseña: demo123<br>
+                            <strong>Administrador:</strong><br>
+                            Email: admin@bookmate.com | Contraseña: admin123
+                        </small>
+                    </div>
+                    <p class="text-center mb-0">
+                        ¿No tienes cuenta? 
+                        <a href="#" data-bs-dismiss="modal" onclick="showRegisterModal()">Regístrate aquí</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Registro -->
+<div class="modal fade" id="registerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-plus"></i> Crear Cuenta
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="registerName" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="registerName" required
+                               placeholder="Juan Pérez">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="registerEmail" required
+                               placeholder="tu@email.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="registerPassword" required
+                               placeholder="Mínimo 6 caracteres" minlength="6">
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerConfirmPassword" class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" id="registerConfirmPassword" required
+                               placeholder="Repite tu contraseña">
+                    </div>
+                    <div class="alert alert-warning">
+                        <small>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Nota:</strong> Los datos se guardan solo en tu navegador.
+                            Al limpiar el caché se perderán.
+                        </small>
+                    </div>
+                    <p class="text-center mb-0">
+                        ¿Ya tienes cuenta? 
+                        <a href="#" data-bs-dismiss="modal" onclick="showLoginModal()">Inicia sesión aquí</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

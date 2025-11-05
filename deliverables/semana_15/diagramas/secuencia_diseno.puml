@@ -1,0 +1,46 @@
+@startuml secuencia_diseno
+!include ../../commons/plantuml_config.puml
+
+title Diagrama de Secuencia de Diseño - UC13: Obtener Recomendaciones
+
+actor Usuario
+participant "API Route" as Route
+participant "RecommendationService" as RecService
+participant "UserLibraryRepository" as LibRepo
+participant "BookRepository" as BookRepo
+participant "HeuristicEngine" as Heuristic
+database "PostgreSQL" as DB
+
+Usuario -> Route : GET /api/recommendations/{user_id}
+activate Route
+
+Route -> RecService : get_recommendations(user_id)
+activate RecService
+
+RecService -> LibRepo : get_user_books(user_id)
+activate LibRepo
+LibRepo -> DB : SELECT * FROM user_books
+DB --> LibRepo : user_books[]
+deactivate LibRepo
+
+RecService -> Heuristic : calculate_scores(user_books)
+activate Heuristic
+
+Heuristic -> BookRepo : get_all_books()
+activate BookRepo
+BookRepo -> DB : SELECT * FROM books
+DB --> BookRepo : books[]
+deactivate BookRepo
+
+Heuristic -> Heuristic : apply_heuristic_rules()
+Heuristic --> RecService : scored_books[]
+deactivate Heuristic
+
+RecService --> Route : recommendations[]
+deactivate RecService
+
+Route --> Usuario : JSON {recommendations}
+deactivate Route
+
+@enduml
+

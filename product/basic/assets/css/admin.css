@@ -1,0 +1,166 @@
+/* ============================================================================
+   BOOKMATE - ADMIN PANEL CSS
+   Estilos específicos del panel de administración
+   ============================================================================ */
+
+/* Stats Cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-warning,
+.card.bg-info,
+.card.bg-danger {
+    transition: transform 0.2s ease;
+}
+
+.card.bg-primary:hover,
+.card.bg-success:hover,
+.card.bg-warning:hover,
+.card.bg-info:hover,
+.card.bg-danger:hover {
+    transform: translateY(-5px);
+}
+
+/* Table Responsive */
+.table-responsive {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Botones pequeños */
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Modal grande */
+.modal-lg {
+    max-width: 800px;
+}
+
+/* Formulario */
+.form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Búsqueda en tabla */
+#searchTable {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#searchTable:focus {
+    border-color: #3498db;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: #28a745;
+}
+
+.alert-danger {
+    border-left-color: #dc3545;
+}
+
+.alert-warning {
+    border-left-color: #ffc107;
+}
+
+.alert-info {
+    border-left-color: #17a2b8;
+}
+
+/* No autorizado */
+#notAuthorized {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Pagination */
+.pagination .page-link {
+    color: #3498db;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .btn-group-vertical {
+        width: 100%;
+    }
+
+    .btn-group-vertical .btn {
+        width: 100%;
+    }
+
+    .table {
+        font-size: 0.875rem;
+    }
+
+    .card-body h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+}
+
+/* Card shadows */
+.shadow {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Spinner */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Code style in alerts */
+code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 87.5%;
+    color: #e83e8c;
+}
+

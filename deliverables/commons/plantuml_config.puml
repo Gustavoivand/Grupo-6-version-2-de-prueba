@@ -1,0 +1,100 @@
+@startuml
+' ============================================================================
+' CONFIGURACIÓN COMÚN DE PLANTUML PARA BOOKMATE
+' Curso: CC341 - Ingeniería de Software (UNI)
+' Grupo: 6.2
+' ============================================================================
+
+' Tema y estilos generales
+skinparam {
+    ' Colores institucionales UNI
+    backgroundColor White
+    defaultFontName Arial
+    defaultFontSize 12
+    
+    ' Estilo de clases
+    classBackgroundColor LightBlue
+    classBorderColor DarkBlue
+    classArrowColor Black
+    classBorderThickness 2
+    
+    ' Estilo de paquetes
+    packageBackgroundColor AliceBlue
+    packageBorderColor DarkBlue
+    packageBorderThickness 2
+    
+    ' Estilo de actores (casos de uso)
+    actorBackgroundColor LightYellow
+    actorBorderColor DarkOrange
+    
+    ' Estilo de casos de uso
+    usecaseBackgroundColor LightGreen
+    usecaseBorderColor DarkGreen
+    usecaseArrowColor Black
+    
+    ' Estilo de componentes
+    componentBackgroundColor LightCyan
+    componentBorderColor DarkCyan
+    componentArrowColor Black
+    
+    ' Estilo de nodos (deployment)
+    nodeBackgroundColor LightGray
+    nodeBorderColor Black
+    
+    ' Estilo de secuencia
+    sequenceArrowColor Black
+    sequenceLifeLineBorderColor Blue
+    sequenceParticipantBackgroundColor LightBlue
+    sequenceParticipantBorderColor DarkBlue
+    
+    ' Estilo de actividades
+    activityBackgroundColor LightSteelBlue
+    activityBorderColor Navy
+    activityDiamondBackgroundColor LightYellow
+    activityDiamondBorderColor DarkOrange
+    activityStartColor Green
+    activityEndColor Red
+    activityBarColor Black
+    
+    ' Estilo de estados
+    stateBackgroundColor LightGreen
+    stateBorderColor DarkGreen
+    stateArrowColor Black
+    
+    ' Notas
+    noteBackgroundColor LightYellow
+    noteBorderColor Orange
+    noteFontSize 10
+    
+    ' Sombras
+    shadowing true
+    
+    ' Líneas
+    arrowThickness 1.5
+    linetype ortho
+    
+    ' Títulos
+    titleFontSize 14
+    titleFontStyle bold
+    titleFontColor DarkBlue
+}
+
+' Estereotipos personalizados
+!define CONTROLLER_COLOR #FFE6CC
+!define ENTITY_COLOR #CCE5FF
+!define BOUNDARY_COLOR #CCFFCC
+
+' Macros útiles
+!procedure $success($text)
+  <color:green><b>$text</b></color>
+!endprocedure
+
+!procedure $error($text)
+  <color:red><b>$text</b></color>
+!endprocedure
+
+!procedure $warning($text)
+  <color:orange><b>$text</b></color>
+!endprocedure
+
+@enduml

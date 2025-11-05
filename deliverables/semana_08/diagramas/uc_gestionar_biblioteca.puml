@@ -1,0 +1,24 @@
+@startuml uc_gestionar_biblioteca
+!include ../../commons/plantuml_config.puml
+
+left to right direction
+title Caso de Uso: UC09 - Gestionar Biblioteca Personal
+
+actor "Usuario Autenticado" as User
+
+rectangle "Sistema BookMate" {
+    usecase "UC09: Gestionar Biblioteca" as UC09
+    usecase "Agregar Libro" as Add
+    usecase "Eliminar Libro" as Del
+    usecase "Cambiar Estado Lectura" as Status
+    usecase "Autenticar Usuario" as Auth
+}
+
+User --> UC09
+UC09 <.. Add : <<extend>>
+UC09 <.. Del : <<extend>>
+UC09 <.. Status : <<extend>>
+UC09 ..> Auth : <<include>>
+
+@enduml
+

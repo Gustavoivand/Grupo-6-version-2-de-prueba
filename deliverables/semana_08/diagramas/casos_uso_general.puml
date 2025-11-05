@@ -1,0 +1,23 @@
+@startuml casos_uso_general
+!include ../../commons/plantuml_config.puml
+
+left to right direction
+title Diagrama de Casos de Uso General - BookMate
+
+actor "Usuario" as User
+
+rectangle "Sistema BookMate" {
+    (Registrar Usuario) as UC01
+    (Iniciar Sesión) as UC02
+    (Buscar Libros) as UC05
+    (Gestionar Biblioteca) as UC09
+    (Obtener Recomendaciones) as UC13
+}
+
+User --> UC01
+User --> UC02
+User --> UC05
+User --> UC09
+User --> UC13
+
+@enduml

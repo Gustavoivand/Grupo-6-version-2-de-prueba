@@ -1,0 +1,196 @@
+/* ============================================================================
+   BOOKMATE - ESTILOS ESPECÍFICOS DE DETALLE
+   ============================================================================ */
+
+.details-container {
+    min-height: 70vh;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+/* Cover grande */
+.book-cover-large {
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    border-radius: 15px;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 2rem;
+    box-shadow: var(--shadow-hover);
+    position: sticky;
+    top: 2rem;
+}
+
+/* Card de información */
+.book-info-card {
+    background: var(--bg-white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.book-detail-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.book-detail-author {
+    font-size: 1.3rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+.book-detail-author i {
+    color: var(--secondary-color);
+}
+
+/* Meta información */
+.book-meta-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-top: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.meta-item i {
+    color: var(--secondary-color);
+    font-size: 1.1rem;
+}
+
+.meta-item strong {
+    color: var(--text-dark);
+}
+
+/* Tags */
+.book-tags {
+    margin-bottom: 2rem;
+}
+
+.book-tags .badge-custom {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Acciones */
+.book-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.book-actions .btn {
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+}
+
+/* Synopsis card */
+.synopsis-card {
+    background: var(--bg-white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.synopsis-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.synopsis-card h3 i {
+    color: var(--secondary-color);
+    margin-right: 0.5rem;
+}
+
+.synopsis-card p {
+    line-height: 1.8;
+    color: var(--text-dark);
+    font-size: 1.05rem;
+}
+
+/* Similar books grid */
+#similarBooksGrid {
+    margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .book-cover-large {
+        position: static;
+        min-height: 400px;
+    }
+    
+    .book-detail-title {
+        font-size: 2rem;
+    }
+    
+    .book-meta-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767px) {
+    .book-cover-large {
+        min-height: 300px;
+        font-size: 1.2rem;
+    }
+    
+    .book-detail-title {
+        font-size: 1.75rem;
+    }
+    
+    .book-detail-author {
+        font-size: 1.1rem;
+    }
+    
+    .book-info-card {
+        padding: 1.5rem;
+    }
+    
+    .synopsis-card {
+        padding: 1.5rem;
+    }
+    
+    .book-actions {
+        flex-direction: column;
+    }
+    
+    .book-actions .btn,
+    .book-actions .dropdown {
+        width: 100%;
+    }
+    
+    .book-actions .dropdown button {
+        width: 100%;
+    }
+}
+

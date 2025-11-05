@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Auth - BookMate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="mb-4">🔧 Diagnóstico de Autenticación - BookMate</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Usuarios Registrados</h5>
+            </div>
+            <div class="card-body">
+                <pre id="usersData" class="bg-light p-3"></pre>
+                <button class="btn btn-info" onclick="refreshData()">🔄 Refrescar</button>
+                <button class="btn btn-warning" onclick="fixUsers()">🔧 Agregar Admin si falta</button>
+                <button class="btn btn-danger" onclick="clearUsers()">🗑️ Limpiar Todo</button>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Sesión Actual</h5>
+            </div>
+            <div class="card-body">
+                <pre id="sessionData" class="bg-light p-3"></pre>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary mb-2" onclick="addAdmin()">➕ Agregar Admin Manualmente</button>
+                <button class="btn btn-secondary mb-2" onclick="addDemoUser()">➕ Agregar Usuario Demo</button>
+                <button class="btn btn-success mb-2" onclick="resetToDefault()">🔄 Resetear a Usuarios Default</button>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <strong>ℹ️ Instrucciones:</strong>
+            <ol>
+                <li>Revisa los usuarios registrados arriba</li>
+                <li>Si no ves <code>admin@bookmate.com</code>, haz click en "🔧 Agregar Admin si falta"</li>
+                <li>Si hay problemas, usa "🔄 Resetear a Usuarios Default"</li>
+                <li>Luego cierra esta página y vuelve a <code>index.html</code></li>
+                <li>Intenta login con: <code>admin@bookmate.com</code> / <code>admin123</code></li>
+            </ol>
+        </div>
+
+        <a href="index.html" class="btn btn-primary">← Volver a BookMate</a>
+    </div>
+
+    <script>
+        function getUsers() {
+            const usersJson = localStorage.getItem('bookmate_users');
+            return usersJson ? JSON.parse(usersJson) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('bookmate_users', JSON.stringify(users));
+        }
+
+        function refreshData() {
+            const users = getUsers();
+            document.getElementById('usersData').textContent = JSON.stringify(users, null, 2);
+
+            const session = sessionStorage.getItem('bookmate_current_user');
+            document.getElementById('sessionData').textContent = session || 'No hay sesión activa';
+        }
+
+        function clearUsers() {
+            if (confirm('¿Estás seguro de que deseas eliminar TODOS los usuarios? Esto no se puede deshacer.')) {
+                localStorage.removeItem('bookmate_users');
+                sessionStorage.removeItem('bookmate_current_user');
+                alert('✅ Usuarios eliminados. Recarga BookMate para crear usuarios default.');
+                refreshData();
+            }
+        }
+
+        function fixUsers() {
+            let users = getUsers();
+            let updated = false;
+
+            // Agregar role a usuarios sin role
+            users = users.map(user => {
+                if (!user.role) {
+                    user.role = 'user';
+                    updated = true;
+                }
+                return user;
+            });
+
+            // Agregar admin si no existe
+            const adminExists = users.some(u => u.email === 'admin@bookmate.com');
+            if (!adminExists) {
+                const maxId = users.length > 0 ? Math.max(...users.map(u => u.id)) : 0;
+                users.push({
+                    id: maxId + 1,
+                    name: 'Administrador',
+                    email: 'admin@bookmate.com',
+                    password: 'admin123',
+                    role: 'admin'
+                });
+                updated = true;
+            }
+
+            if (updated) {
+                saveUsers(users);
+                alert('✅ Usuarios actualizados correctamente!');
+                refreshData();
+            } else {
+                alert('ℹ️ No se necesitan cambios. Todo está correcto.');
+            }
+        }
+
+        function addAdmin() {
+            let users = getUsers();
+            
+            const adminExists = users.some(u => u.email === 'admin@bookmate.com');
+            if (adminExists) {
+                alert('⚠️ El admin ya existe!');
+                return;
+            }
+
+            const maxId = users.length > 0 ? Math.max(...users.map(u => u.id)) : 0;
+            users.push({
+                id: maxId + 1,
+                name: 'Administrador',
+                email: 'admin@bookmate.com',
+                password: 'admin123',
+                role: 'admin'
+            });
+
+            saveUsers(users);
+            alert('✅ Admin agregado correctamente!');
+            refreshData();
+        }
+
+        function addDemoUser() {
+            let users = getUsers();
+            
+            const demoExists = users.some(u => u.email === 'demo@bookmate.com');
+            if (demoExists) {
+                alert('⚠️ El usuario demo ya existe!');
+                return;
+            }
+
+            const maxId = users.length > 0 ? Math.max(...users.map(u => u.id)) : 0;
+            users.push({
+                id: maxId + 1,
+                name: 'Usuario Demo',
+                email: 'demo@bookmate.com',
+                password: 'demo123',
+                role: 'user'
+            });
+
+            saveUsers(users);
+            alert('✅ Usuario demo agregado correctamente!');
+            refreshData();
+        }
+
+        function resetToDefault() {
+            if (confirm('¿Estás seguro? Esto eliminará todos los usuarios y creará los usuarios default.')) {
+                const defaultUsers = [
+                    {
+                        id: 1,
+                        name: 'Usuario Demo',
+                        email: 'demo@bookmate.com',
+                        password: 'demo123',
+                        role: 'user'
+                    },
+                    {
+                        id: 2,
+                        name: 'Administrador',
+                        email: 'admin@bookmate.com',
+                        password: 'admin123',
+                        role: 'admin'
+                    }
+                ];
+
+                saveUsers(defaultUsers);
+                sessionStorage.removeItem('bookmate_current_user');
+                alert('✅ Usuarios reseteados a valores default!');
+                refreshData();
+            }
+        }
+
+        // Cargar datos al iniciar
+        refreshData();
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mi Biblioteca Personal - BookMate">
+    <title>Mi Biblioteca - BookMate</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/catalog.css">
+</head>
+<body>
+    <!-- HEADER / NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-book-reader"></i> BookMate
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalog.html">Catálogo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="library.html">Mi Biblioteca</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">Acerca de</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="authButtons">
+                    <!-- Los botones de autenticación se cargarán aquí dinámicamente -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- LIBRARY CONTENT -->
+    <div class="container py-5">
+        <!-- Header con estadísticas -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="display-4 mb-4">
+                    <i class="fas fa-bookmark"></i> Mi Biblioteca Personal
+                </h1>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="row g-4 mb-4" id="libraryStats">
+            <div class="col-md-3 col-6">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <i class="fas fa-books fa-2x text-primary mb-2"></i>
+                        <h3 class="mb-0" id="totalBooks">0</h3>
+                        <p class="text-muted mb-0">Total</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <i class="fas fa-bookmark fa-2x text-warning mb-2"></i>
+                        <h3 class="mb-0" id="toReadBooks">0</h3>
+                        <p class="text-muted mb-0">Por Leer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <i class="fas fa-book-reader fa-2x text-info mb-2"></i>
+                        <h3 class="mb-0" id="readingBooks">0</h3>
+                        <p class="text-muted mb-0">Leyendo</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                        <h3 class="mb-0" id="readBooks">0</h3>
+                        <p class="text-muted mb-0">Leídos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles de Recomendaciones -->
+        <div class="row mb-4" id="recommendationControls">
+            <div class="col-12">
+                <div class="card shadow-sm bg-light">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">
+                                    <i class="fas fa-magic text-primary"></i> Obtener Recomendaciones Inteligentes
+                                </h5>
+                                <p class="text-muted small mb-0">
+                                    Selecciona uno o más libros de tu biblioteca y obtén recomendaciones personalizadas basadas en tus gustos
+                                </p>
+                            </div>
+                            <div class="text-end">
+                                <div class="mb-2">
+                                    <span class="badge bg-primary fs-6">
+                                        <span id="selectedBooksCount">0</span> libro(s) seleccionado(s)
+                                    </span>
+                                </div>
+                                <button 
+                                    id="getRecommendationsBtn" 
+                                    class="btn btn-secondary" 
+                                    onclick="getRecommendations()"
+                                    disabled>
+                                    <i class="fas fa-brain"></i> Obtener Recomendaciones
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros por estado -->
+        <ul class="nav nav-tabs mb-4" id="statusTabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#all-books">
+                    <i class="fas fa-list"></i> Todos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#to-read-books">
+                    <i class="fas fa-bookmark"></i> Por Leer
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#reading-books">
+                    <i class="fas fa-book-reader"></i> Leyendo
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#read-books">
+                    <i class="fas fa-check-circle"></i> Leídos
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab content -->
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="all-books">
+                <div class="row g-4" id="allBooksGrid">
+                    <!-- Libros se cargarán dinámicamente -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="to-read-books">
+                <div class="row g-4" id="toReadBooksGrid">
+                    <!-- Libros se cargarán dinámicamente -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="reading-books">
+                <div class="row g-4" id="readingBooksGrid">
+                    <!-- Libros se cargarán dinámicamente -->
+                </div>
+            </div>
+            <div class="tab-pane fade" id="read-books">
+                <div class="row g-4" id="readBooksGrid">
+                    <!-- Libros se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Biblioteca vacía -->
+        <div id="emptyLibrary" class="text-center py-5" style="display: none;">
+            <i class="fas fa-book-open fa-5x text-muted mb-4"></i>
+            <h3>Tu biblioteca está vacía</h3>
+            <p class="text-muted mb-4">Comienza agregando libros desde el catálogo</p>
+            <a href="catalog.html" class="btn btn-primary-custom">
+                <i class="fas fa-search"></i> Explorar Catálogo
+            </a>
+        </div>
+
+        <!-- Sección de Recomendaciones -->
+        <div id="recommendationsSection" class="mt-5" style="display: none;">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-lightbulb"></i> Recomendaciones para Ti
+                    </h4>
+                    <small>Basado en tus libros seleccionados</small>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4" id="recommendationsGrid">
+                        <!-- Las recomendaciones se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="libraryLoading" class="loading">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3">Cargando tu biblioteca...</p>
+        </div>
+
+        <!-- No logged in -->
+        <div id="notLoggedIn" class="text-center py-5" style="display: none;">
+            <i class="fas fa-user-lock fa-5x text-warning mb-4"></i>
+            <h3>Debes iniciar sesión</h3>
+            <p class="text-muted mb-4">Para ver tu biblioteca personal, necesitas tener una cuenta</p>
+            <button class="btn btn-primary-custom" onclick="showLoginModal()">
+                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+            </button>
+            <button class="btn btn-outline-secondary ms-2" onclick="showRegisterModal()">
+                <i class="fas fa-user-plus"></i> Registrarse
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-book-reader"></i> BookMate</h5>
+                    <p class="text-muted-custom">
+                        Tu compañero de lectura inteligente.
+                    </p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Enlaces</h5>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="catalog.html">Catálogo</a></li>
+                        <li><a href="about.html">Acerca de</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Proyecto Académico</h5>
+                    <p class="text-muted-custom">
+                        CC341 - Ingeniería de Software<br>
+                        Universidad Nacional de Ingeniería (UNI)<br>
+                        Grupo 6.2 - 2024
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 BookMate. Proyecto Académico - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modals -->
+    <div id="auth-modals-container"></div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/library.js"></script>
+    <script src="assets/js/library-page.js"></script>
+    <script>
+        // Cargar modals
+        fetch('assets/includes/auth-modals.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('auth-modals-container').innerHTML = html;
+            });
+    </script>
+</body>
+</html>
+

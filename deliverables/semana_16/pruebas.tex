@@ -1,0 +1,54 @@
+% ============================================================================
+% PLAN DE PRUEBAS - PROYECTO BOOKMATE
+% Curso: CC341 - Ingeniería de Software
+% Universidad Nacional de Ingeniería (UNI)
+% Semana: 16 - Examen Final (100%)
+% ============================================================================
+
+\def\docTitle{Plan de Pruebas}
+\def\docSubtitle{Estrategia y Casos de Prueba}
+\def\docWeek{16}
+\def\docVersion{1.0}
+
+\input{../commons/preamble.tex}
+
+\begin{document}
+
+\makeUNIcover
+\versionTable
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+El presente documento describe el plan de pruebas del sistema BookMate.
+
+\section{Estrategia de Pruebas}
+
+\subsection{Niveles de Pruebas}
+\begin{itemize}
+    \item Pruebas unitarias (pytest)
+    \item Pruebas de integración
+    \item Pruebas de sistema
+    \item Pruebas de aceptación
+\end{itemize}
+
+\section{Casos de Prueba}
+
+\subsection{CP01: Registro de Usuario}
+
+\textbf{Entrada:} Email válido, contraseña fuerte
+
+\textbf{Resultado esperado:} Usuario creado exitosamente
+
+\section{Métricas de Calidad}
+
+\begin{itemize}
+    \item Cobertura de código: >80\%
+    \item Casos de prueba: 20+
+\end{itemize}
+
+\printbibliography[heading=bibintoc,title={Referencias}]
+
+\end{document}
+

@@ -1,0 +1,53 @@
+@startuml clases_analisis
+!include ../../commons/plantuml_config.puml
+
+title Diagrama de Clases de Análisis
+
+class Usuario {
+    - id
+    - email
+    - password_hash
+    + registrar()
+    + autenticar()
+}
+
+class Libro {
+    - id
+    - titulo
+    - autor
+    - sinopsis
+    - genero
+    + buscar()
+    + obtenerDetalle()
+}
+
+class BibliotecaPersonal {
+    - user_id
+    - book_id
+    - estado
+    + agregarLibro()
+    + eliminarLibro()
+    + cambiarEstado()
+}
+
+class Tag {
+    - id
+    - nombre
+    + listar()
+}
+
+class Recomendacion {
+    - user_id
+    - book_id
+    - score
+    + generar()
+}
+
+Usuario "1" -- "*" BibliotecaPersonal : tiene >
+Libro "1" -- "*" BibliotecaPersonal : está en >
+Libro "*" -- "*" Tag : tiene >
+Usuario "1" -- "*" Recomendacion : recibe >
+Libro "1" -- "*" Recomendacion : es recomendado >
+
+@enduml
+
