@@ -3,8 +3,8 @@
 **Curso:** CC341 - Ingeniería de Software  
 **Institución:** Universidad Nacional de Ingeniería (UNI)  
 **Proyecto:** BookMate  
-**Grupo:** 6.2  
-**Período:** Semanas 7-17 (Ciclo 2024-2)
+**Grupo:** 6  
+**Período:** Semanas 7-17 (Ciclo 2025-2)
 
 ---
 
@@ -12,9 +12,9 @@
 
 | Semana | Tipo Entrega | Entregable Oficial | Artefactos Documentación | Evidencias Demo | Criterios de Aceptación | Responsables |
 |--------|--------------|-------------------|-------------------------|-----------------|------------------------|--------------|
-| **7** | **PC2** | Charter del proyecto<br>Modelo de negocio BPMN<br>Visión<br>Glosario | `/deliverables/semana_07/charter.tex`<br>`/deliverables/semana_07/glosario.tex`<br>`/deliverables/semana_07/bpmn/bpmn.tex`<br>`/deliverables/semana_07/bpmn/diagramas/proceso_actual.puml`<br>`/deliverables/semana_07/bpmn/diagramas/proceso_futuro.puml` | `/product/basic/PLAN_BASIC.md`<br>Estructura de carpetas creada | ✅ Charter aprobado con alcance claro<br>✅ BPMN AS-IS y TO-BE completos<br>✅ Visión alineada con stakeholders<br>✅ Glosario con 20+ términos técnicos<br>✅ Tag `v0.1` en repositorio | **Integrante 1:** Charter, Visión<br>**Integrante 2:** BPMN<br>**Integrante 3:** Glosario<br>**Todos:** Revisión |
-| **8** | **Parcial** | Software Requirement Specification (SRS)<br>Modelo de casos de uso<br>Prototipo UC<br>Mapeo Requisitos/Casos de Uso | `/deliverables/semana_08/srs.tex`<br>`/deliverables/semana_08/diagramas/casos_uso_general.puml`<br>`/deliverables/semana_08/diagramas/uc_registrar_usuario.puml`<br>`/deliverables/semana_08/diagramas/uc_buscar_libros.puml`<br>`/deliverables/semana_08/diagramas/uc_gestionar_biblioteca.puml`<br>`/deliverables/semana_08/diagramas/uc_recomendar_libros.puml`<br>`/deliverables/semana_08/diagramas/c4/c4_contexto.puml`<br>`/deliverables/semana_08/diagramas/c4/c4_contenedores.puml` | `/product/basic/index.html`<br>`/product/basic/catalog.html`<br>`/product/basic/details.html`<br>`/product/basic/about.html`<br>`/product/basic/assets/data/books.json`<br>Prototipo navegable funcional | ✅ SRS con 15+ RF, 10+ RNF<br>✅ 5+ casos de uso especificados<br>✅ Matriz trazabilidad completa<br>✅ Prototipo HTML con 4+ páginas<br>✅ Diseño responsive validado<br>✅ C4 niveles 1-2 documentados<br>✅ Tarjetas CRC para 10+ clases<br>✅ Tag `v0.2` en repositorio | **Integrante 1:** SRS, Requisitos<br>**Integrante 2:** Casos de Uso, C4<br>**Integrante 3:** CRC<br>**Integrante 4:** Prototipo HTML<br>**Integrante 5:** Datos mock<br>**Integrante 6:** Validación responsive |
-| **11** | **PC3** | Especificaciones UC con prototipo<br>Modelo de Análisis<br>Diagrama de robustez<br>Diagrama de secuencia<br>Arquitectura C4 - Niveles C1 y C2 (Gráficos)<br>Diagramas de estado (si aplicara)<br>**Entrega al 40%** | `/deliverables/semana_11/analisis.tex`<br>`/deliverables/semana_11/diagramas/robustez_uc01.puml`<br>`/deliverables/semana_11/diagramas/secuencia_analisis_uc01.puml`<br>`/deliverables/semana_11/diagramas/estados_libro.puml`<br>`/deliverables/semana_11/diagramas/estados_usuario.puml`<br>`/deliverables/semana_11/diagramas/clases_analisis.puml` | `/product/ai/app.py` (Flask API)<br>`/product/ai/models/` (SQLAlchemy)<br>`/product/ai/migrations/` (Alembic)<br>`/product/ai/requirements.txt`<br>Backend con 5+ endpoints<br>BD Postgres funcional<br>Colección Postman | ✅ Diagramas robustez, secuencia, estados completados<br>✅ Tarjetas CRC actualizadas<br>✅ Backend Flask con endpoints REST<br>✅ BD Postgres con esquema normalizado (3FN)<br>✅ 100+ libros en BD<br>✅ API documentada en Postman<br>✅ Entrega 40% validada<br>✅ Tag `v0.4` en repositorio | **Integrante 1:** Análisis, Robustez<br>**Integrante 2:** Secuencias, Estados<br>**Integrante 3:** Backend Flask, API<br>**Integrante 5:** BD Postgres, Migraciones<br>**Integrante 6:** Postman, Pruebas API |
+| **7** | **PC2** | Charter del proyecto<br>Modelo de negocio BPMN<br>Visión<br>Glosario | `/deliverables/semana_07/charter.tex`<br>`/deliverables/semana_07/glosario.tex`<br>`/deliverables/semana_07/bpmn/bpmn.tex`<br>`/deliverables/semana_07/bpmn/diagramas/proceso_actual.uml`<br>`/deliverables/semana_07/bpmn/diagramas/proceso_futuro.uml` | `/product/basic/PLAN_BASIC.md`<br>Estructura de carpetas creada | ✅ Charter aprobado con alcance claro<br>✅ BPMN AS-IS y TO-BE completos<br>✅ Visión alineada con stakeholders<br>✅ Glosario con 20+ términos técnicos<br>✅ Tag `v0.1` en repositorio | **Integrante 1:** Charter, Visión<br>**Integrante 2:** BPMN<br>**Integrante 3:** Glosario<br>**Todos:** Revisión |
+| **8** | **Parcial** | Software Requirement Specification (SRS)<br>Modelo de casos de uso<br>Prototipo UC<br>Mapeo Requisitos/Casos de Uso | `/deliverables/semana_08/srs.tex`<br>`/deliverables/semana_08/diagramas/casos_uso_general.uml`<br>`/deliverables/semana_08/diagramas/uc_registrar_usuario.uml`<br>`/deliverables/semana_08/diagramas/uc_buscar_libros.uml`<br>`/deliverables/semana_08/diagramas/uc_gestionar_biblioteca.uml`<br>`/deliverables/semana_08/diagramas/uc_recomendar_libros.uml` | `/product/basic-springboot/src/main/resources/static/index.html`<br>`/product/basic-springboot/src/main/resources/static/catalog.html`<br>`/product/basic-springboot/src/main/resources/static/details.html`<br>`/product/basic-springboot/src/main/resources/static/about.html`<br>`/product/basic-springboot/src/main/resources/static/assets/data/books.json`<br>Prototipo navegable funcional | ✅ SRS con 15+ RF, 10+ RNF<br>✅ 5+ casos de uso especificados<br>✅ Matriz trazabilidad completa<br>✅ Prototipo HTML con 4+ páginas<br>✅ Diseño responsive validado<br>✅ Tag `v0.2` en repositorio | **Integrante 1:** SRS, Requisitos<br>**Integrante 2:** Casos de Uso<br>**Integrante 4:** Prototipo HTML<br>**Integrante 5:** Datos mock<br>**Integrante 6:** Validación responsive |
+| **11** | **PC3** | Especificaciones UC con prototipo<br>Modelo de Análisis<br>Diagrama de robustez<br>Diagrama de secuencia<br>Arquitectura C4 - Niveles C1 y C2 (Gráficos)<br>Diagramas de estado (si aplicara)<br>Tarjetas CRC<br>**Entrega al 40%** | `/deliverables/semana_11/analisis.tex`<br>`/deliverables/semana_11/diagramas/robustez_uc01.uml`<br>`/deliverables/semana_11/diagramas/secuencia_analisis_uc01.uml`<br>`/deliverables/semana_11/diagramas/estados_libro.uml`<br>`/deliverables/semana_11/diagramas/estados_usuario.uml`<br>`/deliverables/semana_11/diagramas/clases_analisis.uml` | `/product/ai/src/main/java/com/bookmate/` (Spring Boot API)<br>`/product/ai/src/main/java/com/bookmate/model/` (Entidades JPA)<br>`/product/ai/src/main/resources/db/migration/` (Flyway)<br>`/product/ai/pom.xml`<br>Backend con 5+ endpoints<br>BD Postgres funcional<br>Colección Postman | ✅ Diagramas robustez, secuencia, estados completados<br>✅ Tarjetas CRC actualizadas<br>✅ Backend Spring Boot con endpoints REST<br>✅ BD Postgres con esquema normalizado (3FN)<br>✅ 100+ libros en BD<br>✅ API documentada en Postman<br>✅ Entrega 40% validada<br>✅ Tag `v0.4` en repositorio | **Integrante 1:** Análisis, Robustez<br>**Integrante 2:** Secuencias, Estados<br>**Integrante 3:** Backend Spring Boot, API<br>**Integrante 5:** BD Postgres, Migraciones<br>**Integrante 6:** Postman, Pruebas API |
 | **13** | **PC4** | Prototipo Navegable<br>Plan de desarrollo del software<br>Arquitectura C4 - Niveles C3 y C4 (Gráficos)<br>Documento de Arquitectura (versión inicial)<br>**Entrega al 60%** | `/deliverables/semana_13/arquitectura.tex`<br>`/deliverables/semana_13/plan_desarrollo.tex`<br>`/deliverables/semana_13/diagramas/c4_componentes.puml`<br>`/deliverables/semana_13/diagramas/c4_codigo.puml`<br>Especificaciones UC detalladas con flujos alternativos | `/product/ai/auth/` (Autenticación)<br>`/product/ai/routes/library.py`<br>Endpoints `/api/library` funcionales<br>Biblioteca personal operativa<br>Estados de lectura implementados | ✅ Especificaciones UC con flujos alternativos<br>✅ Arquitectura C4 niveles 3-4 documentada<br>✅ Plan de desarrollo actualizado<br>✅ Sistema de autenticación funcional<br>✅ Biblioteca personal CRUD completo<br>✅ Estados: Leído, Leyendo, Por leer<br>✅ Entrega 60% validada<br>✅ Tag `v0.6` en repositorio | **Integrante 1:** Especificaciones UC<br>**Integrante 2:** Arquitectura C4 (C3-C4)<br>**Integrante 3:** Autenticación JWT<br>**Integrante 4:** Frontend integración<br>**Integrante 5:** Biblioteca personal<br>**Integrante 6:** Plan desarrollo |
 | **15** | **PC5** | Modelo de diseño<br>Diagrama de clases de diseño<br>Diagrama de secuencia de diseño (Caso de uso principal)<br>Diagrama de colaboración<br>Diagrama de componentes<br>Diagrama de despliegue<br>**Entrega al 80%** | `/deliverables/semana_15/diseno.tex`<br>`/deliverables/semana_15/diagramas/clases_diseno.puml`<br>`/deliverables/semana_15/diagramas/secuencia_diseno.puml`<br>`/deliverables/semana_15/diagramas/colaboracion.puml`<br>`/deliverables/semana_15/diagramas/componentes.puml`<br>`/deliverables/semana_15/diagramas/despliegue.puml` | `/product/ai/recommender/heuristic.py`<br>`/product/ai/routes/recommendations.py`<br>Endpoint `/api/recommendations/<user_id>`<br>`/product/ai/docker-compose.yml`<br>`/product/ai/Dockerfile`<br>Docker Compose funcional (web+db)<br>Recomendador heurístico operativo | ✅ Modelo de diseño completo<br>✅ Diagramas de diseño completos<br>✅ Recomendador heurístico funcional<br>✅ Docker Compose ejecutándose<br>✅ Pruebas unitarias con pytest<br>✅ Tiempo respuesta <1s<br>✅ Entrega 80% validada<br>✅ Tag `v0.8` en repositorio | **Integrante 2:** Modelo y diagramas diseño<br>**Integrante 3:** Docker web service<br>**Integrante 5:** Recomendador heurístico<br>**Integrante 6:** Pruebas unitarias, validación |
 | **16** | **Final** | Demo<br>Link al Drive.Google.com con todo lo anterior plus software e indicaciones para ejecutar<br>Plan de pruebas<br>Plan de despliegue<br>Plan de adm. de la configuración<br>**Entrega al 100%** | `/deliverables/semana_16/informe_final.tex`<br>`/deliverables/semana_16/pruebas.tex`<br>`/deliverables/semana_16/despliegue.tex`<br>`/deliverables/semana_16/gestion_config.tex`<br>Todos los documentos consolidados<br>`/deliverables/beamer_templates/presentacion_base.tex`<br>Link Google Drive con documentación completa | `/product/ai/ai_service/` (Servicio IA)<br>`/product/ai/ai_service/embeddings.py`<br>Endpoint `/api/recommendations/ai/<user_id>`<br>Docker Compose 3 servicios (web+db+ai)<br>`docker-compose up` funcional<br>README con instrucciones completas<br>Video demo (backup) | ✅ Demo completa funcional (10-15 min)<br>✅ Sistema IA con embeddings operativo<br>✅ Recomendaciones semánticas >0.7 similitud<br>✅ Fallback heurístico funcional<br>✅ Docker Compose sin errores<br>✅ Plan de pruebas con 20+ casos<br>✅ Plan de despliegue con Docker<br>✅ Plan admin. configuración<br>✅ Documentación completa en Drive<br>✅ Instrucciones ejecución claras<br>✅ Informe final consolidado<br>✅ Entrega 100% validada<br>✅ Tag `v1.0` en repositorio | **Integrante 5:** Servicio IA, embeddings<br>**Integrante 3:** Integración IA-web<br>**Integrante 6:** Planes (pruebas, despliegue, config), Docker ai_service<br>**Integrante 1:** Informe final<br>**Integrante 2:** Presentación<br>**Todos:** Demo, ensayo |
@@ -40,7 +40,7 @@
 - Documento LaTeX con charter (introducción, objetivos, justificación, alcance, restricciones, supuestos, stakeholders, hitos, riesgos)
 - Documento LaTeX con glosario (20+ términos técnicos)
 - Documento LaTeX con modelo de negocio (procesos AS-IS y TO-BE en BPMN)
-- Diagramas PlantUML: proceso_actual.puml, proceso_futuro.puml
+- Diagramas StarUML: proceso_actual.uml, proceso_futuro.uml
 - Presentación Beamer para exposición
 
 **Código/Prototipos:**
@@ -77,11 +77,9 @@
 
 **Artefactos a producir:**
 - Documento LaTeX SRS completo (introducción, descripción general, requisitos funcionales, no funcionales, restricciones)
-- Diagrama PlantUML de casos de uso general
-- 5+ diagramas PlantUML de casos de uso específicos (registrar usuario, buscar libros, gestionar biblioteca, recomendar libros, otros)
+- Diagrama StarUML de casos de uso general
+- 5+ diagramas StarUML de casos de uso específicos (registrar usuario, buscar libros, gestionar biblioteca, recomendar libros, otros)
 - Matriz de trazabilidad requisitos-casos de uso
-- Diagramas C4 nivel 1 (contexto) y nivel 2 (contenedores) en PlantUML
-- Tarjetas CRC para 10+ clases principales
 - Presentación Beamer
 
 **Código/Prototipos:**
@@ -89,7 +87,7 @@
 - Archivos CSS para diseño responsive
 - JavaScript para interacciones básicas
 - Datos mock en JSON (20+ libros con metadatos completos)
-- Mini servidor Flask opcional para desarrollo local
+- Servidor Spring Boot integrado para desarrollo local
 
 **Criterios de éxito:**
 - SRS con 15+ requisitos funcionales, 10+ no funcionales
@@ -127,20 +125,22 @@
 
 **Artefactos a producir:**
 - Documento LaTeX de análisis completo
-- Diagramas PlantUML de robustez para UC principal
-- Diagramas PlantUML de secuencia de análisis
-- Diagramas PlantUML de estados (libro: disponible, prestado, reservado; usuario: activo, inactivo, bloqueado)
-- Diagrama PlantUML de clases de análisis
+- Diagramas StarUML de robustez para UC principal
+- Diagramas StarUML de secuencia de análisis
+- Diagramas StarUML de estados (libro: disponible, prestado, reservado; usuario: activo, inactivo, bloqueado)
+- Diagrama StarUML de clases de análisis
+- Diagramas C4 nivel 1 (contexto) y nivel 2 (contenedores) en StarUML
+- Tarjetas CRC para 10+ clases principales
 - Presentación Beamer
 
 **Código/Prototipos:**
-- Backend Flask con estructura de proyecto completa
-- Modelos SQLAlchemy (User, Book, Tag, BookTag, UserBook)
-- Migraciones Alembic iniciales
+- Backend Spring Boot con estructura de proyecto completa
+- Entidades JPA (User, Book, Tag, BookTag, UserBook)
+- Migraciones Flyway iniciales
 - Base de datos PostgreSQL configurada
 - 5+ endpoints REST funcionales:
   - GET /api/books (listar con filtros)
-  - GET /api/books/<id> (detalle)
+  - GET /api/books/{id} (detalle)
   - POST /api/books (crear - admin)
   - GET /api/tags (listar tags)
   - GET /api/search (búsqueda avanzada)
@@ -150,7 +150,7 @@
 **Criterios de éxito:**
 - Modelo de análisis completo y coherente
 - Diagramas UML bien formados y consistentes
-- Backend Flask ejecutándose sin errores
+- Backend Spring Boot ejecutándose sin errores
 - BD Postgres con esquema normalizado (3FN)
 - Endpoints REST retornando JSON válido
 - Pruebas API exitosas con Postman
@@ -159,8 +159,8 @@
 **Responsables principales:**
 - Integrante 1: Documento análisis, especificaciones UC
 - Integrante 2: Diagramas robustez, secuencia, estados
-- Integrante 3: Backend Flask, endpoints, arquitectura
-- Integrante 5: BD Postgres, modelos, migraciones, dataset
+- Integrante 3: Backend Spring Boot, endpoints, arquitectura
+- Integrante 5: BD Postgres, entidades JPA, migraciones Flyway, dataset
 - Integrante 6: Colección Postman, pruebas API
 
 ---
@@ -181,14 +181,14 @@
 
 **Artefactos a producir:**
 - Especificaciones UC detalladas con flujos principales, alternativos y excepcionales
-- Arquitectura C4 nivel 3 (componentes web) en PlantUML
-- Arquitectura C4 nivel 4 (componentes IA) en PlantUML
+- Arquitectura C4 nivel 3 (componentes web) en StarUML
+- Arquitectura C4 nivel 4 (componentes IA) en StarUML
 - Documento de arquitectura LaTeX (estilos, vistas, decisiones, justificaciones)
 - Plan de desarrollo actualizado con cronograma real
 - Presentación Beamer
 
 **Código/Prototipos:**
-- Sistema de autenticación implementado (JWT o sesiones Flask)
+- Sistema de autenticación implementado (JWT con Spring Security)
 - Endpoints de autenticación:
   - POST /api/auth/register
   - POST /api/auth/login
@@ -197,10 +197,10 @@
 - Endpoints de biblioteca personal:
   - GET /api/library (libros del usuario)
   - POST /api/library (agregar libro)
-  - DELETE /api/library/<book_id> (eliminar libro)
-  - PUT /api/library/<book_id>/status (cambiar estado)
+  - DELETE /api/library/{bookId} (eliminar libro)
+  - PUT /api/library/{bookId}/status (cambiar estado)
 - Estados de lectura: "Leído", "Leyendo", "Por leer"
-- Middleware de autenticación en rutas protegidas
+- Filtros de seguridad Spring Security en rutas protegidas
 - Prototipo frontend actualizado con integración real (opcional)
 
 **Criterios de éxito:**
@@ -213,7 +213,7 @@
 **Responsables principales:**
 - Integrante 1: Especificaciones UC detalladas
 - Integrante 2: Arquitectura C4 (C3-C4), documento arquitectura
-- Integrante 3: Sistema autenticación, middleware
+- Integrante 3: Sistema autenticación Spring Security, filtros
 - Integrante 4: Frontend integración (opcional)
 - Integrante 5: Biblioteca personal, endpoints
 - Integrante 6: Plan desarrollo, cronograma
@@ -238,28 +238,29 @@
 
 **Artefactos a producir:**
 - Documento LaTeX de diseño completo
-- Diagramas PlantUML:
-  - clases_diseno.puml (con atributos, métodos, tipos)
-  - secuencia_diseno.puml (UC principal con objetos de diseño)
-  - colaboracion.puml (interacción entre objetos)
-  - componentes.puml (arquitectura de componentes)
-  - despliegue.puml (nodos, contenedores, conexiones)
+- Diagramas StarUML:
+  - clases_diseno.uml (con atributos, métodos, tipos)
+  - secuencia_diseno.uml (UC principal con objetos de diseño)
+  - colaboracion.uml (interacción entre objetos)
+  - componentes.uml (arquitectura de componentes)
+  - despliegue.uml (nodos, contenedores, conexiones)
+  - estados.uml (diagramas de estados de diseño)
 - Presentación Beamer
 
 **Código/Prototipos:**
 - Recomendador heurístico implementado:
   - Algoritmo: autor coincidente +3 pts, tag coincidente +2 pts, páginas ±15% +1 pt
-  - Endpoint GET /api/recommendations/<user_id>
+  - Endpoint GET /api/recommendations/{userId}
   - Lógica para excluir libros ya en biblioteca
   - Ordenamiento por score descendente
 - Docker Compose configurado:
   - docker-compose.yml con servicios web y db
-  - Dockerfile para Flask web
+  - Dockerfile para Spring Boot
   - Variables de entorno documentadas
   - Volúmenes para persistencia
   - Healthchecks configurados
-- Pruebas unitarias con pytest (20+ tests)
-- Pruebas de integración API
+- Pruebas unitarias con JUnit (20+ tests)
+- Pruebas de integración API con RestAssured
 - README actualizado con instrucciones Docker
 
 **Criterios de éxito:**
@@ -275,7 +276,7 @@
 - Integrante 2: Modelo diseño, diagramas UML diseño
 - Integrante 3: Docker web service, Dockerfile
 - Integrante 5: Recomendador heurístico, algoritmo
-- Integrante 6: Docker Compose, pruebas unitarias pytest
+- Integrante 6: Docker Compose, pruebas unitarias JUnit
 
 ---
 
@@ -320,21 +321,21 @@
 **Código/Prototipos:**
 - Servicio IA implementado:
   - Directorio `/product/ai/ai_service/`
-  - Flask app independiente
+  - Microservicio Python independiente
   - Modelo Sentence Transformers cargado
   - Endpoint POST /embed (generar embedding de texto)
   - Endpoint POST /recommend (recomendaciones por similitud)
   - Embeddings pre-calculados de sinopsis almacenados
   - Cálculo de similitud coseno
 - Integración web ↔ IA:
-  - Endpoint GET /api/recommendations/ai/<user_id> en web service
-  - Cliente HTTP para llamar a ai_service
+  - Endpoint GET /api/recommendations/ai/{userId} en web service Spring Boot
+  - RestTemplate/WebClient para llamar a ai_service
   - Fallback automático a heurística si IA falla
   - Logging de errores
 - Docker Compose 3 servicios:
-  - web: Flask web (puerto 5000)
+  - web: Spring Boot (puerto 8080)
   - db: PostgreSQL (puerto 5432)
-  - ai_service: Flask IA (puerto 5001)
+  - ai_service: Python Flask (puerto 5001)
 - Dockerfile para ai_service con dependencias ML
 - Sistema completo funcional end-to-end
 - Pruebas de sistema ejecutadas
@@ -447,6 +448,6 @@ Semana 17 (Subsanaciones) → Depende de feedback del docente
 
 ---
 
-**Documento preparado por:** Equipo BookMate - Grupo 6.2  
-**Última actualización:** Noviembre 2024  
+**Documento preparado por:** Equipo BookMate - Grupo 6  
+**Última actualización:** Noviembre 2025  
 **Versión:** 2.0 (Reorganizado por semanas)

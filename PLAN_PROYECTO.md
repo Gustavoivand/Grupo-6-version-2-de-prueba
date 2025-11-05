@@ -54,7 +54,7 @@ El alcance funcional incluirá:
 
 **Supuestos:**
 - Se contará con acceso a datasets de libros en formato estructurado
-- El equipo tendrá conocimientos básicos de Python/Flask
+- El equipo tendrá conocimientos básicos de Java/Spring Boot
 - Se utilizarán servicios gratuitos para despliegue (GitHub Pages, Docker)
 - Los modelos de embeddings pre-entrenados estarán disponibles
 
@@ -109,14 +109,14 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 - Páginas HTML/CSS/JS estáticas: `index.html`, `catalog.html`, `details.html`, `about.html`
 - Datos mock en archivos JSON (`public/assets/data/*.json`)
 - Sin base de datos persistente
-- **Opcional:** Mini servidor Flask para desarrollo local (solo entorno dev)
-- Publicable en GitHub Pages (nota: backend no funcionará en Pages)
+- Servidor Spring Boot integrado para desarrollo local
+- Archivos estáticos servidos desde `/resources/static/`
 
 **Tecnologías:**
-- HTML5, CSS3 (Bootstrap/Tailwind), JavaScript (Vanilla o React básico)
-- Flask (opcional, solo para desarrollo local)
+- HTML5, CSS3 (Bootstrap 5), JavaScript (Vanilla)
+- Spring Boot (servidor integrado para desarrollo local)
 
-**Ubicación:** `/product/basic/`
+**Ubicación:** `/product/basic-springboot/`
 
 **Criterios de Aceptación:**
 - ✅ Prototipo navegable funcional en navegador
@@ -129,11 +129,11 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 **Propósito:** Implementar el sistema completo con persistencia, backend y recomendaciones inteligentes.
 
 **Características:**
-- **Backend Web:** Flask con endpoints REST
+- **Backend Web:** Spring Boot con endpoints REST
   - `/api/books` - Listar libros con filtros
-  - `/api/books/<id>` - Detalle de libro
+  - `/api/books/{id}` - Detalle de libro
   - `/api/library` - Biblioteca personal del usuario
-  - `/api/recommendations/<user_id>` - Recomendaciones personalizadas
+  - `/api/recommendations/{userId}` - Recomendaciones personalizadas
   
 - **Base de datos:** PostgreSQL con esquema relacional
   - Tablas: `users`, `books`, `tags`, `book_tags`, `user_books`
@@ -141,36 +141,36 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
   
 - **Sistema de recomendación:**
   - **Fase 1 - Heurística:** Basada en metadatos (autor, tags, páginas ±15%)
-  - **Fase 2 - IA:** Servicio Flask separado con embeddings de sinopsis
+  - **Fase 2 - IA:** Microservicio Python separado con embeddings de sinopsis
     - Modelo: Sentence Transformers (e.g., `all-MiniLM-L6-v2`)
     - Similitud coseno entre embeddings
     - Fallback automático a heurística si IA falla
 
 - **Infraestructura:** Docker Compose con 3 servicios
-  - `web`: Flask app principal
+  - `web`: Spring Boot app principal
   - `db`: PostgreSQL 15
-  - `ai_service`: Flask IA con modelos pre-entrenados
+  - `ai_service`: Microservicio Python IA con modelos pre-entrenados
 
 **Tecnologías:**
-- Python 3.11+, Flask 3.0, SQLAlchemy
-- PostgreSQL 15
-- Sentence Transformers, NumPy, Scikit-learn
+- Java 17+, Spring Boot 3.2, Spring Data JPA
+- PostgreSQL 15, Flyway (migraciones)
+- Microservicio Python 3.11+ con Sentence Transformers, NumPy, Scikit-learn
 - Docker + Docker Compose
 
 **Ubicación:** `/product/ai/`
 
 **Orden de Implementación (Progresivo):**
-1. **Semana 11:** Backend Flask básico + Postgres + CRUD libros
-2. **Semana 13:** Biblioteca personal + autenticación
+1. **Semana 11:** Backend Spring Boot básico + Postgres + CRUD libros
+2. **Semana 13:** Biblioteca personal + autenticación Spring Security
 3. **Semana 15:** Recomendador heurístico funcional
-4. **Semana 16:** Servicio IA + Docker Compose completo
+4. **Semana 16:** Microservicio Python IA + Docker Compose completo
 
 **Criterios de Aceptación por Hito:**
 
 | Hito | Criterio |
 |------|----------|
 | Backend básico | Endpoints REST funcionales, Postman collection documentada |
-| BD Postgres | Esquema normalizado, migraciones Alembic, 100+ registros mock |
+| BD Postgres | Esquema normalizado, migraciones Flyway, 100+ registros mock |
 | Heurística | Recomienda 5+ libros relevantes, tiempo respuesta <1s |
 | IA | Recomendaciones semánticas precisas, similitud >0.7, fallback operativo |
 | Docker | `docker-compose up` funciona sin errores, servicios saludables |
@@ -282,7 +282,7 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 **Objetivo:** Implementar API REST básica
 
 **Actividades:**
-- Configurar Flask con Blueprint pattern
+- Configurar Spring Boot con arquitectura por capas (Controller, Service, Repository)
 - Crear endpoints CRUD para libros
 - Documentar API con Swagger/OpenAPI
 - Probar con Postman
@@ -301,8 +301,8 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 
 **Actividades:**
 - Diseñar esquema ER normalizado
-- Implementar modelos SQLAlchemy
-- Crear migraciones con Alembic
+- Implementar entidades JPA
+- Crear migraciones con Flyway
 - Poblar BD con dataset inicial
 
 **Entregables:**
@@ -319,7 +319,7 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 **Objetivo:** Implementar funcionalidad de usuario
 
 **Actividades:**
-- Agregar autenticación (JWT o sesiones)
+- Agregar autenticación JWT con Spring Security
 - Crear relación usuario-libros
 - Implementar endpoints de biblioteca personal
 - Marcar estados de lectura
@@ -338,7 +338,7 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 
 **Actividades:**
 - Diseñar algoritmo heurístico (autor coincidente +3 pts, tag coincidente +2 pts, páginas ±15% +1 pt)
-- Implementar endpoint `/api/recommendations/<user_id>`
+- Implementar endpoint `/api/recommendations/{userId}`
 - Probar con diferentes perfiles de usuario
 - Ajustar pesos según relevancia
 
@@ -356,8 +356,8 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 **Objetivo:** Containerizar aplicación
 
 **Actividades:**
-- Crear Dockerfile para Flask web
-- Crear Dockerfile para servicio IA (preparación)
+- Crear Dockerfile para Spring Boot
+- Crear Dockerfile para microservicio Python IA (preparación)
 - Configurar docker-compose.yml con servicios web + db
 - Configurar variables de entorno
 - Probar orquestación de contenedores
@@ -379,15 +379,15 @@ El proyecto se organizará en **dos líneas de desarrollo paralelas** (tracks) q
 **Actividades:**
 - Seleccionar modelo pre-entrenado (Sentence Transformers)
 - Generar embeddings de sinopsis de libros
-- Implementar servicio Flask IA separado
+- Implementar microservicio Python IA separado
 - Calcular similitud coseno para recomendaciones
-- Integrar servicio IA con web principal
+- Integrar microservicio IA con Spring Boot principal (RestTemplate/WebClient)
 - Implementar fallback automático a heurística
 
 **Entregables:**
-- Servicio IA en `/product/ai/ai_service/`
+- Microservicio IA en `/product/ai/ai_service/`
 - Embeddings pre-calculados almacenados
-- Endpoint `/api/recommendations/ai/<user_id>`
+- Endpoint `/api/recommendations/ai/{userId}`
 
 **Criterios de Aceptación:**
 - ✅ Recomendaciones IA más precisas que heurística
@@ -427,7 +427,8 @@ Cada fase deberá cumplir:
 #### Semana 11 (PC3)
 - ✅ Diagramas robustez, secuencia, estados, clases completados
 - ✅ Tarjetas CRC para 10+ clases
-- ✅ Backend Flask con 5+ endpoints funcionales
+- ✅ Arquitectura C4 niveles 1-2 documentada
+- ✅ Backend Spring Boot con 5+ endpoints funcionales
 - ✅ BD Postgres con esquema normalizado
 - ✅ Entrega al 40% validada
 
@@ -466,7 +467,7 @@ Cada fase deberá cumplir:
 | R02 | Complejidad técnica de IA subestimada | Media | Alto | Comenzar con heurística simple, IA como fase final opcional |
 | R03 | Dataset de libros insuficiente | Media | Medio | Identificar 3+ fuentes alternativas (Kaggle, OpenLibrary, Goodreads API) |
 | R04 | Problemas de integración Docker | Baja | Medio | Documentar troubleshooting, usar imágenes oficiales estables |
-| R05 | Falta de experiencia en Flask/PostgreSQL | Media | Medio | Capacitación interna semana 9-10, pair programming |
+| R05 | Falta de experiencia en Spring Boot/PostgreSQL | Media | Medio | Capacitación interna semana 9-10, pair programming |
 | R06 | Cambios en requisitos académicos | Baja | Alto | Mantener comunicación con docente, documentar cambios formalmente |
 | R07 | Conflictos en Git por trabajo simultáneo | Media | Bajo | Branching strategy estricto, code reviews obligatorios |
 | R08 | Hardware insuficiente para entrenar modelos | Media | Medio | Usar modelos pre-entrenados, Google Colab como alternativa |
@@ -498,7 +499,7 @@ Cada fase deberá cumplir:
 main (producción, solo merges desde develop)
   ├── develop (integración continua)
   │   ├── feature/basic-ui
-  │   ├── feature/flask-api
+  │   ├── feature/springboot-api
   │   ├── feature/postgres-schema
   │   ├── feature/auth
   │   ├── feature/heuristic-recommender
@@ -552,9 +553,9 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 |---|--------|---------------|-------------------|
 | 1 | Integrante 1 | Project Manager / Analista | Coordinación, requisitos, SRS, casos de uso |
 | 2 | Integrante 2 | Arquitecto de Software | Diseño C4, patrones, diagramas de diseño |
-| 3 | Integrante 3 | Desarrollador Backend | Flask API, BD Postgres, endpoints |
+| 3 | Integrante 3 | Desarrollador Backend | Spring Boot API, BD Postgres, endpoints |
 | 4 | Integrante 4 | Desarrollador Frontend | Prototipo HTML/CSS/JS, integración UI |
-| 5 | Integrante 5 | Especialista IA/Data | Recomendador heurístico, servicio IA, embeddings |
+| 5 | Integrante 5 | Especialista IA/Data | Recomendador heurístico, microservicio IA, embeddings |
 | 6 | Integrante 6 | QA / DevOps | Plan de pruebas, Docker, despliegue, CI/CD |
 
 **Nota:** Los roles son rotativos; cada integrante participará en múltiples áreas.
@@ -574,22 +575,98 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 
 | Categoría | Herramienta |
 |-----------|-------------|
-| Lenguaje Backend | Python 3.11+ |
-| Framework Web | Flask 3.0 |
-| ORM | SQLAlchemy |
+| Lenguaje Backend | Java 17+ |
+| Framework Web | Spring Boot 3.2 |
+| ORM | Spring Data JPA / Hibernate |
+| Migraciones BD | Flyway |
+| Build Tool | Maven |
 | Base de Datos | PostgreSQL 15 |
 | Lenguaje Frontend | HTML5, CSS3, JavaScript (ES6+) |
-| Framework CSS | Bootstrap 5 o Tailwind CSS |
-| IA/ML | Sentence Transformers, NumPy, Scikit-learn |
+| Framework CSS | Bootstrap 5 |
+| IA (Microservicio) | Python 3.11+, Flask (micro), Sentence Transformers |
+| Testing | JUnit 5, Mockito, RestAssured |
 | Contenedores | Docker, Docker Compose |
+
+### 10.1.1 Flyway - Gestión de Migraciones de Base de Datos
+
+**¿Qué es Flyway?**
+
+Flyway es una herramienta de migración de bases de datos que permite versionar y aplicar cambios al esquema de la BD de forma controlada y reproducible. Es una alternativa robusta y ampliamente usada en proyectos Java/Spring Boot.
+
+**¿Cómo funciona?**
+
+1. Los cambios al esquema se escriben en archivos SQL numerados secuencialmente
+2. Flyway ejecuta automáticamente las migraciones pendientes al iniciar Spring Boot
+3. Registra qué migraciones ya se aplicaron en una tabla de control (`flyway_schema_history`)
+4. Garantiza que todos los ambientes (dev, test, prod) tengan el mismo esquema
+
+**Nomenclatura de archivos:**
+
+```
+V1__crear_tabla_usuarios.sql
+V2__agregar_columna_email.sql
+V3__crear_tabla_libros.sql
+V4__relacion_usuario_libros.sql
+```
+
+- **V** = Versioned migration (obligatorio)
+- **Número** = Versión secuencial (1, 2, 3...)
+- **__** = Doble guión bajo (separador obligatorio)
+- **Descripción** = Texto descriptivo con guiones bajos
+
+**Uso en BookMate:**
+
+```
+src/main/resources/db/migration/
+├── V1__schema_inicial.sql
+├── V2__agregar_tabla_libros.sql
+├── V3__agregar_tabla_tags.sql
+├── V4__relacion_libros_tags.sql
+└── V5__relacion_usuario_libros.sql
+```
+
+**Configuración en `application.properties`:**
+
+```properties
+spring.flyway.enabled=true
+spring.flyway.baseline-on-migrate=true
+spring.flyway.locations=classpath:db/migration
+```
+
+**Ejemplo de migración (`V1__schema_inicial.sql`):**
+
+```sql
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE books (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(500) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    isbn VARCHAR(20),
+    pages INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+**Ventajas:**
+- ✅ Versionado automático del esquema de BD
+- ✅ Reproducibilidad en diferentes ambientes
+- ✅ Historial completo de cambios
+- ✅ Rollback controlado (con migraciones undo)
+- ✅ Integración nativa con Spring Boot
 
 ### 10.2 Documentación
 
 | Categoría | Herramienta |
 |-----------|-------------|
 | LaTeX | TeXLive, Overleaf (opcional) |
-| Diagramas UML | PlantUML, Draw.io |
-| Diagramas C4 | PlantUML con extensión C4 |
+| Diagramas UML | StarUML 5 (formato XPD .uml) |
+| Diagramas C4 | StarUML con templates C4 |
 | Gestión Bibliográfica | BibLaTeX |
 
 ### 10.3 Gestión
@@ -626,7 +703,7 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 ### 11.2 Código Fuente (en `/product/`)
 
 - Track BASIC: Prototipo estático navegable
-- Track AI: Aplicación Flask completa con IA
+- Track AI: Aplicación Spring Boot completa con IA
 
 ### 11.3 Presentaciones (en `/deliverables/beamer_templates/`)
 
@@ -671,10 +748,10 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 - [ ] Datos mock en JSON (20+ libros)
 - [ ] Diseño responsive validado
 
-**Diagramas (`/deliverables/04_diseno/diagramas/`):**
-- [ ] `c4_contexto.puml` completado
-- [ ] `c4_contenedores.puml` completado
-- [ ] Tarjetas CRC para 10+ clases
+**Diagramas (`/deliverables/semana_08/diagramas/`):**
+- [ ] `casos_uso_general.uml` completado
+- [ ] 5+ casos de uso específicos (.uml)
+- [ ] Matriz de trazabilidad completada
 
 **Presentación:**
 - [ ] Beamer para Parcial preparado
@@ -696,19 +773,21 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 - [ ] Diagrama de clases de análisis
 
 **Código (`/product/ai/`):**
-- [ ] Backend Flask con 5+ endpoints
+- [ ] Backend Spring Boot con 5+ endpoints
 - [ ] BD Postgres con esquema normalizado
-- [ ] Modelos SQLAlchemy creados
-- [ ] Migraciones Alembic funcionales
+- [ ] Entidades JPA creadas
+- [ ] Migraciones Flyway funcionales
 - [ ] 100+ libros en BD
 - [ ] Colección Postman documentada
 
 **Diagramas UML:**
-- [ ] `robustez_uc_principal.puml`
-- [ ] `secuencia_uc_principal.puml`
-- [ ] `estados_libro.puml`
-- [ ] `estados_usuario.puml`
-- [ ] `clases_analisis.puml`
+- [ ] `robustez_uc_principal.uml`
+- [ ] `secuencia_uc_principal.uml`
+- [ ] `estados_libro.uml`
+- [ ] `estados_usuario.uml`
+- [ ] `clases_analisis.uml`
+- [ ] `c4_contexto.uml`
+- [ ] `c4_contenedores.uml`
 
 **Presentación:**
 - [ ] Beamer para PC3 preparado
@@ -716,7 +795,7 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 
 **Control de versiones:**
 - [ ] Tag `v0.4` creado en main
-- [ ] Merge de ramas `feature/flask-api` y `feature/postgres-schema`
+- [ ] Merge de ramas `feature/springboot-api` y `feature/postgres-schema`
 
 ---
 
@@ -735,8 +814,8 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 - [ ] Estados de lectura (Leído, Leyendo, Por leer)
 
 **Diagramas UML:**
-- [ ] `c4_componentes_web.puml`
-- [ ] `c4_componentes_ia.puml`
+- [ ] `c4_componentes_web.uml`
+- [ ] `c4_componentes_ia.uml`
 - [ ] Diagramas de componentes actualizados
 
 **Presentación:**
@@ -770,11 +849,12 @@ Ejemplo: `feat: agregar endpoint de recomendaciones heurísticas`
 - [ ] Variables de entorno documentadas
 
 **Diagramas UML:**
-- [ ] `clases_diseno.puml`
-- [ ] `secuencia_diseno.puml`
-- [ ] `colaboracion.puml`
-- [ ] `componentes.puml`
-- [ ] `despliegue.puml`
+- [ ] `clases_diseno.uml`
+- [ ] `secuencia_diseno.uml`
+- [ ] `colaboracion.uml`
+- [ ] `componentes.uml`
+- [ ] `despliegue.uml`
+- [ ] `estados_diseno.uml`
 
 **Pruebas:**
 - [ ] Plan de pruebas ejecutado
@@ -889,7 +969,7 @@ El éxito del proyecto dependerá de la disciplina en seguir este plan, la comun
 
 ---
 
-**Documento preparado por:** Equipo BookMate - Grupo 6.2  
-**Fecha de última actualización:** Noviembre 2024  
+**Documento preparado por:** Equipo BookMate - Grupo 6  
+**Fecha de última actualización:** Noviembre 2025  
 **Versión:** 1.0  
 **Estado:** Aprobado para ejecución

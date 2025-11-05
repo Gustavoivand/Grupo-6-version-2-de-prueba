@@ -1,6 +1,6 @@
 # BookMate - Productos
 
-> **Plataforma de Gestión de Libros Personales - Grupo 6.2**
+> **Plataforma de Gestión de Libros Personales - Grupo 6**
 
 Este directorio contiene los diferentes tracks de desarrollo del proyecto BookMate.
 
@@ -8,31 +8,13 @@ Este directorio contiene los diferentes tracks de desarrollo del proyecto BookMa
 
 ## 📦 Productos Disponibles
 
-### 1. **Basic (Flask)** - `basic/`
-**Track:** Prototipo Estático  
-**Backend:** Flask (Python)  
-**Puerto:** 5000  
-**Estado:** ✅ Completado
-
-Versión original del prototipo con servidor Flask.
-
-```bash
-cd basic
-python server.py
-# http://localhost:5000
-```
-
-[Ver README completo →](basic/README.md)
-
----
-
-### 2. **Basic (Spring Boot)** - `basic-springboot/` ⭐ NUEVO
+### 1. **Basic (Spring Boot)** - `basic-springboot/` ⭐ PRODUCTO PRINCIPAL
 **Track:** Prototipo Estático  
 **Backend:** Spring Boot (Java)  
 **Puerto:** 8080  
 **Estado:** ✅ Completado
 
-Versión Spring Boot con funcionalidades idénticas al Flask.
+Base del proyecto oficial. Prototipo con Spring Boot que sirve archivos estáticos.
 
 ```bash
 cd basic-springboot
@@ -45,33 +27,51 @@ cd basic-springboot
 
 ---
 
-### 3. **AI** - `ai/`
+### 2. **AI** - `ai/`
 **Track:** Sistema Completo con IA  
-**Estado:** 🚧 Pendiente
+**Estado:** 🚧 En Desarrollo
 
-Sistema completo con inteligencia artificial, base de datos, y API REST.
+Sistema completo basado en **basic-springboot/** con inteligencia artificial, base de datos PostgreSQL, y API REST completa. Incluye microservicio Python para recomendaciones semánticas.
+
+**Tecnologías:**
+- Spring Boot 3.2 (Java 17+)
+- PostgreSQL 15 + Flyway
+- Microservicio Python IA (Sentence Transformers)
+- Docker Compose
 
 [Ver Plan →](ai/PLAN_AI.md)
 
 ---
 
-## 🎯 Comparación Rápida
+### 3. **Basic (Flask)** - `basic/` 🗂️ LEGACY (Solo Referencia)
+**Track:** Prototipo Inicial (Deprecated)  
+**Backend:** Flask (Python)  
+**Puerto:** 5000  
+**Estado:** ⚠️ LEGACY - No se desarrollará
 
-| Característica | Basic (Flask) | Basic (Spring Boot) | AI (Futuro) |
-|----------------|---------------|---------------------|-------------|
-| **Backend** | Python + Flask | Java + Spring Boot | Spring Boot + IA |
-| **Puerto** | 5000 | 8080 | 8080 |
-| **Base de Datos** | ❌ (localStorage) | ❌ (localStorage) | ✅ PostgreSQL |
-| **Auth Real** | ❌ | ❌ | ✅ JWT |
-| **IA** | ❌ | ❌ | ✅ Embeddings |
-| **API REST** | ❌ | ❌ | ✅ Completa |
-| **Producción** | ❌ | ✅ | ✅ |
+**⚠️ IMPORTANTE:** Esta carpeta contiene un prototipo inicial en Flask que sirvió como **exploración tecnológica preliminar**. **NO se trabajará sobre este código**. El proyecto oficial se desarrolla sobre `basic-springboot/` (Spring Boot).
+
+Se mantiene únicamente como referencia histórica.
 
 ---
 
-## ✨ Funcionalidades (Basic)
+## 🎯 Comparación Rápida
 
-Ambas versiones Basic incluyen:
+| Característica | Basic (Spring Boot) ⭐ | AI (En Desarrollo) | Basic (Flask) LEGACY |
+|----------------|------------------------|-------------------|---------------------|
+| **Backend** | Java + Spring Boot | Spring Boot + Microservicio IA | Python + Flask |
+| **Puerto** | 8080 | 8080 | 5000 |
+| **Base de Datos** | ❌ (localStorage) | ✅ PostgreSQL + Flyway | ❌ (localStorage) |
+| **Auth Real** | ❌ | ✅ JWT (Spring Security) | ❌ |
+| **IA** | ❌ | ✅ Embeddings (Python) | ❌ |
+| **API REST** | ❌ | ✅ Completa | ❌ |
+| **Estado** | ✅ Producción | 🚧 En Desarrollo | ⚠️ Deprecated |
+
+---
+
+## ✨ Funcionalidades (Basic Spring Boot)
+
+El prototipo básico incluye:
 
 ### Frontend
 - ✅ Landing Page con libros destacados
@@ -95,21 +95,23 @@ Ambas versiones Basic incluyen:
 
 ## 🚀 Inicio Rápido
 
-### Recomendado: Spring Boot
+### Producto Principal: Spring Boot
 
 ```bash
 # Requisito: Java 17+
 cd basic-springboot
 ./run.bat              # Windows (automático)
+./run.sh               # Linux/Mac
+# Acceder a http://localhost:8080
 ```
 
-### Alternativo: Flask
+### AI Track (En Desarrollo)
 
 ```bash
-# Requisito: Python 3.8+
-cd basic
-pip install -r requirements.txt
-python server.py
+# Requisito: Docker + Docker Compose
+cd ai
+docker-compose up --build
+# Acceder a http://localhost:8080
 ```
 
 ---
@@ -141,20 +143,20 @@ Password: admin123
 
 ## 🔮 Roadmap
 
-### ✅ Fase 1: Basic (Completada)
+### ✅ Fase 1: Prototipo Basic Spring Boot (Completada)
 - [x] Frontend completo
-- [x] Sistema de recomendaciones heurísticas
-- [x] Login/Registro volátil
+- [x] Sistema de recomendaciones heurísticas (simulado)
+- [x] Login/Registro volátil (localStorage)
 - [x] Panel admin
-- [x] Versión Flask
-- [x] **Versión Spring Boot**
+- [x] Servidor Spring Boot integrado
+- [x] Prototipo navegable funcional
 
-### 🚧 Fase 2: AI (Pendiente)
-- [ ] Base de datos PostgreSQL
-- [ ] Autenticación JWT
-- [ ] Sistema de recomendaciones con IA
-- [ ] API REST completa
-- [ ] Docker deployment
+### 🚧 Fase 2: AI Track (En Desarrollo - Semanas 11-16)
+- [ ] **Semana 11:** Backend Spring Boot con API REST + PostgreSQL
+- [ ] **Semana 13:** Autenticación JWT con Spring Security
+- [ ] **Semana 15:** Sistema de recomendaciones heurísticas (real)
+- [ ] **Semana 16:** Microservicio Python IA con embeddings
+- [ ] Docker Compose (web + db + ai_service)
 
 ---
 
@@ -162,21 +164,10 @@ Password: admin123
 
 ```
 product/
-├── basic/                        # Versión Flask (original)
-│   ├── index.html
-│   ├── catalog.html
-│   ├── details.html
-│   ├── library.html
-│   ├── about.html
-│   ├── admin.html
-│   ├── assets/
-│   ├── server.py
-│   └── README.md
-│
-├── basic-springboot/            # Versión Spring Boot (nuevo)
+├── basic-springboot/            # ⭐ PRODUCTO PRINCIPAL
 │   ├── src/
 │   │   ├── main/
-│   │   │   ├── java/
+│   │   │   ├── java/com/bookmate/
 │   │   │   └── resources/static/
 │   │   └── test/
 │   ├── pom.xml
@@ -184,64 +175,81 @@ product/
 │   ├── run.bat / run.sh
 │   └── README.md
 │
-├── ai/                          # Versión con IA (futuro)
-│   └── PLAN_AI.md
+├── ai/                          # 🚧 EN DESARROLLO (upgrade de basic-springboot)
+│   ├── src/main/java/          # Backend Spring Boot
+│   ├── ai_service/             # Microservicio Python IA
+│   ├── docker-compose.yml
+│   └── README.md
 │
-├── README.md                    # Este archivo
-└── MIGRACION_SPRINGBOOT.md     # Documentación de migración
+├── basic/                       # 🗂️ LEGACY (Solo referencia histórica)
+│   ├── *.html
+│   ├── server.py (Flask)
+│   └── README.md
+│
+└── README.md                    # Este archivo
 ```
 
 ---
 
 ## 🛠️ Tecnologías
 
-### Frontend (Ambos Basic)
+### Frontend (Basic Spring Boot)
 - HTML5
 - CSS3 + Bootstrap 5
 - JavaScript (Vanilla)
 - LocalStorage API
 
-### Backend Basic (Flask)
-- Python 3.8+
-- Flask 3.0
-
-### Backend Basic (Spring Boot)
+### Backend (Basic Spring Boot)
 - Java 17
 - Spring Boot 3.2
 - Maven
 
-### Backend AI (Futuro)
-- Spring Boot + Spring Data JPA
-- PostgreSQL
-- Python (microservicio IA)
-- Docker
+### Backend AI Track (En Desarrollo)
+- **Web Service:** Spring Boot 3.2 + Spring Data JPA
+- **Base de Datos:** PostgreSQL 15 + Flyway
+- **Microservicio IA:** Python 3.11+ con Sentence Transformers
+- **Contenedores:** Docker + Docker Compose
+- **Seguridad:** Spring Security + JWT
 
 ---
 
 ## 🤝 Contribución
 
-**Equipo:** Grupo 6.2  
+**Equipo:** Grupo 6
 **Curso:** CC341 IS - Ingeniería de Software  
 **Ciclo:** Actual
 
 ---
 
-## 📝 Notas
+## 📝 Notas Importantes
 
-1. **Prioridad:** Usar `basic-springboot/` para el proyecto final
-2. **Referencia:** `basic/` se mantiene como backup
-3. **Frontend idéntico:** Ambos Basic tienen el mismo frontend
-4. **Localhost:** Flask usa puerto 5000, Spring Boot usa 8080
+1. **⭐ Producto Principal:** `basic-springboot/` es la BASE del proyecto
+2. **🚧 AI Track:** Se desarrolla como UPGRADE de `basic-springboot/`, no de `basic/`
+3. **⚠️ LEGACY:** `basic/` (Flask) NO se usará en el desarrollo. Solo es referencia histórica
+4. **Puerto 8080:** Tanto `basic-springboot/` como `ai/` usan el puerto 8080
+5. **Stack Oficial:** Java 17 + Spring Boot + PostgreSQL + Microservicio Python (IA)
 
 ---
 
 ## ✅ Estado del Proyecto
 
-- ✅ **Basic (Flask):** Funcional y completo
-- ✅ **Basic (Spring Boot):** Funcional y completo
-- 🚧 **AI:** Planificado
+- ✅ **Basic (Spring Boot):** Completado y funcional
+- 🚧 **AI Track:** En desarrollo (Semanas 11-16)
+- 🗂️ **Basic (Flask):** Deprecated - Solo referencia
 
-**Última actualización:** 2024-11-05
+**Última actualización:** 2025-11-05
+
+---
+
+## ⚠️ Advertencia sobre /basic/ (Flask)
+
+La carpeta `basic/` contiene un prototipo inicial en Flask que sirvió como exploración tecnológica. **NO se trabajará sobre este código**.
+
+El proyecto oficial se desarrolla sobre:
+- **Base:** `basic-springboot/` (Spring Boot)
+- **Evolución:** `ai/` (Spring Boot + PostgreSQL + Microservicio Python IA)
+
+El track Flask se mantiene únicamente como referencia histórica.
 
 ---
 
