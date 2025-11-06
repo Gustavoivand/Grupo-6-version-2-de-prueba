@@ -1,11 +1,4 @@
-@startuml c4_contenedores_flujo_recomendaciones
-' ============================================================================
-' DIAGRAMA C4 - NIVEL 2: CONTENEDORES CON FLUJOS
-' Flujo de Recomendaciones (UC-06)
-' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
-' Grupo: 6
-' Universidad: UNI
-' ============================================================================
+@startuml
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
@@ -49,9 +42,7 @@ Rel(backend, webapp, "9. Retorna recomendaciones formateadas")
 Rel(webapp, usuario, "10. Muestra 6 libros similares\ncon puntuaciones")
 
 ' FLUJO ALTERNATIVO (Heurísticas)
-Rel(backend, database, "5a. IA no disponible:\nConsulta todo el catálogo", "Fallback")
+Rel_Back(backend, database, "5a. IA no disponible:\nConsulta todo el catálogo", "Fallback")
 Rel(backend, backend, "6a. Aplica reglas heurísticas\n(género, autor, tags, precio)")
 Rel(backend, webapp, "7a. Retorna recomendaciones heurísticas")
-
 @enduml
-
