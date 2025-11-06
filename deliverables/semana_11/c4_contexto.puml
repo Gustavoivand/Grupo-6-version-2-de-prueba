@@ -1,12 +1,4 @@
-@startuml c4_contexto_bookmate
-' ============================================================================
-' DIAGRAMA C4 - NIVEL 1: CONTEXTO
-' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
-' Grupo: 6
-' Universidad: UNI
-' Fase: ANÁLISIS (sin tecnologías específicas)
-' ============================================================================
-
+@startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
 title Diagrama C4 - Nivel 1: Contexto del Sistema\nBookMate - Sistema de Recomendación de Libros Académicos
@@ -37,21 +29,12 @@ end note
 
 note right of ia
   **Responsabilidad:**
-  • Generar embeddings (representaciones vectoriales)
-  • Calcular similitud de coseno
   • Retornar top N libros más similares
   
   **Fallback:**
-  Si no disponible, sistema usa heurísticas
+  •Si no disponible, sistema retorna libros similares según autor y género
 end note
 
-@enduml
-
-@startuml c4_contexto_detallado
-' ============================================================================
-' DIAGRAMA C4 - NIVEL 1: CONTEXTO DETALLADO
-' (Mostrando flujos principales)
-' ============================================================================
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
@@ -59,7 +42,7 @@ title Diagrama C4 - Nivel 1: Contexto Detallado\nFlujos Principales del Sistema 
 
 LAYOUT_WITH_LEGEND()
 
-Person(estudiante, "Estudiante", "Busca libros para proyectos y tesis")
+Person(estudiante, "Estudiante", "Busca libros de su interés")
 Person(profesor, "Profesor", "Busca bibliografía para cursos")
 Person(bibliotecario, "Bibliotecario", "Gestiona el catálogo de libros")
 
@@ -94,7 +77,7 @@ note bottom of bookmate
   **Usuario General:**
   • UC-02: Listar Libros
   • UC-05: Buscar Libros
-  • UC-06: Obtener Recomendaciones ⭐
+  • UC-06: Obtener Recomendaciones 
   • UC-07: Ver Detalle de Libro
   • UC-08: Filtrar por Precio
   
@@ -106,15 +89,9 @@ note bottom of bookmate
 end note
 
 note bottom of ia_service
-  **Tecnología Conceptual:**
-  • Procesamiento de Lenguaje Natural (NLP)
-  • Modelos preentrenados de embeddings
-  • Cálculo de similitud de coseno
   
   **Requisitos:**
   • Responder en <3 segundos (p95)
   • Relevancia >70%
 end note
-
 @enduml
-
