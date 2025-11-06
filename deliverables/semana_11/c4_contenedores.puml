@@ -1,11 +1,4 @@
-@startuml c4_contenedores_bookmate
-' ============================================================================
-' DIAGRAMA C4 - NIVEL 2: CONTENEDORES
-' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
-' Grupo: 6
-' Universidad: UNI
-' Fase: ANÁLISIS (sin tecnologías específicas)
-' ============================================================================
+@startuml
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
@@ -47,8 +40,8 @@ note right of webapp
   • Panel de administración
   
   **Características:**
-  • Responsive (móvil/tablet/desktop)
-  • Menos de 5 clicks para tareas comunes
+•Uso principal en escritorio
+  • <5 clicks para tareas comunes
 end note
 
 note right of backend
@@ -72,11 +65,11 @@ note bottom of database
   • Autores (nombre, biografía, etc.)
   • Representaciones Semánticas (embeddings)
   • Usuarios y roles
-  • Resultados de búsquedas (caché opcional)
+  • Resultados de búsquedas 
   
   **Características:**
   • Integridad referencial
-  • Consultas eficientes (menos de 1s)
+  • Consultas eficientes (<1s)
 end note
 
 note bottom of ia_service
@@ -88,12 +81,11 @@ note bottom of ia_service
   
   2. Calcular Similitud:
      • Recibe ID de libro referencia
-     • Calcula coseno con todos los libros
+     • Cálculos y comparaciones con todos los libros
      • Retorna top 6 más similares
   
   **Requisitos:**
-  • Latencia menor a 3s (p95)
-  • Relevancia mayor a 70%
+  • Latencia <3s (p95)
+  • Relevancia >70%
 end note
-
 @enduml
