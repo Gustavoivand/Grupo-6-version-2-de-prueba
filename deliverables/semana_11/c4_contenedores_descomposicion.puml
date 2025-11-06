@@ -1,11 +1,5 @@
-@startuml c4_contenedores_descomposicion
-' ============================================================================
-' DIAGRAMA C4 - NIVEL 2: DESCOMPOSICIÓN DEL BACKEND
-' Vista de Componentes Conceptuales
-' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
-' Grupo: 6
-' Universidad: UNI
-' ============================================================================
+@startuml
+
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
@@ -56,6 +50,4 @@ note bottom of generador_rec
   • Manejar fallback transparente
   • Garantizar respuesta menor a 3s
 end note
-
 @enduml
-
