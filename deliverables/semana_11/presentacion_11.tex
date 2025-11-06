@@ -82,6 +82,7 @@ Nos enfocamos en el comportamiento y la estructura conceptual, no en la implemen
 \item Especificaciones detalladas de UC
 \item Modelo de Análisis (BCE)
 \item Diagramas de Robustez
+\item Diagramas de Secuencia
 \item Arquitectura C4 (Niveles 1-2)
 \item Diagramas de Estados
 \item Tarjetas CRC
@@ -484,6 +485,234 @@ Interfaz con IA & Comunicar con servicio externo de IA & Sistema IA \\
 
 \end{frame}
 
+\section{Diagramas de Secuencia de Análisis}
+
+\begin{frame}
+\frametitle{Diagramas de Secuencia: Concepto}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{¿Qué son?}
+\begin{itemize}
+\item Diagramas de interacción que muestran el orden temporal
+\item Colaboración entre elementos a lo largo del tiempo
+\item Mensajes intercambiados entre actores, boundaries, controls y entities
+\item Flujos alternativos y decisiones
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Propósito:}
+\begin{itemize}
+\item Visualizar orden temporal de operaciones
+\item Entender flujo completo de casos de uso
+\item Documentar comportamiento del sistema
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Diferencia con Robustez:}
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{2.5cm}p{3.5cm}}
+\toprule
+\textbf{Aspecto} & \textbf{Enfoque} \\
+\midrule
+\textbf{Robustez} & Estructura estática \\
+\textbf{Secuencia} & Orden temporal \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Relación:}
+\begin{itemize}
+\item Robustez: \textit{¿Qué elementos participan?}
+\item Secuencia: \textit{¿En qué orden interactúan?}
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+\textbf{Nota:} Los diagramas de secuencia de análisis son conceptuales y no mencionan tecnologías específicas. Utilizan la misma notación BCE (Boundary-Control-Entity).
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Diagrama de Secuencia: UC-06 Recomendaciones}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama de secuencia de UC-06
+% Mostrar orden temporal:
+% 1. Usuario → InterfazDetalle (solicita recomendaciones)
+% 2. InterfazDetalle → Generador (solicitud)
+% 3. Generador → LibroRef (consulta datos)
+% 4. Generador → AnalizadorSem (solicita análisis)
+% 5. AnalizadorSem → InterfazIA (envía sinopsis)
+% 6. InterfazIA → AnalizadorSem (retorna IDs similares)
+% 7. Generador → Catalogo (obtiene detalles)
+% 8. Generador → InterfazDetalle (retorna recomendaciones)
+% 9. InterfazDetalle → Usuario (muestra resultados)
+\end{center}
+
+\textbf{Flujo temporal:}
+\begin{enumerate}
+\item Usuario solicita recomendaciones
+\item Sistema consulta libro de referencia
+\item Sistema decide método (IA o heurístico)
+\item Sistema calcula similitud
+\item Sistema obtiene detalles de libros recomendados
+\item Sistema muestra recomendaciones al usuario
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Diagrama de Secuencia: UC-06 Flujo Alternativo}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de secuencia mostrando flujo alternativo
+% Mostrar fallback a heurísticas cuando IA no está disponible
+\end{center}
+
+\textbf{Flujo alternativo (Fallback a Heurísticas):}
+\begin{enumerate}
+\item Sistema detecta que Analizador Semántico no está disponible
+\item Sistema activa Calculador Heurístico
+\item Calculador aplica reglas de similitud:
+  \begin{itemize}
+  \item Género compartido: +3 puntos
+  \item Autor común: +5 puntos
+  \item Tags compartidos: +2 puntos cada uno
+  \item Precio similar: +1 punto
+  \item Rating alto: +1 punto
+  \end{itemize}
+\item Sistema ordena por puntuación
+\item Sistema retorna top 6 libros heurísticos
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Ventaja:} El sistema siempre retorna recomendaciones, garantizando alta disponibilidad mediante fallback automático.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Diagrama de Secuencia: UC-01 Crear Libro}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama de secuencia de UC-01
+% Mostrar orden temporal de creación de libro
+\end{center}
+
+\textbf{Secuencia temporal:}
+\begin{enumerate}
+\item Administrador completa formulario
+\item Interfaz envía datos a Gestor de Catálogo
+\item Gestor solicita validación
+\item Validador verifica datos y autor
+\item Gestor crea entidad Libro
+\item Gestor notifica a Analizador Semántico
+\item Analizador genera representación semántica
+\item Sistema confirma creación
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Flujo alternativo:} Si datos son inválidos, sistema retorna errores específicos sin crear el libro.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Diagrama de Secuencia: UC-05 Buscar Libros}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama de secuencia de UC-05
+% Mostrar orden temporal de búsqueda
+\end{center}
+
+\textbf{Secuencia temporal:}
+\begin{enumerate}
+\item Usuario ingresa consulta de búsqueda
+\item Interfaz envía solicitud a Gestor de Búsqueda
+\item Gestor busca en Catálogo (título, género)
+\item Gestor busca en Autores (nombre)
+\item Gestor calcula relevancia por tipo de coincidencia
+\item Gestor ordena resultados por relevancia
+\item Gestor crea entidad Resultado de Búsqueda
+\item Interfaz muestra resultados al usuario
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Flujo alternativo:} Si no hay resultados, sistema muestra libros populares como sugerencias.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Robustez vs Secuencia: Complementariedad}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Diagrama de Robustez}
+\begin{itemize}
+\item \textbf{Enfoque:} Estructura estática
+\item \textbf{Muestra:} ¿Qué elementos participan?
+\item \textbf{Propósito:} Validar completitud
+\item \textbf{Vista:} Relaciones entre elementos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Ejemplo:}
+\begin{itemize}
+\item Boundary: Interfaz de Detalle
+\item Control: Generador de Recomendaciones
+\item Entity: Libro, Recomendación
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Diagrama de Secuencia}
+\begin{itemize}
+\item \textbf{Enfoque:} Orden temporal
+\item \textbf{Muestra:} ¿En qué orden interactúan?
+\item \textbf{Propósito:} Documentar comportamiento
+\item \textbf{Vista:} Secuencia de mensajes
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Ejemplo:}
+\begin{enumerate}
+\item Usuario → Interfaz
+\item Interfaz → Generador
+\item Generador → Libro
+\item Generador → Analizador
+\item ...
+\end{enumerate}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{Conclusión:} Ambos diagramas son necesarios. El diagrama de robustez valida la estructura, mientras que el diagrama de secuencia documenta el comportamiento temporal.
+\end{tcolorbox}
+
+\end{frame}
+
 \section{Arquitectura C4}
 
 \begin{frame}
@@ -852,6 +1081,7 @@ Las tarjetas CRC proporcionan una base sólida para el diseño detallado en Sema
 \textbf{Diagramas Generados:}
 \begin{itemize}
 \item 5 diagramas de robustez
+\item 3 diagramas de secuencia de análisis
 \item 2 niveles C4 (Contexto, Contenedores)
 \item 4 diagramas de estados
 \item 20 tarjetas CRC
@@ -913,6 +1143,7 @@ Las tarjetas CRC proporcionan una base sólida para el diseño detallado en Sema
 \item ✅ \textbf{Especificaciones completas} de 5 casos de uso principales
 \item ✅ \textbf{Modelo de análisis BCE} con 17 elementos identificados
 \item ✅ \textbf{Diagramas de robustez} validando casos de uso
+\item ✅ \textbf{Diagramas de secuencia} documentando orden temporal
 \item ✅ \textbf{Arquitectura C4} niveles 1-2 documentada
 \item ✅ \textbf{Diagramas de estados} para entidades clave
 \item ✅ \textbf{20 tarjetas CRC} con responsabilidades claras

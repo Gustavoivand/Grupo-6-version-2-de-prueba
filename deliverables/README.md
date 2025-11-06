@@ -142,6 +142,13 @@ deliverables/semana_08/
 - **robustez.puml**: Diagramas de robustez (BCE)
   - 5 diagramas detallados por caso de uso
   - Vista general del sistema
+- **secuencia_analisis.puml**: Diagramas de secuencia de análisis
+  - Diagramas conceptuales que muestran interacciones temporales
+  - UC-06 (Obtener Recomendaciones) - Caso crítico
+  - UC-01 (Crear Libro)
+  - UC-05 (Buscar Libros)
+  - Usa elementos BCE (Boundary-Control-Entity)
+  - Enfoque conceptual sin tecnologías específicas
 - **c4_contexto.puml**: Arquitectura C4 Nivel 1 (Contexto)
   - Sistema BookMate en contexto
   - Actores externos
@@ -171,11 +178,12 @@ deliverables/semana_11/
 ├── especificaciones_uc.md
 ├── modelo_analisis.md
 ├── robustez.puml
+├── secuencia_analisis.puml
 ├── c4_contexto.puml
 ├── c4_contenedores.puml
 ├── estados_analisis.puml
 ├── crc_tarjetas.md
-├── presentacion_11.tex (pendiente)
+├── presentacion_11.tex
 └── Imagenes/
     └── README.md
 ```

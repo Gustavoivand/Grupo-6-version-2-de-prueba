@@ -1,0 +1,303 @@
+@startuml secuencia_uc06_recomendaciones
+' ============================================================================
+' DIAGRAMA DE SECUENCIA DE ANÁLISIS - UC-06: OBTENER RECOMENDACIONES
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: ANÁLISIS (sin tecnologías específicas)
+' ============================================================================
+
+title Diagrama de Secuencia de Análisis: UC-06 Obtener Recomendaciones\n(Caso de Uso Crítico)
+
+actor Usuario
+participant "Interfaz de\nDetalle de Libro" as InterfazDetalle <<boundary>>
+participant "Generador de\nRecomendaciones" as Generador <<control>>
+participant "Analizador\nSemántico" as AnalizadorSem <<control>>
+participant "Calculador\nHeurístico" as CalculadorHeur <<control>>
+participant "Interfaz con\nComponente de IA" as InterfazIA <<boundary>>
+participant "Libro\n(referencia)" as LibroRef <<entity>>
+participant "Catálogo\nde Libros" as Catalogo <<entity>>
+participant "Representación\nSemántica" as RepSem <<entity>>
+participant "Recomendación" as Recomendacion <<entity>>
+
+== Flujo Principal: Recomendaciones con Análisis Semántico ==
+
+Usuario -> InterfazDetalle: 1. Solicita recomendaciones\npara libro X
+activate InterfazDetalle
+
+InterfazDetalle -> Generador: 2. Solicitud de recomendaciones\n(ID libro X)
+activate Generador
+
+Generador -> LibroRef: 3. Consulta datos del libro X
+activate LibroRef
+LibroRef --> Generador: 4. Datos completos del libro
+deactivate LibroRef
+
+note right of Generador
+  **Decisión:**
+  ¿Analizador Semántico
+  disponible?
+end note
+
+Generador -> AnalizadorSem: 5. Solicita análisis semántico\n(ID libro X)
+activate AnalizadorSem
+
+AnalizadorSem -> LibroRef: 6. Obtiene sinopsis del libro
+activate LibroRef
+LibroRef --> AnalizadorSem: 7. Sinopsis del libro
+deactivate LibroRef
+
+AnalizadorSem -> InterfazIA: 8. Envía sinopsis para\nanálisis semántico
+activate InterfazIA
+InterfazIA --> AnalizadorSem: 9. Retorna IDs de libros similares
+deactivate InterfazIA
+
+AnalizadorSem -> RepSem: 10. Consulta representaciones\nsemánticas
+activate RepSem
+RepSem --> AnalizadorSem: 11. Vectores semánticos
+deactivate RepSem
+
+AnalizadorSem --> Generador: 12. Top 6 libros similares\n(IDs y puntuaciones)
+deactivate AnalizadorSem
+
+Generador -> Catalogo: 13. Obtiene detalles de\nlibros recomendados
+activate Catalogo
+Catalogo --> Generador: 14. Datos completos de libros
+deactivate Catalogo
+
+Generador -> Recomendacion: 15. Crea entidades Recomendación
+activate Recomendacion
+Recomendacion --> Generador: 16. Conjunto de recomendaciones
+deactivate Recomendacion
+
+Generador --> InterfazDetalle: 17. Retorna recomendaciones\n(6 libros con puntuaciones)
+deactivate Generador
+
+InterfazDetalle -> Usuario: 18. Muestra 6 libros similares\ncon información de similitud
+deactivate InterfazDetalle
+
+== Flujo Alternativo: Fallback a Heurísticas ==
+
+alt Si Analizador Semántico no disponible
+    Generador -> AnalizadorSem: verificarDisponibilidad()
+    activate AnalizadorSem
+    AnalizadorSem -> InterfazIA: verificar conexión
+    activate InterfazIA
+    InterfazIA --> AnalizadorSem: No disponible / Error
+    deactivate InterfazIA
+    AnalizadorSem --> Generador: false (no disponible)
+    deactivate AnalizadorSem
+    
+    Generador -> CalculadorHeur: 5a. Activa modo respaldo\n(ID libro X)
+    activate CalculadorHeur
+    
+    CalculadorHeur -> LibroRef: 6a. Consulta datos libro referencia
+    activate LibroRef
+    LibroRef --> CalculadorHeur: 7a. Datos completos
+    deactivate LibroRef
+    
+    CalculadorHeur -> Catalogo: 8a. Consulta todos los libros
+    activate Catalogo
+    Catalogo --> CalculadorHeur: 9a. Lista completa de libros
+    deactivate Catalogo
+    
+    CalculadorHeur -> CalculadorHeur: 10a. Aplica reglas de similitud:\n- Género compartido: +3\n- Autor común: +5\n- Tags compartidos: +2 c/u\n- Precio similar: +1\n- Rating alto: +1
+    
+    CalculadorHeur -> CalculadorHeur: 11a. Ordena por puntuación\ndescendente
+    
+    CalculadorHeur --> Generador: 12a. Top 6 libros heurísticos
+    deactivate CalculadorHeur
+    
+    Generador -> Catalogo: 13a. Obtiene detalles
+    activate Catalogo
+    Catalogo --> Generador: 14a. Datos completos
+    deactivate Catalogo
+    
+    Generador --> InterfazDetalle: 15a. Retorna recomendaciones\nheurísticas
+    InterfazDetalle -> Usuario: 16a. Muestra recomendaciones\nheurísticas
+end
+
+note right of Generador
+  **Estrategia:**
+  El sistema siempre retorna
+  recomendaciones, garantizando
+  alta disponibilidad mediante
+  fallback automático
+end note
+
+@enduml
+
+@startuml secuencia_uc01_crear_libro
+' ============================================================================
+' DIAGRAMA DE SECUENCIA DE ANÁLISIS - UC-01: CREAR LIBRO
+' ============================================================================
+
+title Diagrama de Secuencia de Análisis: UC-01 Crear Libro
+
+actor Administrador
+participant "Interfaz de\nAdministración" as InterfazAdmin <<boundary>>
+participant "Gestor de\nCatálogo" as GestorCatalogo <<control>>
+participant "Validador\nde Datos" as Validador <<control>>
+participant "Analizador\nSemántico" as AnalizadorSem <<control>>
+participant "Interfaz con\nComponente de IA" as InterfazIA <<boundary>>
+participant "Libro\n(nuevo)" as LibroNuevo <<entity>>
+participant "Autor" as Autor <<entity>>
+participant "Representación\nSemántica" as RepSem <<entity>>
+
+== Flujo Principal ==
+
+Administrador -> InterfazAdmin: 1. Selecciona "Agregar Libro"
+activate InterfazAdmin
+
+InterfazAdmin --> Administrador: 2. Muestra formulario vacío
+
+Administrador -> InterfazAdmin: 3. Completa datos del libro:\n- Título, autor, género\n- Precio, sinopsis, etc.
+
+InterfazAdmin -> GestorCatalogo: 4. Envía datos para crear
+activate GestorCatalogo
+
+GestorCatalogo -> Validador: 5. Solicita validación de datos
+activate Validador
+
+Validador -> Autor: 6. Verifica existencia del autor
+activate Autor
+Autor --> Validador: 7. Autor existe / No existe
+deactivate Autor
+
+Validador -> Validador: 8. Valida campos:\n- Título no vacío\n- Precio > 0\n- Fecha válida\n- ISBN único (si se proporciona)
+
+Validador --> GestorCatalogo: 9. Resultado de validación\n(válido / errores)
+deactivate Validador
+
+alt Datos válidos
+    GestorCatalogo -> LibroNuevo: 10. Crea entidad Libro
+    activate LibroNuevo
+    LibroNuevo --> GestorCatalogo: 11. Libro creado con ID
+    deactivate LibroNuevo
+    
+    alt Si hay sinopsis
+        GestorCatalogo -> AnalizadorSem: 12. Notifica para generar\nrepresentación semántica
+        activate AnalizadorSem
+        
+        AnalizadorSem -> LibroNuevo: 13. Obtiene sinopsis
+        activate LibroNuevo
+        LibroNuevo --> AnalizadorSem: 14. Sinopsis del libro
+        deactivate LibroNuevo
+        
+        AnalizadorSem -> InterfazIA: 15. Solicita generación de\nrepresentación semántica
+        activate InterfazIA
+        InterfazIA --> AnalizadorSem: 16. Retorna vector semántico
+        deactivate InterfazIA
+        
+        AnalizadorSem -> RepSem: 17. Almacena representación\nsemántica
+        activate RepSem
+        RepSem --> AnalizadorSem: 18. Confirmación de almacenamiento
+        deactivate RepSem
+        
+        AnalizadorSem --> GestorCatalogo: 19. Representación generada
+        deactivate AnalizadorSem
+    end
+    
+    GestorCatalogo --> InterfazAdmin: 20. Confirmación: "Libro creado\nexitosamente"
+    deactivate GestorCatalogo
+    
+    InterfazAdmin --> Administrador: 21. Muestra mensaje de éxito\ny libro en lista
+    deactivate InterfazAdmin
+
+else Datos inválidos
+    GestorCatalogo --> InterfazAdmin: 20a. Errores de validación
+    deactivate GestorCatalogo
+    
+    InterfazAdmin --> Administrador: 21a. Muestra errores específicos\npor campo
+    deactivate InterfazAdmin
+end
+
+note right of Validador
+  **Validaciones:**
+  - Campos obligatorios completos
+  - Formatos correctos
+  - ISBN único
+  - Autor existe
+  - Rangos válidos
+end note
+
+@enduml
+
+@startuml secuencia_uc05_buscar_libros
+' ============================================================================
+' DIAGRAMA DE SECUENCIA DE ANÁLISIS - UC-05: BUSCAR LIBROS
+' ============================================================================
+
+title Diagrama de Secuencia de Análisis: UC-05 Buscar Libros
+
+actor Usuario
+participant "Interfaz de\nBúsqueda" as InterfazBusqueda <<boundary>>
+participant "Gestor de\nBúsqueda" as GestorBusqueda <<control>>
+participant "Catálogo\nde Libros" as Catalogo <<entity>>
+participant "Autor" as Autor <<entity>>
+participant "Resultado de\nBúsqueda" as ResultadoBusqueda <<entity>>
+
+== Flujo Principal ==
+
+Usuario -> InterfazBusqueda: 1. Ingresa consulta:\n"arquitectura microservicios"
+activate InterfazBusqueda
+
+InterfazBusqueda -> GestorBusqueda: 2. Solicita búsqueda\n(consulta, filtros)
+activate GestorBusqueda
+
+GestorBusqueda -> Catalogo: 3. Busca en título y género
+activate Catalogo
+Catalogo --> GestorBusqueda: 4. Libros que coinciden en título/género
+deactivate Catalogo
+
+GestorBusqueda -> Autor: 5. Busca en nombre de autor
+activate Autor
+Autor --> GestorBusqueda: 6. Autores que coinciden
+deactivate Autor
+
+GestorBusqueda -> Catalogo: 7. Obtiene libros de autores\nencontrados
+activate Catalogo
+Catalogo --> GestorBusqueda: 8. Libros de autores coincidentes
+deactivate Catalogo
+
+GestorBusqueda -> GestorBusqueda: 9. Calcula relevancia:\n- Coincidencia exacta título: prioridad 1\n- Coincidencia parcial título: prioridad 2\n- Coincidencia en autor: prioridad 3\n- Coincidencia en género: prioridad 4\n- Coincidencia en etiquetas: prioridad 5
+
+GestorBusqueda -> GestorBusqueda: 10. Ordena por relevancia\ndescendente
+
+GestorBusqueda -> ResultadoBusqueda: 11. Crea entidad Resultado\nde Búsqueda
+activate ResultadoBusqueda
+ResultadoBusqueda --> GestorBusqueda: 12. Conjunto de resultados\nordenados
+deactivate ResultadoBusqueda
+
+GestorBusqueda --> InterfazBusqueda: 13. Retorna resultados\n(lista de libros con relevancia)
+deactivate GestorBusqueda
+
+InterfazBusqueda -> Usuario: 14. Muestra libros encontrados\nen grid con información resumida
+deactivate InterfazBusqueda
+
+== Flujo Alternativo: Sin Resultados ==
+
+alt Sin coincidencias
+    GestorBusqueda -> Catalogo: 9a. Sin coincidencias:\nObtiene libros populares
+    activate Catalogo
+    Catalogo --> GestorBusqueda: 10a. Libros con alto rating
+    deactivate Catalogo
+    
+    GestorBusqueda -> ResultadoBusqueda: 11a. Crea resultado con\nsugerencias
+    activate ResultadoBusqueda
+    ResultadoBusqueda --> GestorBusqueda: 12a. Sugerencias de libros populares
+    deactivate ResultadoBusqueda
+    
+    GestorBusqueda --> InterfazBusqueda: 13a. Mensaje + sugerencias
+    InterfazBusqueda -> Usuario: 14a. "Sin resultados" +\nlibros populares sugeridos
+end
+
+note right of GestorBusqueda
+  **Cálculo de Relevancia:**
+  Sistema de prioridades que
+  ordena resultados según
+  tipo de coincidencia
+end note
+
+@enduml
+
