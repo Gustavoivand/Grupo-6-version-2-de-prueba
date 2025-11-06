@@ -1,0 +1,958 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{moreverb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+% Configuración de TikZ
+\tikzstyle{block} = [
+  rectangle, draw, rounded corners,
+  text centered, minimum height=1cm,
+  minimum width=2.5cm, font=\small, fill=gray!5
+]
+\tikzstyle{arrow} = [->, thick]
+
+% Configuración de tcolorbox
+\tcbset{
+  colback=gray!5, colframe=gray!50,
+  boxrule=0.4pt, sharp corners,
+}
+
+\title[BookMate]{BookMate — Sistema de Recomendación de Libros Académicos}
+\subtitle{Análisis Conceptual: Especificaciones UC, Modelo de Análisis y Arquitectura C4}
+\author[GRUPO 6]{Delgado R., G. \and Osorio M., A. \and Rojas A., J. \and Torres R., J. \and Valverde G., Y. \and Villanueva A., F.}
+\institute[FC-UNI]{UNIVERSIDAD NACIONAL DE INGENIERÍA}
+\titlegraphic{\includegraphics[height=1.4cm]{example-image}}
+% NOTA: Reemplazar 'example-image' con 'Imagenes/logo_uni.png' cuando esté disponible
+
+\date{Octubre 2025}
+
+\begin{document}
+
+% Portada
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Agenda
+\begin{frame}
+\frametitle{Agenda}
+\tableofcontents
+\end{frame}
+
+\section{Introducción al Análisis}
+
+\begin{frame}
+\frametitle{Fase de Análisis Conceptual}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Objetivo de esta Fase:}
+\begin{itemize}
+\item Comprender QUÉ debe hacer el sistema
+\item Identificar entidades del dominio
+\item Definir comportamientos conceptuales
+\item Diseñar arquitectura conceptual
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Enfoque:}
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+\textbf{Sin tecnologías específicas}\\
+Nos enfocamos en el comportamiento y la estructura conceptual, no en la implementación técnica.
+\end{tcolorbox}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Entregables de Semana 11:}
+\begin{enumerate}
+\item Especificaciones detalladas de UC
+\item Modelo de Análisis (BCE)
+\item Diagramas de Robustez
+\item Arquitectura C4 (Niveles 1-2)
+\item Diagramas de Estados
+\item Tarjetas CRC
+\end{enumerate}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{Nota:} Las tecnologías específicas (Spring Boot, PostgreSQL, Python) se definirán en la fase de diseño (Semana 13).
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Modelo Boundary-Control-Entity (BCE)}
+
+\begin{columns}
+\begin{column}{0.33\textwidth}
+\textbf{Boundary (Frontera)}
+\begin{itemize}
+\item Interfaz de Usuario
+\item Interfaz de Búsqueda
+\item Interfaz de Detalle
+\item Interfaz de Admin
+\item Interfaz con IA
+\end{itemize}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\textbf{Control (Controlador)}
+\begin{itemize}
+\item Gestor de Catálogo
+\item Gestor de Búsqueda
+\item Generador de Recomendaciones
+\item Analizador Semántico
+\item Calculador Heurístico
+\item Validador de Datos
+\end{itemize}
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\textbf{Entity (Entidad)}
+\begin{itemize}
+\item Libro
+\item Autor
+\item Representación Semántica
+\item Recomendación
+\item Resultado de Búsqueda
+\item Usuario
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+\node[block, fill=LightBlue] (boundary) {Boundary};
+\node[block, fill=LightGreen, right=of boundary] (control) {Control};
+\node[block, fill=Pink, right=of control] (entity) {Entity};
+\draw[arrow] (boundary) -- (control);
+\draw[arrow] (control) -- (entity);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\section{Especificaciones de Casos de Uso}
+
+\begin{frame}
+\frametitle{Casos de Uso Priorizados}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{1.5cm}p{4.5cm}p{2cm}p{2cm}}
+\toprule
+\textbf{ID} & \textbf{Nombre} & \textbf{Prioridad} & \textbf{Complejidad} \\
+\midrule
+\textbf{UC-06} & Obtener Recomendaciones & \textbf{Muy Alta} ⭐ & Alta \\
+UC-01 & Crear Libro & Alta & Media \\
+UC-05 & Buscar Libros & Alta & Media \\
+UC-03 & Actualizar Libro & Alta & Media \\
+UC-04 & Eliminar Libro & Alta & Baja \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=red!5, colframe=red!50]
+\textbf{UC-06 es el caso de uso más crítico} - Define el valor principal del sistema: recomendaciones inteligentes con IA.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{UC-06: Obtener Recomendaciones (Caso Crítico)}
+
+\textbf{Descripción:} El sistema genera una lista de libros similares usando análisis semántico o reglas heurísticas.
+
+\textbf{Actores:}
+\begin{itemize}
+\item \textbf{Principal:} Usuario
+\item \textbf{Secundario:} Componente de Inteligencia Artificial
+\end{itemize}
+
+\textbf{Precondiciones:}
+\begin{itemize}
+\item Libro de referencia existe en el sistema
+\item Catálogo tiene al menos 7 libros
+\end{itemize}
+
+\textbf{Postcondiciones:}
+\begin{itemize}
+\item Se retornan 6 libros similares
+\item Tiempo de respuesta <3 segundos (p95)
+\item Al menos 70\% de relevancia (si usa IA)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Valor para el Negocio:} Muy Alto - Es el diferenciador principal del sistema
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{UC-06: Flujo Principal (Análisis Semántico)}
+
+\begin{enumerate}
+\item Usuario solicita recomendaciones para libro X
+\item Sistema recupera datos del libro X
+\item Sistema verifica disponibilidad del componente IA
+\item Sistema envía solicitud a IA con sinopsis
+\item \textbf{IA genera embedding} de la sinopsis
+\item \textbf{IA calcula similitud de coseno} con todos los libros
+\item IA retorna top 6 libros más similares
+\item Sistema consulta detalles de libros recomendados
+\item Sistema muestra recomendaciones al usuario
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de secuencia del flujo principal de UC-06
+% Mostrar: Usuario → Sistema → IA → Sistema → Usuario
+% Incluir pasos de generación de embeddings y cálculo de similitud
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{UC-06: Flujo Alternativo (Heurísticas)}
+
+\textbf{Punto de divergencia:} Componente IA no disponible
+
+\begin{enumerate}
+\item Sistema detecta que IA no está disponible
+\item Sistema activa modo de respaldo (heurísticas)
+\item Sistema aplica algoritmo heurístico:
+  \begin{itemize}
+  \item Género compartido: +3 puntos
+  \item Autor común: +5 puntos
+  \item Tags compartidos: +2 puntos cada uno
+  \item Precio similar (±20\%): +1 punto
+  \item Rating alto (≥4.0): +1 punto
+  \end{itemize}
+\item Sistema ordena por puntuación descendente
+\item Sistema retorna top 6 libros
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{Ventaja:} El sistema siempre retorna recomendaciones, garantizando alta disponibilidad.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{UC-01: Crear Libro - Flujo Principal}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Pasos:}
+\begin{enumerate}
+\item Admin completa formulario
+\item Sistema valida datos
+\item Sistema crea libro en BD
+\item Sistema notifica a IA
+\item IA genera embedding
+\item Sistema confirma creación
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Validaciones:}
+\begin{itemize}
+\item Título no vacío
+\item Autor existe
+\item Precio > 0
+\item Fecha válida
+\item ISBN único (si se proporciona)
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama de robustez de UC-01
+% Mostrar: Admin → InterfazAdmin → GestorCatálogo → Validador → Libro → AnalizadorSemántico
+\end{center}
+
+\end{frame}
+
+\section{Modelo de Análisis}
+
+\begin{frame}
+\frametitle{Entidades del Dominio}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{3cm}p{4cm}p{4cm}}
+\toprule
+\textbf{Entidad} & \textbf{Atributos Principales} & \textbf{Responsabilidades} \\
+\midrule
+\textbf{Libro} & Título, autor, género, precio, sinopsis, ISBN & Mantener información completa, proveer datos para búsqueda \\
+\textbf{Autor} & Nombre, biografía, nacionalidad & Mantener información del autor, relacionar libros \\
+\textbf{Representación Semántica} & Vector numérico, fecha generación & Almacenar embeddings, proveer datos para similitud \\
+\textbf{Recomendación} & Libro recomendado, puntuación, método & Representar resultado de similitud calculada \\
+\textbf{Resultado de Búsqueda} & Lista libros, consulta original, relevancia & Agrupar resultados de búsqueda \\
+\textbf{Usuario} & Nombre, correo, rol & Mantener información, determinar permisos \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Controladores (Lógica de Negocio)}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Controladores Principales:}
+\begin{itemize}
+\item \textbf{Gestor de Catálogo}
+  \begin{itemize}
+  \item Coordina CRUD de libros/autores
+  \item Valida datos
+  \item Notifica a IA
+  \end{itemize}
+\item \textbf{Gestor de Búsqueda}
+  \begin{itemize}
+  \item Coordina búsquedas
+  \item Calcula relevancia
+  \item Ordena resultados
+  \end{itemize}
+\item \textbf{Generador de Recomendaciones}
+  \begin{itemize}
+  \item Decide método (IA/heurístico)
+  \item Coordina generación
+  \item Maneja fallback
+  \end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Controladores Especializados:}
+\begin{itemize}
+\item \textbf{Analizador Semántico}
+  \begin{itemize}
+  \item Genera embeddings
+  \item Calcula similitud
+  \item Comunica con IA
+  \end{itemize}
+\item \textbf{Calculador Heurístico}
+  \begin{itemize}
+  \item Aplica reglas
+  \item Calcula puntuaciones
+  \item Ordena resultados
+  \end{itemize}
+\item \textbf{Validador de Datos}
+  \begin{itemize}
+  \item Verifica integridad
+  \item Valida formatos
+  \item Genera errores
+  \end{itemize}
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Interfaces (Fronteras)}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{3.5cm}p{6cm}p{2cm}}
+\toprule
+\textbf{Interfaz} & \textbf{Responsabilidades} & \textbf{Actor} \\
+\midrule
+Interfaz de Catálogo & Mostrar lista de libros, navegación & Usuario \\
+Interfaz de Búsqueda & Capturar consulta, mostrar resultados & Usuario \\
+Interfaz de Detalle & Mostrar libro completo, recomendaciones & Usuario \\
+Interfaz de Administración & Formularios CRUD, gestión de catálogo & Administrador \\
+Interfaz con IA & Comunicar con servicio externo de IA & Sistema IA \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama de arquitectura BCE mostrando las 3 capas
+% Boundary (arriba) → Control (medio) → Entity (abajo)
+% Con ejemplos de cada tipo de elemento
+\end{center}
+
+\end{frame}
+
+\section{Diagramas de Robustez}
+
+\begin{frame}
+\frametitle{Diagrama de Robustez: UC-06 Recomendaciones}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama de robustez completo de UC-06
+% Mostrar:
+% - Boundary: Interfaz de Detalle, Interfaz con IA
+% - Control: Generador de Recomendaciones, Analizador Semántico, Calculador Heurístico
+% - Entity: Libro, Catálogo, Representación Semántica, Recomendación
+% - Flujos principales y alternativos
+\end{center}
+
+\textbf{Elementos clave:}
+\begin{itemize}
+\item \textbf{Boundary:} Interfaz de Detalle, Interfaz con IA
+\item \textbf{Control:} Generador de Recomendaciones, Analizador Semántico, Calculador Heurístico
+\item \textbf{Entity:} Libro, Catálogo, Representación Semántica, Recomendación
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Diagrama de Robustez: UC-01 Crear Libro}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de robustez de UC-01
+% Mostrar:
+% - Admin → InterfazAdmin → GestorCatálogo → Validador → Libro → AnalizadorSemántico
+% - Flujo de validación y creación
+% - Notificación a IA para generar embedding
+\end{center}
+
+\textbf{Flujo:}
+\begin{enumerate}
+\item Admin → Interfaz de Administración
+\item Interfaz → Gestor de Catálogo
+\item Gestor → Validador de Datos
+\item Gestor → Libro (crea entidad)
+\item Gestor → Analizador Semántico (notifica)
+\item Analizador → Interfaz con IA
+\item Analizador → Representación Semántica (almacena)
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Vista General de Robustez del Sistema}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama de robustez general
+% Mostrar todos los elementos BCE organizados:
+% - Boundaries en la parte superior
+% - Controls en el medio
+% - Entities en la parte inferior
+% - Relaciones entre ellos
+\end{center}
+
+\textbf{Organización:}
+\begin{itemize}
+\item \textbf{Arriba:} Boundaries (Interfaces con actores)
+\item \textbf{Medio:} Controls (Lógica de negocio)
+\item \textbf{Abajo:} Entities (Datos del dominio)
+\end{itemize}
+
+\end{frame}
+
+\section{Arquitectura C4}
+
+\begin{frame}
+\frametitle{C4 Model - Nivel 1: Contexto}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama C4 Nivel 1 (Contexto)
+% Mostrar:
+% - Personas: Usuario, Administrador
+% - Sistema BookMate (centro)
+% - Sistema de IA (externo)
+% - Relaciones entre ellos
+\end{center}
+
+\textbf{Elementos:}
+\begin{itemize}
+\item \textbf{Usuarios:} Estudiante, profesor, investigador
+\item \textbf{Administradores:} Bibliotecario, gestor de catálogo
+\item \textbf{Sistema BookMate:} Sistema principal
+\item \textbf{Sistema de IA:} Servicio externo para análisis semántico
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C4 Model - Nivel 2: Contenedores}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama C4 Nivel 2 (Contenedores)
+% Mostrar:
+% - Aplicación Web (Frontend)
+% - Sistema de Gestión (Backend)
+% - Sistema de Almacenamiento (BD)
+% - Servicio de IA (externo)
+% - Flujos de comunicación entre contenedores
+\end{center}
+
+\textbf{Contenedores:}
+\begin{itemize}
+\item \textbf{Aplicación Web:} Interfaz de usuario (HTML/CSS/JS)
+\item \textbf{Sistema de Gestión:} Lógica de negocio (Backend)
+\item \textbf{Sistema de Almacenamiento:} Base de datos
+\item \textbf{Servicio de IA:} Microservicio externo (Python)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Flujo Entre Contenedores: Recomendaciones}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de flujo entre contenedores para UC-06
+% Mostrar secuencia:
+% 1. Usuario → WebApp
+% 2. WebApp → Backend
+% 3. Backend → BD (consulta libro)
+% 4. Backend → Servicio IA
+% 5. Servicio IA → BD (lee embeddings)
+% 6. Servicio IA → Backend (retorna IDs)
+% 7. Backend → BD (consulta detalles)
+% 8. Backend → WebApp
+% 9. WebApp → Usuario
+\end{center}
+
+\textbf{Flujo:}
+\begin{enumerate}
+\item Usuario solicita recomendaciones
+\item Backend consulta BD
+\item Backend solicita a Servicio IA
+\item Servicio IA calcula similitud
+\item Backend retorna resultados
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Descomposición del Backend (Componentes)}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama C4 mostrando componentes internos del backend
+% Mostrar:
+% - Gestor de Catálogo
+% - Gestor de Búsqueda
+% - Generador de Recomendaciones
+% - Analizador Semántico
+% - Calculador Heurístico
+% - Validador de Datos
+% - Relaciones entre componentes
+\end{center}
+
+\textbf{Componentes Conceptuales:}
+\begin{itemize}
+\item Gestor de Catálogo, Gestor de Búsqueda
+\item Generador de Recomendaciones
+\item Analizador Semántico, Calculador Heurístico
+\item Validador de Datos
+\end{itemize}
+
+\end{frame}
+
+\section{Diagramas de Estados}
+
+\begin{frame}
+\frametitle{Estado: Ciclo de Vida de un Libro}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama de estados del ciclo de vida de un libro
+% Estados: Borrador → Validando → Registrado → GenerandoEmbedding → Activo
+% Transiciones: Editar, Eliminar, etc.
+\end{center}
+
+\textbf{Estados principales:}
+\begin{itemize}
+\item \textbf{Borrador:} Datos ingresados, no validados
+\item \textbf{Validando:} Sistema valida datos
+\item \textbf{Registrado:} Libro persistido en BD
+\item \textbf{GenerandoEmbedding:} Procesando con IA
+\item \textbf{Activo:} Disponible para búsquedas y recomendaciones
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Estado: Solicitud de Recomendación}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama de estados de una solicitud de recomendación
+% Estados: Solicitada → VerificandoIA → ProcesandoConIA/ProcesandoHeuristico → Completada → Entregada
+\end{center}
+
+\textbf{Estados:}
+\begin{enumerate}
+\item \textbf{Solicitada:} Usuario pide recomendaciones
+\item \textbf{VerificandoIA:} Verificando disponibilidad
+\item \textbf{ProcesandoConIA:} Análisis semántico (método primario)
+\item \textbf{ProcesandoHeuristico:} Reglas de negocio (fallback)
+\item \textbf{Completada:} Recomendaciones generadas
+\item \textbf{Entregada:} Mostradas al usuario
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Estado: Representación Semántica (Embedding)}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de estados de una representación semántica
+% Estados: Pendiente → Generando → Almacenada → Actualizando → Error
+\end{center}
+
+\textbf{Estados:}
+\begin{itemize}
+\item \textbf{Pendiente:} Libro creado, esperando generación
+\item \textbf{Generando:} Procesando sinopsis con NLP
+\item \textbf{Almacenada:} Embedding disponible y válido
+\item \textbf{Actualizando:} Regenerando (si sinopsis cambió)
+\item \textbf{Error:} Fallo en generación (reintento programado)
+\end{itemize}
+
+\end{frame}
+
+\section{Tarjetas CRC}
+
+\begin{frame}
+\frametitle{Tarjetas CRC: Concepto}
+
+\textbf{CRC = Class-Responsibility-Collaboration}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Class (Clase):}
+\begin{itemize}
+\item Nombre de la clase conceptual
+\item Entidad, Controlador o Frontera
+\end{itemize}
+
+\textbf{Responsibilities:}
+\begin{itemize}
+\item Qué hace la clase
+\item Funciones principales
+\item Responsabilidades específicas
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Collaborators:}
+\begin{itemize}
+\item Con quiénes interactúa
+\item Dependencias
+\item Relaciones
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{example-image-b}
+% NOTA: Reemplazar con ejemplo visual de una tarjeta CRC
+% Mostrar formato: Clase arriba, Responsabilidades a la izquierda, Colaboradores a la derecha
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Tarjetas CRC: Ejemplos Clave}
+
+\textbf{CRC-09: GeneradorDeRecomendaciones}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{5cm}p{7cm}}
+\toprule
+\textbf{Responsabilidades} & \textbf{Colaboradores} \\
+\midrule
+• Coordinar generación de recomendaciones & • Libro \\
+• Determinar método (IA/heurístico) & • AnalizadorSemántico \\
+• Verificar disponibilidad de IA & • CalculadorHeurístico \\
+• Activar método apropiado & • Recomendación \\
+• Manejar fallback transparente & • InterfazDeDetalle \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{CRC-10: AnalizadorSemántico}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{5cm}p{7cm}}
+\toprule
+\textbf{Responsabilidades} & \textbf{Colaboradores} \\
+\midrule
+• Generar representación vectorial & • Libro \\
+• Calcular similitud entre embeddings & • RepresentaciónSemántica \\
+• Comunicarse con componente IA & • InterfazConIA \\
+• Retornar libros más similares & • GeneradorDeRecomendaciones \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Resumen de Tarjetas CRC Generadas}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{2.5cm}p{2cm}p{2cm}p{2cm}}
+\toprule
+\textbf{Categoría} & \textbf{Cantidad} & \textbf{Ejemplos} & \textbf{Prioridad} \\
+\midrule
+\textbf{Entidades} & 6 & Libro, Autor, RepresentaciónSemántica & Alta \\
+\textbf{Controladores} & 6 & GestorCatálogo, GeneradorRecomendaciones & Muy Alta \\
+\textbf{Interfaces} & 5 & InterfazDetalle, InterfazAdmin & Alta \\
+\textbf{Auxiliares} & 3 & Catálogo, ConjuntoRecomendaciones & Media \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Total: 20 tarjetas CRC}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+Las tarjetas CRC proporcionan una base sólida para el diseño detallado en Semana 15, donde se transformarán en clases de implementación con métodos específicos.
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Flujos de Información}
+
+\begin{frame}
+\frametitle{Flujo: Obtener Recomendaciones (Detallado)}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama de flujo detallado de recomendaciones
+% Mostrar secuencia completa:
+% Usuario → InterfazDetalle → GeneradorRecomendaciones → AnalizadorSemántico → InterfazIA → SistemaIA
+% Y retorno con resultados
+\end{center}
+
+\textbf{Secuencia:}
+\begin{enumerate}
+\item Usuario → Interfaz de Detalle
+\item Interfaz → Generador de Recomendaciones
+\item Generador → Analizador Semántico
+\item Analizador → Interfaz con IA
+\item Interfaz → Sistema de IA (externo)
+\item Sistema IA procesa y retorna
+\item Analizador → Generador
+\item Generador → Interfaz
+\item Interfaz → Usuario
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Flujo: Crear Libro (Detallado)}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama de flujo de creación de libro
+% Mostrar: Admin → InterfazAdmin → GestorCatálogo → Validador → Libro → AnalizadorSemántico → IA
+\end{center}
+
+\textbf{Secuencia:}
+\begin{enumerate}
+\item Admin → Interfaz de Administración
+\item Interfaz → Gestor de Catálogo
+\item Gestor → Validador de Datos
+\item Validador valida → Gestor
+\item Gestor → Libro (crea entidad)
+\item Gestor → Analizador Semántico
+\item Analizador → Interfaz con IA
+\item IA genera embedding
+\item Analizador → Representación Semántica (almacena)
+\end{enumerate}
+
+\end{frame}
+
+\section{Resumen y Conclusiones}
+
+\begin{frame}
+\frametitle{Resumen del Análisis Conceptual}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Entidades Identificadas:}
+\begin{itemize}
+\item 6 entidades del dominio
+\item Libro, Autor, RepresentaciónSemántica
+\item Recomendación, ResultadoBúsqueda, Usuario
+\end{itemize}
+
+\textbf{Controladores Identificados:}
+\begin{itemize}
+\item 6 controladores de lógica
+\item GestorCatálogo, GestorBúsqueda
+\item GeneradorRecomendaciones
+\item AnalizadorSemántico, CalculadorHeurístico
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Interfaces Identificadas:}
+\begin{itemize}
+\item 5 interfaces de frontera
+\item InterfazCatálogo, InterfazBúsqueda
+\item InterfazDetalle, InterfazAdmin
+\item InterfazConIA
+\end{itemize}
+
+\textbf{Diagramas Generados:}
+\begin{itemize}
+\item 5 diagramas de robustez
+\item 2 niveles C4 (Contexto, Contenedores)
+\item 4 diagramas de estados
+\item 20 tarjetas CRC
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Arquitectura Conceptual Identificada}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de arquitectura conceptual completa
+% Mostrar la estructura BCE completa con todos los elementos identificados
+\end{center}
+
+\textbf{Organización:}
+\begin{itemize}
+\item \textbf{Capa de Frontera:} 5 interfaces para interacción con actores
+\item \textbf{Capa de Control:} 6 controladores coordinando comportamientos
+\item \textbf{Capa de Entidad:} 6 entidades representando el dominio
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Próximos Pasos: Fase de Diseño}
+
+\textbf{Semana 13 - Diseño Arquitectónico:}
+
+\begin{itemize}
+\item Definir stack tecnológico específico
+  \begin{itemize}
+  \item Backend: Spring Boot
+  \item Base de datos: PostgreSQL
+  \item Servicio IA: Python + Sentence Transformers
+  \item Frontend: HTML/CSS/JavaScript
+  \end{itemize}
+\item C4 Niveles 3-4 (Componentes y Código)
+\item Patrones de diseño aplicados
+\item Decisiones arquitectónicas clave
+\item Plan de desarrollo del software
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+\textbf{En la fase de diseño:} Transformaremos estos elementos conceptuales en clases de implementación con tecnologías específicas, métodos reales y arquitectura física detallada.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Logros del Análisis Conceptual}
+
+\begin{enumerate}
+\item ✅ \textbf{Especificaciones completas} de 5 casos de uso principales
+\item ✅ \textbf{Modelo de análisis BCE} con 17 elementos identificados
+\item ✅ \textbf{Diagramas de robustez} validando casos de uso
+\item ✅ \textbf{Arquitectura C4} niveles 1-2 documentada
+\item ✅ \textbf{Diagramas de estados} para entidades clave
+\item ✅ \textbf{20 tarjetas CRC} con responsabilidades claras
+\item ✅ \textbf{Flujos de información} documentados
+\item ✅ \textbf{Separación clara} entre análisis y diseño
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50, title=Objetivo Cumplido]
+Hemos comprendido QUÉ debe hacer el sistema y CÓMO se organiza conceptualmente, sin atarnos a tecnologías específicas. Esto proporciona una base sólida para el diseño detallado.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{¡Preguntas?}
+
+\begin{center}
+\Large ¡Gracias por su atención! \\
+
+\vspace{1cm}
+
+\textbf{¿Preguntas sobre el análisis conceptual?}
+
+\vspace{1cm}
+
+\normalsize
+\textbf{Grupo 6}\\
+Universidad Nacional de Ingeniería\\
+CC341 - Ingeniería de Software\\
+Ciclo 2025-2
+
+\vspace{0.5cm}
+
+\textbf{Próxima entrega:} Semana 13 - Diseño Arquitectónico (con tecnologías específicas)
+
+\end{center}
+
+\end{frame}
+
+\end{document}
+

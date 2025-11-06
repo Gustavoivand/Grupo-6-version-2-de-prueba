@@ -1,0 +1,155 @@
+@startuml secuencia_diseno_uc06
+' ============================================================================
+' DIAGRAMA DE SECUENCIA DE DISEÑO - UC-06: Obtener Recomendaciones
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+title Diagrama de Secuencia de Diseño - UC-06: Obtener Recomendaciones
+
+actor Usuario
+participant "Frontend\n(HTML/JS)" as Frontend
+participant "RecommendationController\n(@RestController)" as Controller
+participant "RecommendationService\n(@Service)" as Service
+participant "AIServiceClient\n(@Service)" as AIClient
+participant "HeuristicRecommender\n(@Service)" as Heuristic
+participant "LibrosRepository\n(Spring Data JPA)" as Repository
+participant "PostgreSQL\n(Database)" as DB
+participant "Servicio IA\n(Python Flask)" as AIService
+
+== Flujo Principal: Recomendaciones con IA ==
+
+Usuario -> Frontend: 1. Solicita recomendaciones para libro 123
+activate Frontend
+
+Frontend -> Controller: 2. GET /api/recommendations/123
+activate Controller
+
+Controller -> Service: 3. obtenerRecomendaciones(123)
+activate Service
+
+Service -> AIClient: 4. verificarDisponibilidad()
+activate AIClient
+
+AIClient -> AIService: 5. HTTP GET /health
+activate AIService
+AIService --> AIClient: 6. 200 OK
+deactivate AIService
+AIClient --> Service: 7. true (disponible)
+deactivate AIClient
+
+Service -> AIClient: 8. calcularSimilitud(123)
+activate AIClient
+
+AIClient -> AIService: 9. HTTP GET /api/similarity/123
+activate AIService
+
+AIService -> AIService: 10. Calcula similitud de coseno
+AIService --> AIClient: 11. JSON: {bookIds: [456, 789, 101, 202, 303, 404]}
+deactivate AIService
+
+AIClient --> Service: 12. List<Long> [456, 789, 101, 202, 303, 404]
+deactivate AIClient
+
+Service -> Repository: 13. findAllById([456, 789, 101, 202, 303, 404])
+activate Repository
+
+Repository -> DB: 14. SELECT * FROM libros WHERE id IN (456, 789, ...)
+activate DB
+DB --> Repository: 15. ResultSet con datos de libros
+deactivate DB
+
+Repository --> Service: 16. List<Libro> (6 libros)
+deactivate Repository
+
+Service -> Service: 17. Transforma a List<LibroDTO>
+Service --> Controller: 18. List<LibroDTO>
+deactivate Service
+
+Controller --> Frontend: 19. HTTP 200 OK + JSON
+deactivate Controller
+
+Frontend -> Usuario: 20. Muestra 6 libros recomendados
+deactivate Frontend
+
+== Flujo Alternativo: Fallback a Heurísticas ==
+
+alt Si servicio IA no disponible
+    Service -> AIClient: verificarDisponibilidad()
+    activate AIClient
+    AIClient -> AIService: HTTP GET /health
+    activate AIService
+    AIService --> AIClient: Timeout / Error
+    deactivate AIService
+    AIClient --> Service: false (no disponible)
+    deactivate AIClient
+    
+    Service -> Heuristic: recomendar(123)
+    activate Heuristic
+    
+    Heuristic -> Repository: findById(123)
+    activate Repository
+    Repository -> DB: SELECT * FROM libros WHERE id = 123
+    activate DB
+    DB --> Repository: Libro referencia
+    deactivate DB
+    Repository --> Heuristic: Libro
+    deactivate Repository
+    
+    Heuristic -> Repository: findAll()
+    activate Repository
+    Repository -> DB: SELECT * FROM libros
+    activate DB
+    DB --> Repository: List<Libro> (todos)
+    deactivate DB
+    Repository --> Heuristic: List<Libro>
+    deactivate Repository
+    
+    Heuristic -> Heuristic: Calcula puntuación para cada libro
+    Heuristic -> Heuristic: Ordena por puntuación descendente
+    Heuristic -> Heuristic: Selecciona top 6
+    Heuristic -> Heuristic: Transforma a DTOs
+    
+    Heuristic --> Service: List<LibroDTO> (top 6 heurísticos)
+    deactivate Heuristic
+    
+    Service --> Controller: List<LibroDTO>
+    Controller --> Frontend: HTTP 200 OK + JSON
+    Frontend -> Usuario: Muestra recomendaciones heurísticas
+end
+
+== Manejo de Excepciones ==
+
+alt Si IA falla durante cálculo de similitud
+    Service -> AIClient: calcularSimilitud(123)
+    AIClient -> AIService: HTTP GET /api/similarity/123
+    AIService --> AIClient: Timeout / Error 500
+    AIClient --> Service: Exception
+    
+    Service -> Heuristic: recomendar(123)
+    Heuristic --> Service: List<LibroDTO> (fallback)
+    Service --> Controller: List<LibroDTO>
+    Controller --> Frontend: HTTP 200 OK + JSON
+    Frontend -> Usuario: Muestra recomendaciones heurísticas
+end
+
+note right of Service
+  **Strategy Pattern:**
+  Decide método según disponibilidad de IA
+  Fallback automático transparente
+end note
+
+note right of AIClient
+  **Timeout:** 5 segundos
+  **Retry:** 1 intento
+  **Manejo de errores:** Fallback a heurísticas
+end note
+
+@enduml
+

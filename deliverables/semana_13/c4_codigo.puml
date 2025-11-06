@@ -1,0 +1,210 @@
+@startuml c4_codigo_bookmate
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 4: CÓDIGO
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama C4 - Nivel 4: Código\nMétodos Específicos de Clases Clave - BookMate
+
+LAYOUT_WITH_LEGEND()
+
+Container(webapp, "Aplicación Web", "HTML5/CSS3/JavaScript")
+Container(backend, "Sistema de Gestión", "Spring Boot 3.2.0")
+ContainerDb(database, "Base de Datos", "PostgreSQL 16")
+System_Ext(ai_service, "Servicio IA", "Python 3.11/Flask")
+
+' Componentes con métodos específicos
+Component(rec_controller, "RecommendationController", "@RestController", "Endpoints de recomendaciones")
+Component(rec_service, "RecommendationService", "@Service", "Coordinación de recomendaciones")
+Component(ai_client, "AIServiceClient", "@Service", "Cliente HTTP para servicio IA")
+Component(heuristic, "HeuristicRecommender", "@Service", "Recomendaciones heurísticas")
+Component(libros_repo, "LibrosRepository", "Spring Data JPA", "Acceso a tabla libros")
+Component(embedding_repo, "EmbeddingRepository", "Spring Data JPA", "Acceso a tabla embeddings")
+
+' Métodos específicos de RecommendationController
+note right of rec_controller
+  **Métodos:**
+  
+  ```java
+  @GetMapping("/{bookId}")
+  ResponseEntity<List<LibroDTO>> 
+    obtenerRecomendaciones(@PathVariable Long bookId)
+  ```
+  • Recibe ID de libro
+  • Invoca RecommendationService
+  • Retorna lista de libros recomendados
+  
+  ```java
+  @GetMapping("/user/{userId}")
+  ResponseEntity<List<LibroDTO>> 
+    obtenerRecomendacionesPersonalizadas(@PathVariable Long userId)
+  ```
+  • Recibe ID de usuario
+  • Invoca RecommendationService
+  • Retorna recomendaciones personalizadas
+end note
+
+' Métodos específicos de RecommendationService
+note right of rec_service
+  **Métodos:**
+  
+  ```java
+  public List<LibroDTO> obtenerRecomendaciones(Long bookId)
+  ```
+  • Verifica disponibilidad de IA
+  • Decide método (Strategy pattern)
+  • Retorna recomendaciones
+  
+  ```java
+  private List<LibroDTO> obtenerRecomendacionesIA(Long bookId)
+  ```
+  • Invoca AIServiceClient
+  • Obtiene IDs de libros similares
+  • Consulta detalles de libros
+  • Transforma a DTOs
+  
+  ```java
+  private List<LibroDTO> obtenerRecomendacionesHeuristicas(Long bookId)
+  ```
+  • Invoca HeuristicRecommender
+  • Retorna recomendaciones heurísticas
+end note
+
+' Métodos específicos de AIServiceClient
+note right of ai_client
+  **Métodos:**
+  
+  ```java
+  public List<Long> calcularSimilitud(Long bookId)
+  ```
+  • HTTP GET a /api/similarity/{bookId}
+  • Timeout: 5 segundos
+  • Retry: 1 intento
+  • Retorna lista de IDs de libros similares
+  
+  ```java
+  public boolean verificarDisponibilidad()
+  ```
+  • HTTP GET a /health
+  • Retorna true si disponible
+  • Maneja excepciones
+  
+  ```java
+  public float[] generarEmbedding(String sinopsis)
+  ```
+  • HTTP POST a /api/embeddings/generate
+  • Envía sinopsis
+  • Retorna vector de embedding
+end note
+
+' Métodos específicos de HeuristicRecommender
+note right of heuristic
+  **Métodos:**
+  
+  ```java
+  public List<LibroDTO> recomendar(Long bookId)
+  ```
+  • Obtiene libro de referencia
+  • Calcula puntuación para cada libro
+  • Ordena por puntuación descendente
+  • Retorna top 6
+  
+  ```java
+  private int calcularPuntuacion(Libro libro, Libro referencia)
+  ```
+  • Género compartido: +3 puntos
+  • Autor común: +5 puntos
+  • Tags compartidos: +2 puntos cada uno
+  • Precio similar (±20%): +1 punto
+  • Rating alto (≥4.0): +1 punto
+  • Retorna puntuación total
+end note
+
+' Métodos específicos de Repositories
+note right of libros_repo
+  **Métodos (Spring Data JPA):**
+  
+  ```java
+  List<Libro> findByTituloContaining(String titulo)
+  ```
+  • Búsqueda por título (LIKE)
+  
+  ```java
+  List<Libro> findByAutorId(Long autorId)
+  ```
+  • Búsqueda por autor
+  
+  ```java
+  List<Libro> findByGenero(String genero)
+  ```
+  • Búsqueda por género
+  
+  ```java
+  Page<Libro> findAll(Pageable pageable)
+  ```
+  • Listado paginado
+  
+  ```java
+  Optional<Libro> findById(Long id)
+  ```
+  • Búsqueda por ID
+end note
+
+note right of embedding_repo
+  **Métodos (Spring Data JPA):**
+  
+  ```java
+  Optional<Embedding> findByLibroId(Long libroId)
+  ```
+  • Busca embedding por libro
+  
+  ```java
+  void save(Embedding embedding)
+  ```
+  • Guarda o actualiza embedding
+end note
+
+' Flujo de llamadas
+Rel(webapp, rec_controller, "HTTP GET /api/recommendations/{bookId}", "JSON")
+Rel(rec_controller, rec_service, "obtenerRecomendaciones(bookId)", "Java method call")
+Rel(rec_service, ai_client, "verificarDisponibilidad()", "Java method call")
+Rel(rec_service, ai_client, "calcularSimilitud(bookId)", "Java method call")
+Rel(rec_service, heuristic, "recomendar(bookId)", "Java method call")
+Rel(ai_client, ai_service, "HTTP GET /api/similarity/{bookId}", "JSON")
+Rel(rec_service, libros_repo, "findAllById(bookIds)", "Spring Data JPA")
+Rel(rec_service, embedding_repo, "findByLibroId(bookId)", "Spring Data JPA")
+Rel(libros_repo, database, "SELECT * FROM libros WHERE id IN (...)", "JDBC/SQL")
+Rel(embedding_repo, database, "SELECT * FROM embeddings WHERE libro_id = ?", "JDBC/SQL")
+
+' Ejemplo de flujo completo
+note bottom of rec_service
+  **Flujo Completo (UC-06):**
+  
+  1. Usuario solicita recomendaciones para libro 123
+  2. RecommendationController.obtenerRecomendaciones(123)
+  3. RecommendationService.obtenerRecomendaciones(123)
+  4. RecommendationService verifica IA:
+     - AIServiceClient.verificarDisponibilidad()
+  5. Si IA disponible:
+     - AIServiceClient.calcularSimilitud(123)
+     - HTTP GET → Servicio IA
+     - Servicio IA retorna: [456, 789, 101, 202, 303, 404]
+  6. RecommendationService consulta libros:
+     - LibrosRepository.findAllById([456, 789, ...])
+  7. RecommendationService transforma a DTOs
+  8. RecommendationController retorna JSON
+  9. Frontend muestra recomendaciones
+  
+  **Si IA no disponible:**
+  5. HeuristicRecommender.recomendar(123)
+  6. Calcula puntuaciones para todos los libros
+  7. Retorna top 6
+end note
+
+@enduml
+

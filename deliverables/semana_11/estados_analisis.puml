@@ -1,0 +1,204 @@
+@startuml estados_libro
+' ============================================================================
+' DIAGRAMA DE ESTADOS - LIBRO (Análisis Conceptual)
+' Proyecto: BookMate
+' Grupo: 6
+' Universidad: UNI
+' ============================================================================
+
+title Diagrama de Estados: Ciclo de Vida de un Libro
+
+[*] --> Borrador : Admin inicia creación
+
+Borrador : Datos ingresados pero no validados
+Borrador --> Validando : Admin completa formulario
+
+Validando : Sistema valida datos
+Validando --> Borrador : Datos inválidos
+Validando --> Registrado : Datos válidos
+
+Registrado : Libro persistido en sistema
+Registrado : Visible en catálogo
+Registrado --> GenerandoEmbedding : Tiene sinopsis
+
+GenerandoEmbedding : Procesando con IA
+GenerandoEmbedding --> Activo : Embedding generado
+GenerandoEmbedding --> Activo : IA no disponible (marcado para procesamiento posterior)
+
+Activo : Disponible para búsquedas
+Activo : Puede generar recomendaciones
+Activo --> Editando : Admin solicita edición
+Activo --> Eliminando : Admin solicita eliminación
+
+Editando : Modificando datos
+Editando --> Validando : Guarda cambios
+Editando --> Activo : Cancela edición
+
+Eliminando : Solicitando confirmación
+Eliminando --> Activo : Cancela eliminación
+Eliminando --> [*] : Confirma eliminación
+
+note right of Activo
+  **Estado Principal**
+  
+  Operaciones permitidas:
+  • Aparecer en búsquedas
+  • Generar recomendaciones
+  • Ser recomendado
+  • Ser visualizado
+  • Ser editado
+  • Ser eliminado
+end note
+
+@enduml
+
+@startuml estados_recomendacion
+' ============================================================================
+' DIAGRAMA DE ESTADOS - SOLICITUD DE RECOMENDACIÓN
+' ============================================================================
+
+title Diagrama de Estados: Solicitud de Recomendación
+
+[*] --> Solicitada : Usuario pide recomendaciones
+
+Solicitada : Identificador de libro recibido
+Solicitada --> VerificandoIA : Iniciando proceso
+
+VerificandoIA : Verificando disponibilidad de servicio IA
+VerificandoIA --> ProcesandoConIA : IA disponible
+VerificandoIA --> ProcesandoHeuristico : IA no disponible
+
+ProcesandoConIA : Generando embeddings
+ProcesandoConIA : Calculando similitud de coseno
+ProcesandoConIA --> Completada : Recomendaciones generadas
+ProcesandoConIA --> ProcesandoHeuristico : Timeout o error IA
+
+ProcesandoHeuristico : Aplicando reglas de similitud
+ProcesandoHeuristico : Calculando puntuaciones
+ProcesandoHeuristico --> Completada : Recomendaciones generadas
+
+Completada : 6 libros similares identificados
+Completada : Puntuaciones calculadas
+Completada --> Entregada : Consulta detalles de libros
+
+Entregada : Recomendaciones mostradas al usuario
+Entregada --> [*]
+
+note right of ProcesandoConIA
+  **Método Primario**
+  
+  • Análisis semántico
+  • Alta precisión (>70%)
+  • Latencia: <3s
+end note
+
+note right of ProcesandoHeuristico
+  **Método Fallback**
+  
+  • Reglas de negocio
+  • Precisión media (>50%)
+  • Latencia: <500ms
+  • Siempre disponible
+end note
+
+@enduml
+
+@startuml estados_busqueda
+' ============================================================================
+' DIAGRAMA DE ESTADOS - BÚSQUEDA
+' ============================================================================
+
+title Diagrama de Estados: Proceso de Búsqueda
+
+[*] --> Ingresando : Usuario abre interfaz de búsqueda
+
+Ingresando : Campo de búsqueda vacío
+Ingresando : Esperando entrada del usuario
+Ingresando --> Buscando : Usuario ingresa ≥3 caracteres
+
+Buscando : Consultando base de datos
+Buscando : Aplicando criterios de búsqueda
+Buscando --> CalculandoRelevancia : Libros encontrados
+Buscando --> SinResultados : Sin coincidencias
+
+CalculandoRelevancia : Priorizando resultados
+CalculandoRelevancia : Ordenando por relevancia
+CalculandoRelevancia --> Mostrando : Ordenamiento completado
+
+Mostrando : Resultados mostrados al usuario
+Mostrando : Usuario puede interactuar
+Mostrando --> Ingresando : Usuario limpia búsqueda
+Mostrando --> Buscando : Usuario refina búsqueda
+Mostrando --> [*] : Usuario selecciona libro
+
+SinResultados : Sin coincidencias encontradas
+SinResultados : Mostrando sugerencias (libros populares)
+SinResultados --> Ingresando : Usuario modifica búsqueda
+SinResultados --> [*] : Usuario abandona búsqueda
+
+note bottom of Buscando
+  **Búsqueda en:**
+  • Título (prioridad 1)
+  • Autor (prioridad 2)
+  • Género (prioridad 3)
+  • Tags (prioridad 4)
+  
+  **Requisito:** <1s (p95)
+end note
+
+@enduml
+
+@startuml estados_embedding
+' ============================================================================
+' DIAGRAMA DE ESTADOS - REPRESENTACIÓN SEMÁNTICA (EMBEDDING)
+' ============================================================================
+
+title Diagrama de Estados: Representación Semántica
+
+[*] --> Pendiente : Libro creado con sinopsis
+
+Pendiente : Esperando generación
+Pendiente : En cola de procesamiento
+Pendiente --> Generando : Servicio IA disponible
+
+Generando : Procesando sinopsis con NLP
+Generando : Creando vector semántico
+Generando --> Almacenada : Generación exitosa
+Generando --> Error : Fallo en generación
+
+Almacenada : Embedding disponible
+Almacenada : Libro puede ser recomendado
+Almacenada : Libro puede recomendar otros
+Almacenada --> Actualizando : Sinopsis del libro cambió
+
+Actualizando : Regenerando embedding
+Actualizando --> Almacenada : Actualización exitosa
+Actualizando --> Error : Fallo en actualización
+
+Error : Generación falló
+Error : Marcado para reintento
+Error --> Pendiente : Reintentar después
+Error --> [*] : Libro eliminado
+
+Almacenada --> [*] : Libro eliminado
+
+note right of Almacenada
+  **Embedding Válido:**
+  
+  • Vector de N dimensiones
+  • Representa significado semántico
+  • Usado para cálculo de similitud
+  • Puede ser reutilizado múltiples veces
+end note
+
+note right of Error
+  **Manejo de Errores:**
+  
+  • Libro sigue visible en catálogo
+  • Recomendaciones heurísticas disponibles
+  • Reintento automático programado
+  • No impacta experiencia de usuario
+end note
+
+@enduml
+

@@ -1,0 +1,151 @@
+@startuml estados_diseno_bookmate
+' ============================================================================
+' DIAGRAMAS DE ESTADOS DE DISEÑO (JPA)
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+title Diagramas de Estados de Diseño - Entidades JPA
+
+' Estado de Libro (Ciclo de vida JPA)
+state "Estado de Libro (JPA)" as LibroState {
+  [*] --> Transient : new Libro()
+  
+  Transient --> Managed : save() / persist()
+  Managed --> Detached : clear() / close()
+  Detached --> Managed : merge()
+  Managed --> Removed : remove()
+  Removed --> [*] : commit()
+  
+  state Transient {
+    : Objeto creado
+    : No asociado a EntityManager
+    : No tiene ID asignado
+  }
+  
+  state Managed {
+    : Asociado a EntityManager
+    : ID asignado
+    : Sincronizado con BD
+    : Cambios tracked
+  }
+  
+  state Detached {
+    : Desasociado de EntityManager
+    : Cambios no tracked
+    : Puede ser modificado
+  }
+  
+  state Removed {
+    : Marcado para eliminación
+    : Se eliminará en commit()
+  }
+}
+
+' Estado de Embedding
+state "Estado de Embedding" as EmbeddingState {
+  [*] --> Pendiente : Libro creado
+  
+  Pendiente --> Generando : generarEmbedding()
+  Generando --> Almacenado : embedding generado
+  Almacenado --> Actualizando : sinopsis cambió
+  Actualizando --> Almacenado : embedding regenerado
+  Generando --> Error : fallo en generación
+  Error --> Generando : reintento
+  
+  state Pendiente {
+    : Libro existe
+    : Embedding no generado
+  }
+  
+  state Generando {
+    : Procesando sinopsis
+    : Con Sentence Transformers
+  }
+  
+  state Almacenado {
+    : Embedding disponible
+    : Vector almacenado en BD
+  }
+  
+  state Actualizando {
+    : Regenerando embedding
+    : Sinopsis modificada
+  }
+  
+  state Error {
+    : Fallo en generación
+    : Reintento programado
+  }
+}
+
+' Estado de Solicitud de Recomendación
+state "Estado de Solicitud de Recomendación" as RequestState {
+  [*] --> Solicitada : Usuario solicita
+  
+  Solicitada --> VerificandoIA : RecommendationService.obtenerRecomendaciones()
+  VerificandoIA --> ProcesandoConIA : IA disponible
+  VerificandoIA --> ProcesandoHeuristico : IA no disponible
+  ProcesandoConIA --> Completada : similitud calculada
+  ProcesandoHeuristico --> Completada : puntuaciones calculadas
+  Completada --> Entregada : respuesta enviada
+  Entregada --> [*]
+  
+  ProcesandoConIA --> ProcesandoHeuristico : timeout / error
+  
+  state Solicitada {
+    : Petición recibida
+    : ID de libro disponible
+  }
+  
+  state VerificandoIA {
+    : Health check del servicio IA
+    : Verificando disponibilidad
+  }
+  
+  state ProcesandoConIA {
+    : Cálculo de similitud semántica
+    : Comunicación con servicio IA
+  }
+  
+  state ProcesandoHeuristico {
+    : Cálculo de puntuaciones
+    : Algoritmo heurístico
+  }
+  
+  state Completada {
+    : Recomendaciones generadas
+    : Lista de libros lista
+  }
+  
+  state Entregada {
+    : Respuesta enviada al usuario
+    : JSON con recomendaciones
+  }
+}
+
+note right of LibroState
+  **Ciclo de vida JPA:**
+  • Transient: Objeto nuevo, no persistido
+  • Managed: Persistido y tracked
+  • Detached: Desasociado pero existe en BD
+  • Removed: Marcado para eliminación
+end note
+
+note right of EmbeddingState
+  **Estados de Embedding:**
+  • Pendiente: Esperando generación
+  • Generando: Procesando con IA
+  • Almacenado: Disponible en BD
+  • Actualizando: Regenerando
+  • Error: Fallo, reintento
+end note
+
+@enduml
+

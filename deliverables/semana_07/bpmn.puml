@@ -1,0 +1,419 @@
+@startuml bpmn_bookmate
+' ============================================================================
+' MODELO DE NEGOCIO BPMN - BOOKMATE
+' Proyecto: Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' ============================================================================
+
+title Modelo de Negocio BPMN - BookMate\nProceso de Recomendación de Libros
+
+|Usuario|
+start
+:Usuario accede al\nsistema BookMate;
+:Explora catálogo\nde libros;
+
+if (¿Encontró libro\nde interés?) then (sí)
+  :Visualiza detalles\ndel libro;
+  :Solicita\nrecomendaciones;
+else (no)
+  :Realiza búsqueda\npor palabra clave;
+  if (¿Resultados?) then (sí)
+    :Visualiza detalles\ndel libro;
+    :Solicita\nrecomendaciones;
+  else (no)
+    :Refina criterios\nde búsqueda;
+    stop
+  endif
+endif
+
+|Sistema BookMate|
+:Recibe solicitud de\nrecomendaciones;
+:Obtiene datos del\nlibro de referencia;
+
+|Servicio IA|
+if (¿Servicio IA\ndisponible?) then (sí)
+  :Genera embedding\nde la sinopsis;
+  :Calcula similitud\ncon otros libros;
+  :Ordena por\nsimilitud de coseno;
+  :Retorna top 6\nlibros similares;
+else (no)
+  |Sistema BookMate|
+  :Aplica algoritmo\nheurístico;
+  note right
+    Criterios heurísticos:
+    - Mismo género
+    - Mismo autor
+    - Tags compartidos
+    - Precio similar
+  end note
+  :Retorna top 6\nlibros por reglas;
+endif
+
+|Usuario|
+:Visualiza\nrecomendaciones;
+
+if (¿Libro interesante?) then (sí)
+  :Visualiza detalles;
+  if (¿Desea más\nrecomendaciones?) then (sí)
+    :Solicita\nrecomendaciones;
+    detach
+  else (no)
+    stop
+  endif
+else (no)
+  if (¿Continuar\nexplorando?) then (sí)
+    :Explora catálogo\nde libros;
+    detach
+  else (no)
+    stop
+  endif
+endif
+
+@enduml
+
+@startuml bpmn_administracion
+' ============================================================================
+' MODELO DE NEGOCIO BPMN - ADMINISTRACIÓN DEL CATÁLOGO
+' ============================================================================
+
+title Modelo de Negocio BPMN - BookMate\nProceso de Administración del Catálogo
+
+|Administrador|
+start
+:Accede al panel\nde administración;
+
+:Selecciona operación;
+
+if (Operación) then (Agregar libro)
+  :Ingresa datos del libro;
+  note right
+    - Título
+    - Autor
+    - Género
+    - Precio
+    - Sinopsis
+    - ISBN
+    - Editorial
+  end note
+  
+  |Sistema BookMate|
+  :Valida datos;
+  
+  if (¿Datos válidos?) then (sí)
+    :Persiste libro\nen base de datos;
+    
+    |Servicio IA|
+    if (¿Servicio IA\nactivo?) then (sí)
+      :Genera embedding\nde la sinopsis;
+      :Almacena embedding;
+    else (no)
+      :Marca para procesamiento\nposterior;
+    endif
+    
+    |Sistema BookMate|
+    :Confirma creación;
+    |Administrador|
+    :Visualiza confirmación;
+    stop
+  else (no)
+    |Administrador|
+    :Visualiza errores;
+    :Corrige datos;
+    detach
+  endif
+  
+elseif (Operación) then (Editar libro)
+  |Administrador|
+  :Busca libro a editar;
+  :Modifica datos;
+  
+  |Sistema BookMate|
+  :Valida cambios;
+  :Actualiza en BD;
+  
+  |Servicio IA|
+  if (¿Sinopsis cambió?) then (sí)
+    :Regenera embedding;
+    :Actualiza embedding;
+  else (no)
+    :Mantiene embedding\nexistente;
+  endif
+  
+  |Administrador|
+  :Visualiza confirmación;
+  stop
+  
+elseif (Operación) then (Eliminar libro)
+  |Administrador|
+  :Busca libro a eliminar;
+  :Confirma eliminación;
+  
+  |Sistema BookMate|
+  :Elimina de BD;
+  
+  |Servicio IA|
+  :Elimina embedding\nasociado;
+  
+  |Administrador|
+  :Visualiza confirmación;
+  stop
+  
+else (Listar libros)
+  |Sistema BookMate|
+  :Consulta todos\nlos libros;
+  :Ordena por criterio;
+  
+  |Administrador|
+  :Visualiza catálogo\ncompleto;
+  stop
+endif
+
+@enduml
+
+@startuml bpmn_busqueda
+' ============================================================================
+' MODELO DE NEGOCIO BPMN - BÚSQUEDA DE LIBROS
+' ============================================================================
+
+title Modelo de Negocio BPMN - BookMate\nProceso de Búsqueda de Libros
+
+|Usuario|
+start
+:Ingresa término\nde búsqueda;
+
+note right
+  Puede buscar por:
+  - Título
+  - Autor
+  - Género
+  - Combinación
+end note
+
+if (¿Aplicar filtros?) then (sí)
+  :Selecciona filtros;
+  note right
+    Filtros disponibles:
+    - Precio mínimo/máximo
+    - Género
+    - Año de publicación
+    - Rating
+  end note
+else (no)
+endif
+
+|Sistema BookMate|
+:Recibe consulta\ny filtros;
+
+:Busca coincidencias\nen base de datos;
+
+note right
+  Búsqueda en:
+  - Tabla de libros
+  - Tabla de autores
+  - Join entre tablas
+  
+  Criterios:
+  - LIKE %term%
+  - Insensible a mayúsculas
+end note
+
+:Aplica filtros\nseleccionados;
+
+:Ordena resultados\npor relevancia;
+
+note right
+  Orden por:
+  1. Coincidencia exacta
+  2. Coincidencia parcial
+  3. Rating
+  4. Año de publicación
+end note
+
+if (¿Resultados\nencontrados?) then (sí)
+  :Retorna lista\nde libros;
+  
+  |Usuario|
+  :Visualiza resultados;
+  
+  if (¿Resultados\nsatisfactorios?) then (sí)
+    :Selecciona libro;
+    :Visualiza detalles;
+    stop
+  else (no)
+    :Refina búsqueda;
+    detach
+  endif
+  
+else (no)
+  |Usuario|
+  :Visualiza mensaje\n"Sin resultados";
+  
+  :Sistema sugiere\nlibros populares;
+  
+  if (¿Explora\nsugerencias?) then (sí)
+    :Visualiza libros\npopulares;
+    stop
+  else (no)
+    :Realiza nueva\nbúsqueda;
+    detach
+  endif
+endif
+
+@enduml
+
+@startuml bpmn_interaccion_ia
+' ============================================================================
+' MODELO DE NEGOCIO BPMN - INTERACCIÓN CON SERVICIO IA
+' ============================================================================
+
+title Modelo de Negocio BPMN - BookMate\nInteracción con Servicio de Inteligencia Artificial
+
+|Sistema BookMate|
+start
+:Recibe solicitud\nde recomendaciones;
+
+:Obtiene ID del\nlibro de referencia;
+
+:Consulta datos del\nlibro en BD;
+
+:Prepara petición\npara servicio IA;
+
+note right
+  Payload JSON:
+  {
+    "book_id": 123,
+    "synopsis": "...",
+    "top_n": 6
+  }
+end note
+
+|Servicio IA (Python)|
+:Recibe petición\nHTTP POST;
+
+:Valida formato\nde la petición;
+
+if (¿Petición válida?) then (sí)
+  :Carga modelo\nSentence Transformers;
+  
+  note right
+    Modelo preentrenado:
+    - all-MiniLM-L6-v2
+    - 384 dimensiones
+    - Optimizado para velocidad
+  end note
+  
+  :Genera embedding\ndel libro de referencia;
+  
+  fork
+    :Consulta embeddings\nde todos los libros\nen catálogo;
+  fork again
+    :Calcula similitud\nde coseno;
+    note right
+      cos(θ) = (A · B) / (||A|| × ||B||)
+      
+      Donde:
+      A = embedding libro referencia
+      B = embedding libro catálogo
+    end note
+  end fork
+  
+  :Ordena por similitud\n(mayor a menor);
+  
+  :Selecciona top N\n(excluye libro original);
+  
+  :Prepara respuesta\nJSON;
+  
+  note right
+    Response:
+    {
+      "recommendations": [
+        {"id": 45, "similarity": 0.92},
+        {"id": 12, "similarity": 0.87},
+        ...
+      ],
+      "method": "ai",
+      "time_ms": 2340
+    }
+  end note
+  
+  :Retorna lista\nde recomendaciones;
+  
+  |Sistema BookMate|
+  :Recibe respuesta\nde servicio IA;
+  
+  :Consulta detalles\nde libros recomendados;
+  
+  :Retorna al usuario;
+  stop
+  
+else (no)
+  |Sistema BookMate|
+  :Aplica fallback\nheurístico;
+  
+  note right
+    Recomendaciones basadas en:
+    - Género compartido: +3 puntos
+    - Autor común: +5 puntos
+    - Tags compartidos: +2 puntos cada uno
+    - Precio similar (±20%): +1 punto
+    - Rating alto: +1 punto
+  end note
+  
+  :Ordena por puntuación;
+  
+  :Retorna top N libros;
+  stop
+endif
+
+@enduml
+
+@startuml bpmn_simplificado
+' ============================================================================
+' MODELO DE NEGOCIO BPMN - VISTA SIMPLIFICADA
+' ============================================================================
+
+title Modelo de Negocio BPMN - BookMate\nVista Simplificada del Sistema
+
+|#LightBlue|Usuario Final|
+start
+:Accede a BookMate;
+
+fork
+  :Explora\nCatálogo;
+fork again
+  :Busca\nLibros;
+fork again
+  :Solicita\nRecomendaciones;
+end fork
+
+|#LightGreen|Sistema BookMate|
+
+partition "Gestión de Libros" {
+  :CRUD de Libros;
+  :CRUD de Autores;
+  :Búsqueda Avanzada;
+}
+
+partition "Recomendaciones" {
+  if (¿IA disponible?) then (sí)
+    |#LightYellow|Servicio IA|
+    :Recomendaciones\ncon IA;
+  else (no)
+    |#LightGreen|Sistema BookMate|
+    :Recomendaciones\nHeurísticas;
+  endif
+}
+
+|#LightBlue|Usuario Final|
+:Visualiza\nResultados;
+
+if (¿Satisfecho?) then (sí)
+  stop
+else (no)
+  :Refina búsqueda;
+  detach
+endif
+
+@enduml
+

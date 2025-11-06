@@ -1,0 +1,806 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{moreverb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+% Configuración de TikZ
+\tikzstyle{block} = [
+  rectangle, draw, rounded corners,
+  text centered, minimum height=1cm,
+  minimum width=2.5cm, font=\small, fill=gray!5
+]
+\tikzstyle{arrow} = [->, thick]
+
+% Configuración de tcolorbox
+\tcbset{
+  colback=gray!5, colframe=gray!50,
+  boxrule=0.4pt, sharp corners,
+}
+
+\title[BookMate]{BookMate — Sistema de Recomendación de Libros Académicos}
+\subtitle{Especificación de Requisitos de Software (SRS) y Casos de Uso}
+\author[GRUPO 6]{Delgado R., G. \and Osorio M., A. \and Rojas A., J. \and Torres R., J. \and Valverde G., Y. \and Villanueva A., F.}
+\institute[FC-UNI]{UNIVERSIDAD NACIONAL DE INGENIERÍA}
+\titlegraphic{\includegraphics[height=1.4cm]{example-image}}
+% NOTA: Reemplazar 'example-image' con 'Imagenes/logo_uni.png' cuando esté disponible
+
+\date{Octubre 2025}
+
+\begin{document}
+
+% Portada
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Agenda
+\begin{frame}
+\frametitle{Agenda}
+\tableofcontents
+\end{frame}
+
+\section{Introducción al SRS}
+
+\begin{frame}
+\frametitle{¿Qué es un SRS?}
+
+\begin{itemize}
+\item \textbf{Especificación de Requisitos de Software}
+\item Documento que define qué debe hacer el sistema
+\item Base para el diseño y desarrollo
+\item Contrato entre cliente y desarrolladores
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[title=Objetivo del SRS BookMate]
+Definir los requisitos funcionales y no funcionales del sistema BookMate para la recomendación inteligente de libros académicos.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Descripción General del Producto}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\textbf{Perspectiva del Producto:}
+\begin{itemize}
+\item Sistema web independiente
+\item Arquitectura de microservicios
+\item Backend + IA + Frontend
+\item Base de datos
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Funciones Principales:}
+\begin{itemize}
+\item Gestión de catálogo (CRUD)
+\item Búsqueda avanzada
+\item Recomendaciones inteligentes
+\item Interfaz web responsive
+\end{itemize}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama conceptual del sistema
+% Mostrar: Frontend ↔ Backend ↔ IA + BD
+\end{center}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\section{Requisitos Funcionales}
+
+\begin{frame}
+\frametitle{Requisitos Funcionales Principales}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{2.5cm}p{7cm}p{2cm}}
+\toprule
+\textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+\midrule
+RF-01 & Gestionar Libros (CRUD) & Alta \\
+RF-02 & Gestionar Autores (CRUD) & Alta \\
+RF-03 & Buscar Libros & Alta \\
+RF-04 & Obtener Recomendaciones & \textbf{Muy Alta} \\
+RF-05 & Visualizar Detalle de Libro & Media \\
+RF-06 & Filtrar por Precio & Media \\
+RF-07 & Navegar Catálogo & Media \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+\textbf{RF-04} es el requisito más crítico: Sistema de recomendaciones con IA que debe responder en <3 segundos.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{RF-01: Gestionar Libros}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Descripción:}
+El sistema debe permitir crear, leer, actualizar y eliminar libros.
+
+\textbf{Entradas:}
+\begin{itemize}
+\item Título
+\item Autor
+\item Género
+\item Precio
+\item Fecha de edición
+\item Sinopsis
+\item ISBN, Editorial
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Salidas:}
+\begin{itemize}
+\item Confirmación de operación
+\item Lista de libros
+\end{itemize}
+
+\textbf{Precondiciones:}
+\begin{itemize}
+\item Usuario con permisos de admin
+\end{itemize}
+
+\textbf{Postcondiciones:}
+\begin{itemize}
+\item Libro persistido en BD
+\item Embedding generado (si IA disponible)
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{RF-04: Obtener Recomendaciones (Crítico)}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Descripción:}
+El sistema debe recomendar libros similares basándose en embeddings semánticos o heurísticas.
+
+\textbf{Entradas:}
+\begin{itemize}
+\item ID de libro de referencia
+\end{itemize}
+
+\textbf{Salidas:}
+\begin{itemize}
+\item Lista de 6 libros recomendados
+\item Score de similitud
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Procesamiento:}
+\begin{enumerate}
+\item Obtener datos del libro
+\item Enviar a servicio IA
+\item IA calcula similitud
+\item Retornar top 6
+\end{enumerate}
+
+\textbf{Fallback:}
+\begin{itemize}
+\item Si IA no disponible
+\item Aplicar heurísticas
+\item Basadas en género, autor, tags
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Objetivo:} >70\% relevancia, <3s respuesta
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Requisitos No Funcionales}
+
+\begin{frame}
+\frametitle{Requisitos No Funcionales}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{3cm}p{6cm}p{2cm}}
+\toprule
+\textbf{Categoría} & \textbf{Requisito} & \textbf{Objetivo} \\
+\midrule
+Rendimiento & Búsquedas & <1s (p95) \\
+Rendimiento & Recomendaciones IA & <3s (p95) \\
+Rendimiento & API REST & <500ms (p95) \\
+Usabilidad & Interfaz intuitiva & <5 clicks \\
+Usabilidad & Responsive design & Móvil/Tablet/Desktop \\
+Fiabilidad & Disponibilidad & 95\% \\
+Seguridad & Validación entrada & 100\% \\
+Mantenibilidad & Cobertura tests & >80\% \\
+Escalabilidad & Usuarios concurrentes & 100 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Atributos de Calidad}
+
+\begin{table}
+\centering
+\begin{tabular}{p{4cm}p{3cm}p{2cm}}
+\toprule
+\textbf{Atributo} & \textbf{Métrica} & \textbf{Objetivo} \\
+\midrule
+Precisión recomendaciones & \% relevancia & >70\% \\
+Tiempo respuesta búsqueda & Latencia p95 & <1s \\
+Tiempo respuesta IA & Latencia p95 & <3s \\
+Cobertura tests & \% código & >80\% \\
+Uptime & \% disponibilidad & 95\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{Objetivo Principal:} Sistema de recomendaciones con >70\% de precisión y respuesta en <3 segundos.
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Casos de Uso Principales}
+
+\begin{frame}
+\frametitle{Actores del Sistema}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Actor Principal: Usuario}
+\begin{itemize}
+\item Estudiante
+\item Profesor
+\item Investigador
+\end{itemize}
+
+\textbf{Casos de Uso:} UC-02, UC-05, UC-06, UC-07, UC-08, UC-09
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Actor Secundario: Administrador}
+\begin{itemize}
+\item Bibliotecario
+\item Gestor de catálogo
+\end{itemize}
+
+\textbf{Casos de Uso:} UC-01, UC-03, UC-04, UC-10 a UC-15
+
+\vspace{0.3cm}
+
+\textbf{Actor Externo: Sistema IA}
+\begin{itemize}
+\item Servicio Python
+\item Genera recomendaciones
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+\node[block] (usuario) {Usuario};
+\node[block, right=of usuario] (sistema) {Sistema BookMate};
+\node[block, right=of sistema] (ia) {Servicio IA};
+\draw[arrow] (usuario) -- (sistema);
+\draw[arrow] (sistema) -- (ia);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{UC-01: Crear Libro}
+
+\textbf{Actor:} Administrador
+
+\textbf{Precondiciones:} Autor existe o se creará
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+\item Usuario selecciona ``Agregar Libro''
+\item Sistema muestra formulario
+\item Usuario ingresa: título, autor, género, precio, fecha, sinopsis, etc.
+\item Sistema valida datos
+\item Sistema guarda libro en BD
+\item Sistema notifica a servicio IA para generar embedding
+\item Sistema muestra confirmación
+\end{enumerate}
+
+\textbf{Flujo Alternativo 4a:} Datos inválidos
+\begin{itemize}
+\item Sistema muestra errores específicos
+\item Retorna al paso 3
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{UC-06: Obtener Recomendaciones (Crítico)}
+
+\textbf{Actor Principal:} Usuario  
+\textbf{Actores Secundarios:} Servicio IA
+
+\textbf{Precondiciones:} Libro de referencia existe
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+\item Usuario selecciona ``Ver similares'' en libro X
+\item Sistema verifica disponibilidad de Servicio IA
+\item Sistema envía solicitud a Servicio IA con ID de libro X
+\item Servicio IA genera embedding de sinopsis
+\item Servicio IA calcula similitud de coseno con todos los libros
+\item Servicio IA retorna lista de IDs de libros recomendados
+\item Sistema consulta detalles en BD
+\item Sistema muestra recomendaciones con scores
+\end{enumerate}
+
+\textbf{Flujo Alternativo 2a:} Servicio IA no disponible
+\begin{itemize}
+\item Sistema aplica heurísticas (mismo género/autor/precio/tags)
+\item Sistema muestra recomendaciones heurísticas
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{UC-05: Buscar Libros}
+
+\textbf{Actor:} Usuario
+
+\textbf{Precondiciones:} Ninguna
+
+\textbf{Flujo Principal:}
+\begin{enumerate}
+\item Usuario ingresa query de búsqueda
+\item Sistema busca coincidencias en título/autor/género
+\item Sistema ordena por relevancia
+\item Sistema muestra resultados
+\end{enumerate}
+
+\textbf{Flujo Alternativo 3a:} Sin resultados
+\begin{itemize}
+\item Sistema muestra mensaje ``Sin resultados''
+\item Sistema sugiere libros populares
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+\textbf{Objetivo:} Búsquedas deben responder en <1 segundo (RNF-01.1)
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Diagrama de Casos de Uso}
+
+\begin{frame}
+\frametitle{Diagrama de Casos de Uso}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item \textbf{Actores:}
+  \begin{itemize}
+  \item Usuario
+  \item Administrador
+  \item Servicio IA
+  \end{itemize}
+\item \textbf{Casos de Uso Principales:}
+  \begin{itemize}
+  \item UC-01: Crear Libro
+  \item UC-02: Listar Libros
+  \item UC-05: Buscar Libros
+  \item UC-06: Obtener Recomendaciones
+  \item UC-10-13: Gestionar Autores
+  \end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama casos_uso.puml generado
+% Mostrar el diagrama principal con todos los actores y UC
+\end{center}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Diagrama Detallado: UC-06 Recomendaciones}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image-c}
+% NOTA: Reemplazar con el diagrama detallado de UC-06
+% Mostrar flujo principal (IA) y flujo alternativo (heurísticas)
+\end{center}
+
+\textbf{Nota:} Este es el caso de uso más crítico del sistema. Define el valor principal del producto.
+
+\end{frame}
+
+\section{Matriz de Trazabilidad}
+
+\begin{frame}
+\frametitle{Matriz de Trazabilidad: Requisitos - Casos de Uso}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{2cm}p{4cm}p{4cm}p{2cm}}
+\toprule
+\textbf{Requisito} & \textbf{Descripción} & \textbf{Casos de Uso} & \textbf{Prioridad} \\
+\midrule
+RF-01 & Gestionar Libros & UC-01, UC-02, UC-03, UC-04 & Alta \\
+RF-02 & Gestionar Autores & UC-10, UC-11, UC-12, UC-13 & Alta \\
+RF-03 & Buscar Libros & UC-05 & Alta \\
+RF-04 & Obtener Recomendaciones & UC-06 & \textbf{Muy Alta} \\
+RF-05 & Visualizar Detalle & UC-07 & Media \\
+RF-06 & Filtrar por Precio & UC-08 & Media \\
+RF-07 & Navegar Catálogo & UC-09 & Media \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Matriz de Trazabilidad: Casos de Uso - Componentes}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{2.5cm}p{10cm}}
+\toprule
+\textbf{Caso de Uso} & \textbf{Componentes del Sistema (Arquitectura Futura)} \\
+\midrule
+UC-01 & LibrosController, LibrosService, LibrosRepository, Libros, Autor \\
+UC-02 & LibrosController, LibrosService, LibrosRepository, Libros \\
+UC-03 & LibrosController, LibrosService, LibrosRepository, Libros \\
+UC-04 & LibrosController, LibrosService, LibrosRepository \\
+UC-05 & LibrosController, WebController, LibrosService, LibrosRepository \\
+UC-06 & RecommendationController, RecommendationService, AIService, HeuristicRecommender \\
+UC-07 & WebController, LibrosService, Libros \\
+UC-08 & LibrosController, LibrosService, LibrosRepository \\
+UC-10-13 & AutorController, AutorService, AutorRepository, Autor \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Nota:} Esta es la arquitectura planificada. En la fase de análisis (actual) no se mencionan tecnologías específicas.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Matriz de Trazabilidad: Casos de Uso - Pruebas}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{1.5cm}p{5.5cm}p{5.5cm}p{1cm}}
+\toprule
+\textbf{Caso de Uso} & \textbf{Pruebas Unitarias (Futuras)} & \textbf{Pruebas API (Futuras)} & \textbf{Estado} \\
+\midrule
+UC-01 & LibrosServiceTest.testSave & POST /api/libros & Planificado \\
+UC-02 & LibrosServiceTest.testFindAll & GET /api/libros & Planificado \\
+UC-03 & LibrosServiceTest.testUpdate & PUT /api/libros/\{id\} & Planificado \\
+UC-04 & LibrosServiceTest.testDelete & DELETE /api/libros/\{id\} & Planificado \\
+UC-05 & LibrosServiceTest.testSearchBooks & GET /api/libros/search & Planificado \\
+UC-06 & RecommendationServiceTest & GET /api/recommendations/\{id\} & Planificado \\
+UC-08 & LibrosServiceTest.testFindByPrecio & GET /api/libros/precio & Planificado \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\section{Prototipo de Casos de Uso}
+
+\begin{frame}
+\frametitle{Prototipo Actual}
+
+\textbf{Estado:} Funcional
+
+\textbf{Ubicación:} \texttt{product/basic-springboot/}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Funcionalidades Implementadas:}
+\begin{itemize}
+\item[\checkmark] Interfaz web responsive
+\item[\checkmark] Catálogo navegable
+\item[\checkmark] Búsqueda básica
+\item[\checkmark] Vista de detalles
+\item[\checkmark] Recomendaciones heurísticas
+\item[\checkmark] Panel de admin (CRUD)
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Limitaciones:}
+\begin{itemize}
+\item[\ding{55}] Sin backend real
+\item[\ding{55}] Sin servicio IA
+\item[\ding{55}] Datos en LocalStorage
+\item[\ding{55}] Sin gestión de autores
+\item[\ding{55}] Sin importar/exportar CSV
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Propósito:} Validar requisitos funcionales y obtener feedback temprano
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Capturas del Prototipo}
+
+\begin{center}
+\includegraphics[width=0.45\textwidth]{example-image}
+\includegraphics[width=0.45\textwidth]{example-image-a}
+% NOTA: Reemplazar con capturas reales del prototipo
+% Izquierda: Catálogo de libros
+% Derecha: Panel de administración
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.45\textwidth]{example-image-b}
+\includegraphics[width=0.45\textwidth]{example-image-c}
+% NOTA: Reemplazar con capturas reales
+% Izquierda: Detalle de libro
+% Derecha: Recomendaciones
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Flujo de Usuario en el Prototipo}
+
+\textbf{Escenario:} Usuario descubre libros relacionados
+
+\begin{enumerate}
+\item Usuario accede al catálogo (\texttt{/catalog.html})
+\item Explora libros o usa búsqueda
+\item Hace click en un libro de interés
+\item Visualiza detalles completos
+\item Hace click en ``Ver libros similares''
+\item Sistema muestra 6 recomendaciones heurísticas:
+  \begin{itemize}
+  \item Mismo género: +3 puntos
+  \item Autor común: +5 puntos
+  \item Tags compartidos: +2 puntos cada uno
+  \item Precio similar: +1 punto
+  \end{itemize}
+\item Usuario explora las recomendaciones
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\textbf{Resultado:} Usuario descubre libros relevantes en <2 minutos
+
+\end{frame}
+
+\section{Criterios de Aceptación}
+
+\begin{frame}
+\frametitle{Criterios de Aceptación}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Requisitos Funcionales:}
+\begin{itemize}
+\item [\checkmark] CRUD completo de libros
+\item [\checkmark] CRUD completo de autores
+\item [\checkmark] Búsqueda por múltiples criterios
+\item [\checkmark] Sistema de recomendaciones IA
+\item [\checkmark] Sistema de recomendaciones heurísticas
+\item [\checkmark] Filtros por precio y género
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Requisitos No Funcionales:}
+\begin{itemize}
+\item [\checkmark] Búsquedas <1 segundo
+\item [\checkmark] Recomendaciones IA <3 segundos
+\item [\checkmark] Interfaz responsive
+\item [\checkmark] Cobertura tests >80\%
+\item [\checkmark] Disponibilidad 95\%
+\item [\checkmark] Relevancia recomendaciones >70\%
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Objetivo Principal:} Sistema de recomendaciones con >70\% de precisión y respuesta en <3 segundos.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Restricciones del Proyecto}
+
+\begin{itemize}
+\item \textbf{Tiempo:} 10 semanas de desarrollo (S7-S16)
+\item \textbf{Equipo:} 6 integrantes con disponibilidad limitada
+\item \textbf{Recursos:} Sin presupuesto para servicios cloud
+\item \textbf{Fases:}
+  \begin{itemize}
+  \item \textbf{Análisis (S7-S11):} Sin mencionar tecnologías específicas
+  \item \textbf{Diseño (S13-S16):} Con implementación técnica detallada
+  \end{itemize}
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=red!5, colframe=red!50]
+\textbf{Interfaz de Software (Planificado para fase de diseño):}
+\begin{itemize}
+\item Backend: Framework web moderno
+\item BD: Sistema relacional
+\item IA: Microservicio Python
+\item Comunicación: HTTP/REST
+\end{itemize}
+\end{tcolorbox}
+
+\textbf{Nota:} Las tecnologías específicas se definirán en la Semana 13 (fase de diseño).
+
+\end{frame}
+
+\section{Resumen}
+
+\begin{frame}
+\frametitle{Resumen del SRS}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Requisitos Funcionales:}
+\begin{itemize}
+\item 15 requisitos definidos
+\item RF-04 (Recomendaciones) es crítico
+\item 15 casos de uso especificados
+\item Matriz de trazabilidad completa
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Requisitos No Funcionales:}
+\begin{itemize}
+\item Rendimiento: <1s búsqueda, <3s IA
+\item Usabilidad: <5 clicks, responsive
+\item Fiabilidad: 95\% disponibilidad
+\item Mantenibilidad: >80\% cobertura
+\item Precisión: >70\% relevancia
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50, title=Objetivo Principal]
+Sistema de recomendación de libros académicos con IA que responda en <3 segundos y tenga >70\% de precisión.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Cobertura de Requisitos}
+
+\textbf{Trazabilidad:}
+
+\begin{itemize}
+\item ✅ \textbf{100\%} de requisitos funcionales cubiertos por casos de uso
+\item ✅ \textbf{100\%} de requisitos no funcionales mapeados
+\item ✅ Todos los casos de uso tienen componentes identificados (arquitectura futura)
+\item ✅ Todos los casos de uso tienen pruebas planificadas
+\item ✅ Prototipo funcional valida requisitos principales
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Casos de Uso Críticos:}
+\begin{enumerate}
+\item \textbf{UC-06: Obtener Recomendaciones} (Muy Alta prioridad)
+\item UC-01: Crear Libro (Alta prioridad)
+\item UC-05: Buscar Libros (Alta prioridad)
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Próximos Pasos}
+
+\textbf{Semana 11 - Análisis Conceptual:}
+
+\begin{itemize}
+\item Especificaciones detalladas de casos de uso (UC-01, UC-05, UC-06)
+\item Modelo de análisis (sin tecnologías específicas)
+\item Diagramas de robustez (Boundary-Control-Entity)
+\item Diagramas de secuencia conceptuales
+\item Arquitectura C4 Niveles 1 y 2 (Contexto y Contenedores)
+\item Tarjetas CRC (Class-Responsibility-Collaboration)
+\item Diagramas de estado (si aplica)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{Importante:} Continuar en fase de análisis sin mencionar tecnologías hasta Semana 13
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{¡Preguntas?}
+
+\begin{center}
+\Large ¡Gracias por su atención! \\
+
+\vspace{1cm}
+
+\textbf{¿Preguntas?}
+
+\vspace{1cm}
+
+\normalsize
+\textbf{Grupo 6}\\
+Universidad Nacional de Ingeniería\\
+CC341 - Ingeniería de Software\\
+Ciclo 2025-2
+
+\end{center}
+
+\end{frame}
+
+\end{document}
+

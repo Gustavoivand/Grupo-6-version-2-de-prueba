@@ -1,0 +1,308 @@
+@startuml c4_contenedores_bookmate
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: CONTENEDORES
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: ANÁLISIS (sin tecnologías específicas)
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Contenedores\nArquitectura Conceptual de BookMate
+
+LAYOUT_WITH_LEGEND()
+
+Person(usuario, "Usuario", "Estudiante, profesor o investigador")
+Person(admin, "Administrador", "Bibliotecario o gestor de catálogo")
+
+System_Boundary(bookmate, "Sistema BookMate") {
+    Container(webapp, "Aplicación Web", "Interfaz de Usuario", "Proporciona funcionalidades del sistema a usuarios mediante navegador web")
+    
+    Container(backend, "Sistema de Gestión", "Lógica de Negocio", "Maneja operaciones CRUD, búsquedas y coordinación de recomendaciones")
+    
+    ContainerDb(database, "Sistema de Almacenamiento", "Base de Datos", "Almacena libros, autores, usuarios y representaciones semánticas")
+}
+
+System_Ext(ia_service, "Servicio de Inteligencia Artificial", "Análisis semántico y generación de recomendaciones")
+
+' Relaciones Usuario <-> Sistema
+Rel(usuario, webapp, "Usa", "Navegador web")
+Rel(admin, webapp, "Administra catálogo", "Navegador web")
+
+' Relaciones Internas
+Rel(webapp, backend, "Solicita operaciones", "Llamadas a servicios")
+Rel(backend, database, "Lee/Escribe", "Consultas y actualizaciones")
+
+' Relación con IA
+Rel(backend, ia_service, "Solicita recomendaciones y generación de embeddings", "Comunicación asíncrona")
+Rel(ia_service, database, "Lee sinopsis y almacena embeddings", "Consultas específicas")
+
+note right of webapp
+  **Responsabilidades:**
+  • Interfaz de catálogo
+  • Formularios de búsqueda
+  • Vista de detalles de libro
+  • Mostrar recomendaciones
+  • Panel de administración
+  
+  **Características:**
+  • Responsive (móvil/tablet/desktop)
+  • <5 clicks para tareas comunes
+end note
+
+note right of backend
+  **Componentes Conceptuales:**
+  • Gestor de Catálogo
+  • Gestor de Búsqueda
+  • Generador de Recomendaciones
+  • Validador de Datos
+  
+  **Responsabilidades:**
+  • Coordinar operaciones CRUD
+  • Procesar búsquedas
+  • Decidir método de recomendación
+    (IA o heurístico)
+  • Aplicar reglas de negocio
+end note
+
+note bottom of database
+  **Almacena:**
+  • Libros (título, autor, género, precio, sinopsis, etc.)
+  • Autores (nombre, biografía, etc.)
+  • Representaciones Semánticas (embeddings)
+  • Usuarios y roles
+  • Resultados de búsquedas (caché opcional)
+  
+  **Características:**
+  • Integridad referencial
+  • Consultas eficientes (<1s)
+end note
+
+note bottom of ia_service
+  **Funciones:**
+  1. Generar Embeddings:
+     • Recibe sinopsis del libro
+     • Genera vector semántico
+     • Retorna para almacenamiento
+  
+  2. Calcular Similitud:
+     • Recibe ID de libro referencia
+     • Calcula coseno con todos los libros
+     • Retorna top 6 más similares
+  
+  **Requisitos:**
+  • Latencia <3s (p95)
+  • Relevancia >70%
+end note
+
+@enduml
+
+@startuml c4_contenedores_flujos
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: CONTENEDORES CON FLUJOS
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Flujos Entre Contenedores\nFlujo de Recomendaciones (UC-06)
+
+LAYOUT_TOP_DOWN()
+
+Person(usuario, "Usuario")
+
+System_Boundary(bookmate, "Sistema BookMate") {
+    Container(webapp, "Aplicación Web", "Interfaz de Usuario")
+    Container(backend, "Sistema de Gestión", "Lógica de Negocio")
+    ContainerDb(database, "Sistema de Almacenamiento", "Base de Datos")
+}
+
+System_Ext(ia_service, "Servicio de IA")
+
+' FLUJO DE RECOMENDACIONES
+Rel(usuario, webapp, "1. Click en 'Ver libros similares'")
+Rel(webapp, backend, "2. Solicita recomendaciones (ID: 123)")
+
+Rel(backend, database, "3. Consulta datos del libro 123")
+Rel(database, backend, "4. Retorna: título, sinopsis, etc.")
+
+Rel(backend, ia_service, "5. Solicita recomendaciones\n(ID: 123, sinopsis: '...', top: 6)")
+
+note right of ia_service
+  **Procesamiento IA:**
+  • Genera embedding de sinopsis
+  • Calcula similitud con catálogo
+  • Ordena por relevancia
+  • Selecciona top 6
+end note
+
+Rel(ia_service, backend, "6. Retorna IDs: [45, 12, 78, 34, 56, 23]\n+ scores: [0.92, 0.87, ...]")
+
+Rel(backend, database, "7. Consulta detalles de libros\n[45, 12, 78, 34, 56, 23]")
+Rel(database, backend, "8. Retorna datos completos de 6 libros")
+
+Rel(backend, webapp, "9. Retorna recomendaciones formateadas")
+Rel(webapp, usuario, "10. Muestra 6 libros similares\ncon puntuaciones")
+
+' FLUJO ALTERNATIVO (Heurísticas)
+Rel_Back(backend, database, "5a. IA no disponible:\nConsulta todo el catálogo", "Fallback")
+Rel(backend, backend, "6a. Aplica reglas heurísticas\n(género, autor, tags, precio)")
+Rel(backend, webapp, "7a. Retorna recomendaciones heurísticas")
+
+@enduml
+
+@startuml c4_contenedores_crud
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: FLUJO DE CREACIÓN DE LIBRO
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Flujo de Creación de Libro (UC-01)
+
+LAYOUT_TOP_DOWN()
+
+Person(admin, "Administrador")
+
+System_Boundary(bookmate, "Sistema BookMate") {
+    Container(webapp, "Aplicación Web", "Interfaz de Admin")
+    Container(backend, "Sistema de Gestión", "Gestor de Catálogo")
+    ContainerDb(database, "Sistema de Almacenamiento", "BD")
+}
+
+System_Ext(ia_service, "Servicio de IA")
+
+' FLUJO
+Rel(admin, webapp, "1. Completa formulario:\n• Título: 'Clean Code'\n• Autor: 'Robert Martin'\n• Sinopsis: '...'")
+Rel(webapp, backend, "2. Envía datos del nuevo libro")
+
+Rel(backend, backend, "3. Valida datos:\n• Campos obligatorios\n• Precio > 0\n• ISBN único")
+
+Rel(backend, database, "4. Verifica que autor existe")
+Rel(database, backend, "5. Autor encontrado")
+
+Rel(backend, database, "6. Inserta nuevo libro\n(ID: 456, título: 'Clean Code', ...)")
+Rel(database, backend, "7. Confirmación: Libro creado")
+
+Rel(backend, ia_service, "8. Notifica: Generar embedding\n(ID: 456, sinopsis: '...')")
+Rel(ia_service, ia_service, "9. Genera vector semántico")
+Rel(ia_service, database, "10. Almacena embedding\n(libro_id: 456, vector: [...])")
+
+Rel(backend, webapp, "11. Retorna éxito")
+Rel(webapp, admin, "12. Muestra: 'Libro agregado exitosamente'")
+
+note bottom of backend
+  **Validaciones:**
+  • Título no vacío
+  • Autor existe en BD
+  • Precio > 0
+  • ISBN único (si se proporciona)
+  • Fecha válida
+end note
+
+@enduml
+
+@startuml c4_contenedores_busqueda
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: FLUJO DE BÚSQUEDA
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Flujo de Búsqueda (UC-05)
+
+LAYOUT_TOP_DOWN()
+
+Person(usuario, "Usuario")
+
+System_Boundary(bookmate, "Sistema BookMate") {
+    Container(webapp, "Aplicación Web", "Interfaz de Búsqueda")
+    Container(backend, "Sistema de Gestión", "Gestor de Búsqueda")
+    ContainerDb(database, "Sistema de Almacenamiento", "BD")
+}
+
+' FLUJO
+Rel(usuario, webapp, "1. Ingresa:\n'arquitectura microservicios'")
+Rel(webapp, backend, "2. Solicita búsqueda\n(query: 'arquitectura microservicios')")
+
+Rel(backend, database, "3. Busca en:\n• Título LIKE '%arquitectura%'\n• Autor LIKE '%arquitectura%'\n• Género LIKE '%arquitectura%'")
+Rel(database, backend, "4. Retorna libros que coinciden\n(15 libros encontrados)")
+
+Rel(backend, backend, "5. Calcula relevancia:\n• Coincidencia en título: prioridad 1\n• Coincidencia en autor: prioridad 2\n• Coincidencia en género: prioridad 3")
+
+Rel(backend, backend, "6. Ordena por relevancia\ndescendente")
+
+Rel(backend, webapp, "7. Retorna resultados ordenados\n(15 libros)")
+Rel(webapp, usuario, "8. Muestra grid de libros")
+
+note right of backend
+  **Optimizaciones:**
+  • Búsqueda insensible a mayúsculas
+  • Búsqueda en múltiples campos
+  • Cálculo de relevancia
+  • Latencia objetivo: <1s (p95)
+end note
+
+' FLUJO ALTERNATIVO: Sin resultados
+Rel_Back(backend, database, "3a. Sin coincidencias:\nConsulta libros populares")
+Rel(database, backend, "4a. Retorna top 6\npor rating")
+Rel(backend, webapp, "5a. Mensaje:\n'Sin resultados' + sugerencias")
+
+@enduml
+
+@startuml c4_contenedores_componentes
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: DESCOMPOSICIÓN DEL BACKEND
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Descomposición del Backend\n(Vista de Componentes Conceptuales)
+
+Person(usuario, "Usuario")
+
+Container(webapp, "Aplicación Web", "Interfaz de Usuario")
+
+System_Boundary(backend_detail, "Sistema de Gestión (Backend)") {
+    Component(gestor_catalogo, "Gestor de\nCatálogo", "Control", "Coordina CRUD de libros y autores")
+    Component(gestor_busqueda, "Gestor de\nBúsqueda", "Control", "Coordina búsquedas y filtros")
+    Component(generador_rec, "Generador de\nRecomendaciones", "Control", "Coordina recomendaciones IA/heurísticas")
+    Component(analizador_sem, "Analizador\nSemántico", "Control", "Procesa texto con IA")
+    Component(calculador_heur, "Calculador\nHeurístico", "Control", "Aplica reglas de similitud")
+    Component(validador, "Validador de\nDatos", "Control", "Valida integridad de datos")
+}
+
+ContainerDb(database, "Sistema de Almacenamiento", "BD")
+System_Ext(ia_service, "Servicio de IA")
+
+' Relaciones
+Rel(usuario, webapp, "Usa")
+Rel(webapp, gestor_catalogo, "CRUD libros/autores")
+Rel(webapp, gestor_busqueda, "Búsquedas")
+Rel(webapp, generador_rec, "Solicita recomendaciones")
+
+Rel(gestor_catalogo, validador, "Valida datos")
+Rel(gestor_catalogo, database, "Persiste")
+Rel(gestor_catalogo, analizador_sem, "Notifica nuevo libro")
+
+Rel(gestor_busqueda, database, "Consulta")
+
+Rel(generador_rec, analizador_sem, "Solicita análisis IA")
+Rel(generador_rec, calculador_heur, "Activa heurísticas (fallback)")
+Rel(generador_rec, database, "Consulta detalles")
+
+Rel(analizador_sem, ia_service, "Comunica")
+Rel(analizador_sem, database, "Lee/escribe embeddings")
+
+Rel(calculador_heur, database, "Consulta catálogo")
+
+note bottom of generador_rec
+  **Responsabilidad Crítica:**
+  • Determinar método (IA o heurístico)
+  • Coordinar generación de recomendaciones
+  • Manejar fallback transparente
+  • Garantizar respuesta <3s
+end note
+
+@enduml
+

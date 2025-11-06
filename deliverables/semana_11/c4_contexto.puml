@@ -1,0 +1,120 @@
+@startuml c4_contexto_bookmate
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 1: CONTEXTO
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: ANÁLISIS (sin tecnologías específicas)
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Diagrama C4 - Nivel 1: Contexto del Sistema\nBookMate - Sistema de Recomendación de Libros Académicos
+
+LAYOUT_WITH_LEGEND()
+
+Person(usuario, "Usuario", "Estudiante, profesor o investigador que busca libros académicos")
+Person(admin, "Administrador", "Bibliotecario o gestor que mantiene el catálogo actualizado")
+
+System(bookmate, "Sistema BookMate", "Permite gestionar, buscar y recibir recomendaciones inteligentes de libros académicos basadas en análisis semántico")
+
+System_Ext(ia, "Sistema de Inteligencia Artificial", "Servicio externo que analiza contenido textual y genera recomendaciones basadas en similitud semántica")
+
+Rel(usuario, bookmate, "Busca libros, visualiza catálogo, solicita recomendaciones")
+Rel(admin, bookmate, "Gestiona catálogo de libros y autores (CRUD)")
+
+Rel(bookmate, ia, "Solicita análisis semántico de sinopsis y cálculo de similitud", "Comunicación asíncrona")
+Rel(ia, bookmate, "Retorna representaciones semánticas y lista de libros similares")
+
+note right of bookmate
+  **Funcionalidades Principales:**
+  • Gestión de catálogo (CRUD)
+  • Búsqueda avanzada
+  • Recomendaciones con IA
+  • Recomendaciones heurísticas (fallback)
+  • Panel de administración
+end note
+
+note right of ia
+  **Responsabilidad:**
+  • Generar embeddings (representaciones vectoriales)
+  • Calcular similitud de coseno
+  • Retornar top N libros más similares
+  
+  **Fallback:**
+  Si no disponible, sistema usa heurísticas
+end note
+
+@enduml
+
+@startuml c4_contexto_detallado
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 1: CONTEXTO DETALLADO
+' (Mostrando flujos principales)
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Diagrama C4 - Nivel 1: Contexto Detallado\nFlujos Principales del Sistema BookMate
+
+LAYOUT_WITH_LEGEND()
+
+Person(estudiante, "Estudiante", "Busca libros para proyectos y tesis")
+Person(profesor, "Profesor", "Busca bibliografía para cursos")
+Person(bibliotecario, "Bibliotecario", "Gestiona el catálogo de libros")
+
+System(bookmate, "Sistema BookMate", "Sistema de gestión y recomendación de libros académicos")
+
+System_Ext(ia_service, "Servicio de IA", "Análisis semántico de texto y cálculo de similitud")
+
+' Flujos de Usuario
+Rel(estudiante, bookmate, "1. Busca 'arquitectura software'")
+Rel(bookmate, estudiante, "2. Muestra resultados relevantes")
+Rel(estudiante, bookmate, "3. Selecciona libro y solicita recomendaciones")
+
+' Flujo con IA
+Rel(bookmate, ia_service, "4. Envía sinopsis del libro seleccionado")
+Rel(ia_service, bookmate, "5. Retorna 6 libros similares + scores")
+Rel(bookmate, estudiante, "6. Muestra recomendaciones personalizadas")
+
+' Flujos de Profesor
+Rel(profesor, bookmate, "Explora catálogo, solicita recomendaciones")
+Rel(bookmate, profesor, "Retorna resultados")
+
+' Flujos de Administrador
+Rel(bibliotecario, bookmate, "Gestiona catálogo: CRUD de libros y autores")
+Rel(bookmate, bibliotecario, "Confirmaciones y validaciones")
+
+' Notificación a IA cuando se crea/actualiza libro
+Rel(bookmate, ia_service, "Notifica nuevo/actualizado libro para generar embedding")
+
+note bottom of bookmate
+  **Casos de Uso Principales:**
+  
+  **Usuario General:**
+  • UC-02: Listar Libros
+  • UC-05: Buscar Libros
+  • UC-06: Obtener Recomendaciones ⭐
+  • UC-07: Ver Detalle de Libro
+  • UC-08: Filtrar por Precio
+  
+  **Administrador:**
+  • UC-01: Crear Libro
+  • UC-03: Actualizar Libro
+  • UC-04: Eliminar Libro
+  • UC-10-13: Gestionar Autores
+end note
+
+note bottom of ia_service
+  **Tecnología Conceptual:**
+  • Procesamiento de Lenguaje Natural (NLP)
+  • Modelos preentrenados de embeddings
+  • Cálculo de similitud de coseno
+  
+  **Requisitos:**
+  • Responder en <3 segundos (p95)
+  • Relevancia >70%
+end note
+
+@enduml
+

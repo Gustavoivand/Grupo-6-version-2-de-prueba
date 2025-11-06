@@ -1,0 +1,518 @@
+@startuml casos_uso_bookmate
+' ============================================================================
+' DIAGRAMA DE CASOS DE USO - BOOKMATE
+' Proyecto: Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' ============================================================================
+
+title Casos de Uso - Sistema BookMate
+
+' Definición de actores
+left to right direction
+
+actor "Usuario" as Usuario
+actor "Administrador" as Admin
+actor "Sistema IA" as IA
+
+' El Administrador hereda de Usuario
+Admin --|> Usuario
+
+' Definición del sistema
+rectangle "Sistema BookMate" {
+  
+  ' Casos de uso de gestión de libros (Admin)
+  package "Gestión de Catálogo" {
+    usecase "UC-01\nCrear Libro" as UC01
+    usecase "UC-02\nListar Libros" as UC02
+    usecase "UC-03\nActualizar Libro" as UC03
+    usecase "UC-04\nEliminar Libro" as UC04
+    usecase "UC-10\nCrear Autor" as UC10
+    usecase "UC-11\nListar Autores" as UC11
+    usecase "UC-12\nActualizar Autor" as UC12
+    usecase "UC-13\nEliminar Autor" as UC13
+  }
+  
+  ' Casos de uso de búsqueda y exploración (Usuario)
+  package "Búsqueda y Exploración" {
+    usecase "UC-05\nBuscar Libros" as UC05
+    usecase "UC-07\nVer Detalle\nde Libro" as UC07
+    usecase "UC-08\nFiltrar por Precio" as UC08
+    usecase "UC-09\nNavegar Catálogo" as UC09
+  }
+  
+  ' Caso de uso más importante: Recomendaciones
+  package "Recomendaciones" {
+    usecase "UC-06\nObtener\nRecomendaciones" as UC06 #LightYellow
+    note right of UC06
+      **Caso de uso crítico**
+      Prioridad: Muy Alta
+      Utiliza IA para análisis
+      semántico de sinopsis
+    end note
+  }
+  
+  ' Casos de uso de importación/exportación (Admin)
+  package "Gestión de Datos" {
+    usecase "UC-14\nImportar desde CSV" as UC14
+    usecase "UC-15\nExportar a CSV" as UC15
+  }
+}
+
+' Relaciones Usuario - Casos de Uso
+Usuario --> UC02
+Usuario --> UC05
+Usuario --> UC06
+Usuario --> UC07
+Usuario --> UC08
+Usuario --> UC09
+
+' Relaciones Admin - Casos de Uso (solo los exclusivos de admin)
+Admin --> UC01
+Admin --> UC03
+Admin --> UC04
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC14
+Admin --> UC15
+
+' Relación con Sistema IA
+UC06 ..> IA : << comunica >>
+
+' Relaciones include y extend
+UC01 .> UC10 : << include >>
+note on link
+  Crear libro requiere
+  que exista un autor
+end note
+
+UC03 .> UC02 : << include >>
+UC04 .> UC02 : << include >>
+
+@enduml
+
+@startuml casos_uso_detallados
+' ============================================================================
+' DIAGRAMA DE CASOS DE USO DETALLADO - UC-06 RECOMENDACIONES
+' ============================================================================
+
+title Caso de Uso Detallado: UC-06 Obtener Recomendaciones
+
+actor "Usuario" as Usuario
+actor "Sistema IA" as IA
+
+rectangle "Sistema BookMate" {
+  usecase "UC-06\nObtener\nRecomendaciones" as UC06 #LightYellow
+  usecase "Generar\nRecomendaciones\ncon IA" as RecIA
+  usecase "Generar\nRecomendaciones\nHeurísticas" as RecHeur
+  usecase "Consultar\nDetalles de\nLibros" as Detalles
+  usecase "Calcular\nSimilitud\nSemántica" as Similitud
+}
+
+Usuario --> UC06
+
+UC06 .> RecIA : << include >>
+UC06 .> RecHeur : << extend >>\n[IA no disponible]
+UC06 .> Detalles : << include >>
+
+RecIA ..> IA : << comunica >>
+RecIA .> Similitud : << include >>
+
+note right of RecIA
+  **Flujo principal**
+  1. Obtener sinopsis del libro
+  2. Enviar a Servicio IA
+  3. IA genera embeddings
+  4. IA calcula similitud de coseno
+  5. Retornar top 6 libros
+end note
+
+note right of RecHeur
+  **Flujo alternativo (fallback)**
+  1. Aplicar reglas heurísticas:
+     - Género compartido
+     - Autor común
+     - Tags similares
+     - Precio similar
+  2. Calcular puntuación
+  3. Retornar top 6 libros
+end note
+
+@enduml
+
+@startuml casos_uso_gestion_libros
+' ============================================================================
+' DIAGRAMA DE CASOS DE USO - GESTIÓN DE LIBROS
+' ============================================================================
+
+title Casos de Uso: Gestión de Libros (CRUD)
+
+actor "Administrador" as Admin
+
+rectangle "Sistema BookMate" {
+  usecase "UC-01\nCrear Libro" as UC01
+  usecase "UC-02\nListar Libros" as UC02
+  usecase "UC-03\nActualizar Libro" as UC03
+  usecase "UC-04\nEliminar Libro" as UC04
+  
+  usecase "Validar Datos\nde Entrada" as Validar
+  usecase "Persistir en\nBase de Datos" as Persistir
+  usecase "Generar/Actualizar\nEmbedding" as Embedding
+}
+
+actor "Sistema IA" as IA
+
+Admin --> UC01
+Admin --> UC02
+Admin --> UC03
+Admin --> UC04
+
+UC01 .> Validar : << include >>
+UC01 .> Persistir : << include >>
+UC01 .> Embedding : << include >>
+
+UC03 .> Validar : << include >>
+UC03 .> Persistir : << include >>
+UC03 .> Embedding : << extend >>\n[sinopsis cambió]
+
+UC04 .> Persistir : << include >>
+
+Embedding ..> IA : << comunica >>
+
+@enduml
+
+@startuml casos_uso_busqueda
+' ============================================================================
+' DIAGRAMA DE CASOS DE USO - BÚSQUEDA Y FILTRADO
+' ============================================================================
+
+title Casos de Uso: Búsqueda y Exploración
+
+actor "Usuario" as Usuario
+
+rectangle "Sistema BookMate" {
+  usecase "UC-05\nBuscar Libros" as UC05
+  usecase "UC-08\nFiltrar por Precio" as UC08
+  usecase "UC-09\nNavegar Catálogo" as UC09
+  usecase "UC-07\nVer Detalle\nde Libro" as UC07
+  
+  usecase "Aplicar Filtros" as Filtros
+  usecase "Ordenar\nResultados" as Ordenar
+  usecase "Paginar\nResultados" as Paginar
+}
+
+Usuario --> UC05
+Usuario --> UC08
+Usuario --> UC09
+Usuario --> UC07
+
+UC05 .> Filtros : << extend >>\n[filtros seleccionados]
+UC05 .> Ordenar : << include >>
+
+UC08 .> Filtros : << include >>
+UC08 .> Ordenar : << include >>
+
+UC09 .> Paginar : << include >>
+UC09 .> Ordenar : << extend >>\n[ordenamiento seleccionado]
+
+note right of UC05
+  **Criterios de búsqueda:**
+  - Título
+  - Autor
+  - Género
+  - Combinación
+  
+  **Tiempo de respuesta:**
+  <1 segundo (p95)
+end note
+
+@enduml
+
+@startuml casos_uso_admin
+' ============================================================================
+' DIAGRAMA DE CASOS DE USO - PANEL DE ADMINISTRACIÓN
+' ============================================================================
+
+title Casos de Uso: Panel de Administración
+
+actor "Administrador" as Admin
+
+rectangle "Sistema BookMate" {
+  package "Gestión de Libros" {
+    usecase "UC-01\nCrear Libro" as UC01
+    usecase "UC-02\nListar Libros" as UC02
+    usecase "UC-03\nActualizar Libro" as UC03
+    usecase "UC-04\nEliminar Libro" as UC04
+  }
+  
+  package "Gestión de Autores" {
+    usecase "UC-10\nCrear Autor" as UC10
+    usecase "UC-11\nListar Autores" as UC11
+    usecase "UC-12\nActualizar Autor" as UC12
+    usecase "UC-13\nEliminar Autor" as UC13
+  }
+  
+  package "Importación/Exportación" {
+    usecase "UC-14\nImportar CSV" as UC14
+    usecase "UC-15\nExportar CSV" as UC15
+  }
+  
+  usecase "Validar Formato\nCSV" as ValidarCSV
+  usecase "Generar Archivo\nCSV" as GenerarCSV
+}
+
+Admin --> UC01
+Admin --> UC02
+Admin --> UC03
+Admin --> UC04
+
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+
+Admin --> UC14
+Admin --> UC15
+
+UC14 .> ValidarCSV : << include >>
+UC14 .> UC01 : << include >>
+UC14 .> UC10 : << include >>
+
+UC15 .> UC02 : << include >>
+UC15 .> GenerarCSV : << include >>
+
+note bottom of UC14
+  **Importación masiva**
+  - Valida formato CSV
+  - Crea autores si no existen
+  - Crea múltiples libros
+  - Genera embeddings
+  - Retorna reporte de importación
+end note
+
+@enduml
+
+@startuml casos_uso_flujo_principal
+' ============================================================================
+' DIAGRAMA DE CASOS DE USO - FLUJO PRINCIPAL DE USUARIO
+' ============================================================================
+
+title Flujo Principal de Usuario en BookMate
+
+actor "Usuario" as Usuario
+actor "Sistema IA" as IA
+
+rectangle "Sistema BookMate" {
+  
+  (Acceder al Sistema) as Inicio
+  (Explorar Catálogo) as Explorar
+  (Buscar Libros) as Buscar
+  (Ver Detalles) as Detalle
+  (Solicitar Recomendaciones) as Recomendar
+  (Visualizar Recomendaciones) as VisualizarRec
+  (Seleccionar Libro) as Seleccionar
+  
+}
+
+Usuario --> Inicio
+Inicio --> Explorar
+Inicio --> Buscar
+
+Explorar --> Detalle
+Buscar --> Detalle
+
+Detalle --> Recomendar
+Recomendar ..> IA : << usa >>
+Recomendar --> VisualizarRec
+
+VisualizarRec --> Seleccionar
+Seleccionar --> Detalle
+
+note right of Recomendar
+  **UC-06: Obtener Recomendaciones**
+  
+  Prioridad: MUY ALTA
+  
+  Actores:
+  - Usuario (primario)
+  - Sistema IA (secundario)
+  
+  Flujo:
+  1. Usuario solicita recomendaciones
+  2. Sistema consulta Servicio IA
+  3. IA analiza similitud semántica
+  4. Sistema retorna 6 libros similares
+  
+  Fallback:
+  Si IA no disponible → Heurísticas
+end note
+
+@enduml
+
+@startuml casos_uso_actores
+' ============================================================================
+' DIAGRAMA DE ACTORES Y SUS RESPONSABILIDADES
+' ============================================================================
+
+title Actores del Sistema BookMate
+
+' Definición de actores
+actor "Usuario General" as Usuario <<Usuario>>
+actor "Estudiante" as Estudiante <<Usuario>>
+actor "Profesor" as Profesor <<Usuario>>
+actor "Administrador" as Admin <<Admin>>
+actor "Bibliotecario" as Bibliotecario <<Admin>>
+actor "Sistema IA" as IA <<Sistema Externo>>
+
+' Relaciones de herencia
+Estudiante --|> Usuario
+Profesor --|> Usuario
+Bibliotecario --|> Admin
+
+' Agrupación de casos de uso por actor
+rectangle "Casos de Uso por Actor" {
+  
+  package "Usuario General" {
+    usecase "Buscar libros" as U1
+    usecase "Ver catálogo" as U2
+    usecase "Ver detalles" as U3
+    usecase "Obtener recomendaciones" as U4
+    usecase "Filtrar/Ordenar" as U5
+  }
+  
+  package "Administrador" {
+    usecase "CRUD Libros" as A1
+    usecase "CRUD Autores" as A2
+    usecase "Importar/Exportar CSV" as A3
+    usecase "Gestionar catálogo" as A4
+  }
+  
+  package "Sistema IA" {
+    usecase "Generar embeddings" as I1
+    usecase "Calcular similitud" as I2
+    usecase "Retornar recomendaciones" as I3
+  }
+}
+
+Usuario --> U1
+Usuario --> U2
+Usuario --> U3
+Usuario --> U4
+Usuario --> U5
+
+Admin --> A1
+Admin --> A2
+Admin --> A3
+Admin --> A4
+
+' El admin también puede hacer todo lo del usuario
+Admin --> U1
+Admin --> U2
+Admin --> U3
+Admin --> U4
+Admin --> U5
+
+IA --> I1
+IA --> I2
+IA --> I3
+
+note right of Usuario
+  **Responsabilidades:**
+  - Explorar el catálogo
+  - Buscar libros académicos
+  - Descubrir contenido relevante
+  - Obtener recomendaciones personalizadas
+end note
+
+note right of Admin
+  **Responsabilidades:**
+  - Mantener catálogo actualizado
+  - Gestionar libros y autores
+  - Importar/exportar datos
+  - Todas las de Usuario
+end note
+
+note right of IA
+  **Responsabilidades:**
+  - Analizar sinopsis con NLP
+  - Generar representaciones vectoriales
+  - Calcular similitud semántica
+  - Proporcionar recomendaciones inteligentes
+end note
+
+@enduml
+
+@startuml casos_uso_prioridades
+' ============================================================================
+' DIAGRAMA DE CASOS DE USO CON PRIORIDADES
+' ============================================================================
+
+title Casos de Uso por Prioridad - BookMate
+
+' Casos de Uso Muy Alta Prioridad
+package "Prioridad: MUY ALTA" #LightYellow {
+  usecase "UC-06\nObtener\nRecomendaciones" as UC06
+}
+
+' Casos de Uso Alta Prioridad
+package "Prioridad: ALTA" #LightGreen {
+  usecase "UC-01\nCrear Libro" as UC01
+  usecase "UC-02\nListar Libros" as UC02
+  usecase "UC-03\nActualizar Libro" as UC03
+  usecase "UC-04\nEliminar Libro" as UC04
+  usecase "UC-05\nBuscar Libros" as UC05
+  usecase "UC-10\nCrear Autor" as UC10
+  usecase "UC-12\nActualizar Autor" as UC12
+  usecase "UC-13\nEliminar Autor" as UC13
+}
+
+' Casos de Uso Media Prioridad
+package "Prioridad: MEDIA" #LightBlue {
+  usecase "UC-07\nVer Detalle" as UC07
+  usecase "UC-08\nFiltrar Precio" as UC08
+  usecase "UC-09\nNavegar Catálogo" as UC09
+  usecase "UC-11\nListar Autores" as UC11
+}
+
+' Casos de Uso Baja Prioridad
+package "Prioridad: BAJA" #LightGray {
+  usecase "UC-14\nImportar CSV" as UC14
+  usecase "UC-15\nExportar CSV" as UC15
+}
+
+actor "Usuario" as Usuario
+actor "Admin" as Admin
+actor "Sistema IA" as IA
+
+Usuario --> UC02
+Usuario --> UC05
+Usuario --> UC06
+Usuario --> UC07
+Usuario --> UC08
+Usuario --> UC09
+
+Admin --> UC01
+Admin --> UC03
+Admin --> UC04
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+Admin --> UC14
+Admin --> UC15
+
+UC06 ..> IA : << comunica >>
+
+note bottom of UC06
+  **UC-06 es el caso de uso más crítico**
+  
+  - Define el valor principal del producto
+  - Diferenciador clave del sistema
+  - Requiere integración con IA
+  - Objetivo: >70% relevancia, <3s respuesta
+end note
+
+@enduml
+

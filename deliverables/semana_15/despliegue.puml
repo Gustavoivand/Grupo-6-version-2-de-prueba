@@ -1,0 +1,85 @@
+@startuml despliegue_bookmate
+' ============================================================================
+' DIAGRAMA DE DESPLIEGUE
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+title Diagrama de Despliegue - BookMate
+
+node "Docker Host" {
+  node "bookmate-network" as Network {
+    node "bookmate-backend\n(Spring Boot)" as Backend {
+      artifact "bookmate-backend:1.0.0.jar" as BackendJAR
+      database "HikariCP\nConnection Pool" as ConnectionPool
+    }
+    
+    node "postgresql\n(PostgreSQL 16)" as PostgreSQL {
+      database "bookmate_db" as Database
+      storage "postgres-data\n(Volume)" as PostgresVolume
+    }
+    
+    node "bookmate-ai-service\n(Python Flask)" as AIService {
+      artifact "ai_service:1.0.0" as AIServiceArtifact
+      database "Sentence Transformers\nModel Cache" as ModelCache
+    }
+  }
+}
+
+cloud "Internet" {
+  node "Usuario\n(Navegador)" as Usuario
+}
+
+' Relaciones
+Usuario --> Backend : HTTP :8080
+Backend --> PostgreSQL : JDBC :5432
+Backend --> AIService : HTTP REST :5000
+AIService --> PostgreSQL : JDBC :5432 (opcional)
+
+BackendJAR ..> ConnectionPool
+ConnectionPool ..> Database
+PostgreSQL ..> PostgresVolume
+AIServiceArtifact ..> ModelCache
+
+note right of Backend
+  **Configuración:**
+  • Puerto: 8080
+  • Memoria: 512MB
+  • CPU: 0.5 cores
+  • Health check: /actuator/health
+end note
+
+note right of PostgreSQL
+  **Configuración:**
+  • Puerto: 5432
+  • Usuario: bookmate_user
+  • Base de datos: bookmate_db
+  • Volumen: postgres-data
+  • Persistencia: /var/lib/postgresql/data
+end note
+
+note right of AIService
+  **Configuración:**
+  • Puerto: 5000
+  • Memoria: 1GB
+  • CPU: 1 core
+  • Modelo: all-MiniLM-L6-v2
+  • Health check: /health
+end note
+
+note bottom of Network
+  **Docker Compose:**
+  • Red: bookmate-network
+  • Volúmenes: postgres-data
+  • Servicios: 3 contenedores
+  • Orquestación: docker-compose up
+end note
+
+@enduml
+

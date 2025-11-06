@@ -1,0 +1,459 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{moreverb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+% Configuración de TikZ
+\tikzstyle{block} = [
+  rectangle, draw, rounded corners,
+  text centered, minimum height=1cm,
+  minimum width=2.5cm, font=\small, fill=gray!5
+]
+\tikzstyle{arrow} = [->, thick]
+
+% Configuración de tcolorbox
+\tcbset{
+  colback=gray!5, colframe=gray!50,
+  boxrule=0.4pt, sharp corners,
+}
+
+\title[BookMate]{BookMate — Sistema de Recomendación de Libros Académicos}
+\subtitle{Demo Final, Planes de Pruebas, Despliegue y Configuración}
+\author[GRUPO 6]{Delgado R., G. \and Osorio M., A. \and Rojas A., J. \and Torres R., J. \and Valverde G., Y. \and Villanueva A., F.}
+\institute[FC-UNI]{UNIVERSIDAD NACIONAL DE INGENIERÍA}
+\titlegraphic{\includegraphics[height=1.4cm]{Imagenes/logo_uni.png}}
+% NOTA: Reemplazar 'example-image' con 'Imagenes/logo_uni.png' cuando esté disponible
+
+\date{Noviembre 2025}
+
+\begin{document}
+
+% Portada
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Agenda
+\begin{frame}
+\frametitle{Agenda}
+\tableofcontents
+\end{frame}
+
+\section{Demo del Sistema}
+
+\begin{frame}
+\frametitle{Guía de Demostración}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \textbf{Objetivo:}
+    \begin{itemize}
+      \item Demostrar funcionalidades principales
+      \item Validar casos de uso críticos
+      \item Mostrar sistema de recomendaciones IA
+      \item Verificar integración de componentes
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{Imagenes/demo_flujo.png}
+      \captionof{figure}{Flujo de Demostración (Ejemplo)}
+      \vspace{0.2cm}
+      \small \textit{Descripción: Diagrama que muestra el flujo de la demostración, desde el inicio de sesión hasta la obtención de recomendaciones con IA.}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Escenarios de Demostración}
+\begin{tcolorbox}[title=Escenario 1: Búsqueda y Recomendaciones IA]
+\textbf{Flujo:}
+\begin{enumerate}
+  \item Usuario busca libro "Inteligencia Artificial"
+  \item Selecciona libro del catálogo
+  \item Solicita recomendaciones (IA)
+  \item Sistema genera 6 recomendaciones semánticas
+  \item Usuario revisa justificaciones
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Escenario 2: Fallback a Heurísticas]
+\textbf{Flujo:}
+\begin{enumerate}
+  \item Servicio IA no disponible
+  \item Sistema detecta fallo automáticamente
+  \item Genera recomendaciones heurísticas
+  \item Usuario recibe recomendaciones basadas en género/autor
+\end{enumerate}
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{Flujos Críticos}
+\begin{center}
+  \includegraphics[width=0.9\textwidth]{Imagenes/flujo_critico_uc06.png}
+  \captionof{figure}{Flujo Crítico: Obtener Recomendaciones con IA (Ejemplo)}
+  \vspace{0.2cm}
+  \small \textit{Descripción: Diagrama de flujo que muestra el proceso completo de obtención de recomendaciones, incluyendo la verificación de disponibilidad del servicio IA, el cálculo de similitud semántica, y el fallback a heurísticas si es necesario.}
+\end{center}
+\end{frame}
+
+\section{Plan de Pruebas}
+
+\begin{frame}
+\frametitle{Estrategia de Pruebas}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \textbf{Niveles:}
+    \begin{itemize}
+      \item \textbf{Unitarias:} Clases y métodos individuales
+      \item \textbf{Integración:} Interacción entre componentes
+      \item \textbf{Sistema:} End-to-end
+      \item \textbf{Rendimiento:} Tiempos de respuesta
+      \item \textbf{Seguridad:} Autenticación y autorización
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{Imagenes/piramide_pruebas.png}
+      \captionof{figure}{Pirámide de Pruebas (Ejemplo)}
+      \vspace{0.2cm}
+      \small \textit{Descripción: Pirámide que muestra la distribución de pruebas (más unitarias en la base, menos pruebas de sistema en la cima).}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Cobertura de Pruebas}
+\begin{table}
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Componente} & \textbf{Cobertura} & \textbf{Objetivo} \\
+\midrule
+LibrosService & >90\% & \checkmark \\
+RecommendationService & >85\% & \checkmark \\
+AIServiceClient & >80\% & \checkmark \\
+HeuristicRecommender & >85\% & \checkmark \\
+Servicio IA (Python) & >80\% & \checkmark \\
+\textbf{Total} & \textbf{>80\%} & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[title=Herramientas]
+\begin{itemize}
+  \item \textbf{Java:} JUnit 5, JaCoCo
+  \item \textbf{Python:} pytest, pytest-cov
+  \item \textbf{Integración:} Spring Boot Test, Testcontainers
+\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{Pruebas del Servicio IA}
+\begin{center}
+  \includegraphics[width=0.9\textwidth]{Imagenes/pruebas_ia.png}
+  \captionof{figure}{Estructura de Pruebas del Servicio IA (Ejemplo)}
+  \vspace{0.2cm}
+  \small \textit{Descripción: Diagrama que muestra las pruebas del servicio IA, incluyendo pruebas de generación de embeddings, cálculo de similitud, y endpoints REST.}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+  \item Pruebas de generación de embeddings
+  \item Pruebas de cálculo de similitud semántica
+  \item Pruebas de endpoints REST
+  \item Pruebas de integración con base de datos
+\end{itemize}
+\end{frame}
+
+\section{Plan de Despliegue}
+
+\begin{frame}
+\frametitle{Arquitectura de Despliegue con Docker}
+\begin{center}
+  \includegraphics[width=0.9\textwidth]{Imagenes/despliegue_docker.png}
+  \captionof{figure}{Arquitectura de Despliegue Docker Compose (Ejemplo)}
+  \vspace{0.2cm}
+  \small \textit{Descripción: Diagrama que muestra la arquitectura de despliegue con Docker Compose, incluyendo los contenedores (Backend Spring Boot, Servicio IA Python, PostgreSQL), la red Docker, y los volúmenes de persistencia.}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Configuración Docker Compose}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \textbf{Servicios:}
+    \begin{itemize}
+      \item \textbf{postgres:} Base de datos PostgreSQL 16
+      \item \textbf{backend:} Aplicación Spring Boot
+      \item \textbf{ai-service:} Microservicio IA (Python)
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    
+    \textbf{Características:}
+    \begin{itemize}
+      \item Health checks configurados
+      \item Dependencias entre servicios
+      \item Volúmenes para persistencia
+      \item Red Docker aislada
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{Imagenes/docker_compose.png}
+      \captionof{figure}{Configuración Docker Compose (Ejemplo)}
+      \vspace{0.2cm}
+      \small \textit{Descripción: Captura de pantalla o diagrama que muestra la estructura del archivo docker-compose.yml con los servicios, variables de entorno, y configuraciones.}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Migraciones Flyway}
+\begin{center}
+  \includegraphics[width=0.9\textwidth]{Imagenes/flyway_migrations.png}
+  \captionof{figure}{Estructura de Migraciones Flyway (Ejemplo)}
+  \vspace{0.2cm}
+  \small \textit{Descripción: Diagrama que muestra la estructura de migraciones Flyway (V1\_\_Initial\_schema.sql, V2\_\_Add\_authors\_table.sql, etc.) y cómo se ejecutan automáticamente al iniciar la aplicación.}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+  \item Versionado automático de esquema
+  \item Migraciones ejecutadas al inicio
+  \item Historial de cambios en BD
+  \item Rollback controlado
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Estrategia de Backup}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \textbf{Frecuencia:}
+    \begin{itemize}
+      \item Backups diarios automáticos
+      \item Retención: 7 días
+      \item Comprimidos (gzip)
+      \item Almacenados en volumen persistente
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    
+    \textbf{Proceso:}
+    \begin{enumerate}
+      \item Ejecutar \texttt{pg\_dump}
+      \item Comprimir backup
+      \item Eliminar backups antiguos
+    \end{enumerate}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{Imagenes/backup_strategy.png}
+      \captionof{figure}{Estrategia de Backup (Ejemplo)}
+      \vspace{0.2cm}
+      \small \textit{Descripción: Diagrama que muestra el flujo de backup automático, incluyendo la ejecución diaria, compresión, y eliminación de backups antiguos.}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\section{Plan de Administración de Configuración}
+
+\begin{frame}
+\frametitle{Git Workflow}
+\begin{center}
+  \includegraphics[width=0.9\textwidth]{Imagenes/git_workflow.png}
+  \captionof{figure}{Git Workflow (Ejemplo)}
+  \vspace{0.2cm}
+  \small \textit{Descripción: Diagrama que muestra el flujo de Git (feature branches → develop → release → main), incluyendo las estrategias de merge y las reglas de cada rama.}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+  \item \textbf{main:} Código estable para producción
+  \item \textbf{develop:} Integración de features
+  \item \textbf{feature/*:} Desarrollo de funcionalidades
+  \item \textbf{hotfix/*:} Correcciones urgentes
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Versionado Semántico}
+\begin{table}
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Versión} & \textbf{Tipo de Cambio} & \textbf{Ejemplo} \\
+\midrule
+\textbf{MAJOR} & Cambios incompatibles & 2.0.0 \\
+\textbf{MINOR} & Nuevas funcionalidades & 1.1.0 \\
+\textbf{PATCH} & Correcciones de bugs & 1.1.1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[title=Ejemplos]
+\begin{itemize}
+  \item \texttt{v1.0.0}: Versión inicial
+  \item \texttt{v1.1.0}: Agregar recomendaciones IA
+  \item \texttt{v1.1.1}: Corregir bug en cálculo de similitud
+  \item \texttt{v2.0.0}: Refactorización mayor
+\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{Gestión de Dependencias}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \textbf{Java (Maven):}
+    \begin{itemize}
+      \item Versiones en \texttt{pom.xml}
+      \item Actualización con \texttt{mvnw versions:display-dependency-updates}
+      \item Gestión centralizada
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    
+    \textbf{Python:}
+    \begin{itemize}
+      \item \texttt{requirements.txt}
+      \item \texttt{pip freeze > requirements.txt}
+      \item Versionado explícito
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{Imagenes/dependencias.png}
+      \captionof{figure}{Gestión de Dependencias (Ejemplo)}
+      \vspace{0.2cm}
+      \small \textit{Descripción: Diagrama que muestra la estructura de dependencias del proyecto, incluyendo las dependencias de Java (Spring Boot, JPA, etc.) y Python (Flask, Sentence Transformers, etc.).}
+    \end{center}
+  \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{CI/CD (Opcional)}
+\begin{center}
+  \includegraphics[width=0.9\textwidth]{Imagenes/cicd_pipeline.png}
+  \captionof{figure}{Pipeline CI/CD (Ejemplo)}
+  \vspace{0.2cm}
+  \small \textit{Descripción: Diagrama que muestra el pipeline CI/CD (Build → Test → Lint → Deploy), incluyendo las herramientas utilizadas (GitHub Actions, Maven, pytest).}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+  \item \textbf{Build:} Compilación del código
+  \item \textbf{Test:} Ejecución de pruebas
+  \item \textbf{Lint:} Verificación de código
+  \item \textbf{Deploy:} Despliegue automático (opcional)
+\end{itemize}
+\end{frame}
+
+\section{Resumen y Conclusiones}
+
+\begin{frame}
+\frametitle{Resumen de la Semana 16}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \textbf{Entregables:}
+    \begin{itemize}
+      \item \checkmark Guía de demostración
+      \item \checkmark Plan de pruebas (cobertura >80\%)
+      \item \checkmark Plan de despliegue (Docker Compose)
+      \item \checkmark Plan de administración de configuración
+    \end{itemize}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+    \begin{center}
+      \includegraphics[width=0.8\textwidth]{Imagenes/resumen_semana_16.png}
+      \captionof{figure}{Icono de Resumen (Ejemplo)}
+      \vspace{0.2cm}
+      \small \textit{Descripción: Un icono o gráfico que simboliza la finalización de la fase de pruebas, despliegue y configuración del proyecto.}
+    \end{center}
+  \end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[title=Logros Principales]
+\begin{itemize}
+  \item Sistema probado con cobertura >80\%
+  \item Despliegue reproducible con Docker Compose
+  \item Estrategia de backup implementada
+  \item Gestión de configuración organizada
+\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{Próximos Pasos}
+\begin{itemize}
+  \item \textbf{Demo Final:} Presentación del sistema funcional
+  \item \textbf{Link al Drive:} Documentación completa y software
+  \item \textbf{Indicaciones de Ejecución:} Guía para usuarios finales
+  \item \textbf{Subsanación (S17):} Correcciones si aplican
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[title=Estado del Proyecto]
+El sistema BookMate está listo para demostración, con:
+\begin{itemize}
+  \item Funcionalidades principales implementadas
+  \item Sistema de recomendaciones IA operativo
+  \item Pruebas con cobertura adecuada
+  \item Despliegue automatizado
+\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}
+\frametitle{¡Preguntas?}
+\begin{center}
+  \Large ¡Gracias por su atención! \\
+  \vspace{1cm}
+  \textbf{¿Preguntas sobre la demo, pruebas, despliegue o configuración?}
+  \vspace{1cm}
+  \normalsize
+  \textbf{Grupo 6}\\
+  Universidad Nacional de Ingeniería\\
+  CC341 - Ingeniería de Software\\
+  Ciclo 2025-2
+  \vspace{0.5cm}
+  \textbf{Próxima entrega:} Semana 17 - Subsanación (si aplica)
+\end{center}
+\end{frame}
+
+\end{document}
+

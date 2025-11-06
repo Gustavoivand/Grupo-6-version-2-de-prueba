@@ -1,0 +1,748 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{moreverb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+% Configuración de TikZ
+\tikzstyle{block} = [
+  rectangle, draw, rounded corners,
+  text centered, minimum height=1cm,
+  minimum width=2.5cm, font=\small, fill=gray!5
+]
+\tikzstyle{arrow} = [->, thick]
+
+% Configuración de tcolorbox
+\tcbset{
+  colback=gray!5, colframe=gray!50,
+  boxrule=0.4pt, sharp corners,
+}
+
+\title[BookMate]{BookMate — Sistema de Recomendación de Libros Académicos}
+\subtitle{Diseño Arquitectónico: Stack Tecnológico, Arquitectura C4 y Patrones de Diseño}
+\author[GRUPO 6]{Delgado R., G. \and Osorio M., A. \and Rojas A., J. \and Torres R., J. \and Valverde G., Y. \and Villanueva A., F.}
+\institute[FC-UNI]{UNIVERSIDAD NACIONAL DE INGENIERÍA}
+\titlegraphic{\includegraphics[height=1.4cm]{example-image}}
+% NOTA: Reemplazar 'example-image' con 'Imagenes/logo_uni.png' cuando esté disponible
+
+\date{Noviembre 2025}
+
+\begin{document}
+
+% Portada
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Agenda
+\begin{frame}
+\frametitle{Agenda}
+\tableofcontents
+\end{frame}
+
+\section{Introducción al Diseño Arquitectónico}
+
+\begin{frame}
+\frametitle{Fase de Diseño Arquitectónico}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Objetivo de esta Fase:}
+\begin{itemize}
+\item Definir CÓMO se implementará el sistema
+\item Seleccionar tecnologías específicas
+\item Diseñar arquitectura técnica detallada
+\item Aplicar patrones de diseño
+\item Documentar decisiones arquitectónicas
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Enfoque:}
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Con tecnologías específicas}\\
+Spring Boot, PostgreSQL, Python, Docker, etc.
+\end{tcolorbox}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Entregables de Semana 13:}
+\begin{enumerate}
+\item Prototipo navegable actualizado
+\item Plan de desarrollo del software
+\item Documento de arquitectura completo
+\item Arquitectura C4 Niveles 3-4
+\item Presentación Beamer
+\end{enumerate}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{Nota:} A diferencia de la fase de análisis (Semana 11), aquí definimos tecnologías concretas, clases de implementación y arquitectura física.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Transición: Análisis → Diseño}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Fase de Análisis (S11):}
+\begin{itemize}
+\item Modelo conceptual (BCE)
+\item Entidades del dominio
+\item Arquitectura conceptual
+\item Sin tecnologías específicas
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Fase de Diseño (S13):}
+\begin{itemize}
+\item Clases de implementación (JPA)
+\item Stack tecnológico definido
+\item Arquitectura física
+\item Patrones de diseño aplicados
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=3cm]
+\node[block, fill=LightBlue] (analisis) {Análisis\\Conceptual};
+\node[block, fill=LightGreen, right=of analisis] (diseno) {Diseño\\Arquitectónico};
+\draw[arrow] (analisis) -- node[above] {Transformación} (diseno);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\section{Stack Tecnológico}
+
+\begin{frame}
+\frametitle{Stack Tecnológico Completo}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{2.5cm}p{2.5cm}p{3cm}p{3.5cm}}
+\toprule
+\textbf{Componente} & \textbf{Tecnología} & \textbf{Versión} & \textbf{Propósito} \\
+\midrule
+\textbf{Backend} & Spring Boot & 3.2.0 & Framework principal \\
+& Spring Data JPA & (incluido) & Acceso a datos \\
+& Spring Security & (incluido) & Autenticación \\
+& Flyway & 9.x & Migraciones BD \\
+\midrule
+\textbf{Base de Datos} & PostgreSQL & 16 & Persistencia \\
+& HikariCP & (incluido) & Connection pool \\
+\midrule
+\textbf{Servicio IA} & Python & 3.11+ & Lenguaje IA \\
+& Flask & 2.3+ & Framework web \\
+& Sentence Transformers & 2.2+ & Embeddings \\
+& NumPy/SciPy & 1.24+/1.11+ & Cálculos numéricos \\
+\midrule
+\textbf{Frontend} & HTML5/CSS3/JS & ES6+ & Interfaz \\
+& Bootstrap & 5.1.3 & UI framework \\
+\midrule
+\textbf{Containerización} & Docker & 24+ & Contenedores \\
+& Docker Compose & 2.20+ & Orquestación \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Justificación de Tecnologías Principales}
+
+\textbf{Spring Boot:}
+\begin{itemize}
+\item Convención sobre configuración (reduce código boilerplate)
+\item Ecosistema completo (JPA, Security, Web)
+\item Excelente documentación y comunidad
+\item Ideal para APIs REST
+\end{itemize}
+
+\textbf{PostgreSQL:}
+\begin{itemize}
+\item Open source y robusto
+\item Excelente soporte ACID
+\item Compatible con Spring Data JPA
+\item Extensible y ampliamente usado
+\end{itemize}
+
+\textbf{Python para IA:}
+\begin{itemize}
+\item Ecosistema rico en ML/NLP
+\item Sentence Transformers fácil de usar
+\item Modelos preentrenados disponibles
+\item Ideal para microservicios de IA
+\end{itemize}
+
+\end{frame}
+
+\section{Arquitectura C4 Completa}
+
+\begin{frame}
+\frametitle{C4 Model - Nivel 1: Contexto}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama C4 Nivel 1 (Contexto)
+% Mostrar:
+% - Personas: Usuario, Administrador
+% - Sistema BookMate (centro)
+% - Sistema de IA (externo)
+% - Relaciones entre ellos
+% - Tecnologías: Spring Boot, PostgreSQL, Python
+\end{center}
+
+\textbf{Elementos:}
+\begin{itemize}
+\item \textbf{Usuarios:} Estudiante, profesor, investigador
+\item \textbf{Administradores:} Bibliotecario, gestor de catálogo
+\item \textbf{Sistema BookMate:} Backend Spring Boot + Frontend
+\item \textbf{Servicio de IA:} Microservicio Python con Sentence Transformers
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C4 Model - Nivel 2: Contenedores}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama C4 Nivel 2 (Contenedores)
+% Mostrar:
+% - Aplicación Web (HTML/CSS/JS)
+% - Sistema de Gestión (Spring Boot)
+% - Sistema de Almacenamiento (PostgreSQL)
+% - Servicio de IA (Python Flask)
+% - Flujos de comunicación con tecnologías específicas
+\end{center}
+
+\textbf{Contenedores:}
+\begin{itemize}
+\item \textbf{Aplicación Web:} HTML5, CSS3, JavaScript, Bootstrap
+\item \textbf{Sistema de Gestión:} Spring Boot 3.2.0, Java 17+
+\item \textbf{Sistema de Almacenamiento:} PostgreSQL 16
+\item \textbf{Servicio de IA:} Python 3.11, Flask 2.3, Sentence Transformers
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C4 Model - Nivel 3: Componentes}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama C4 Nivel 3 (Componentes)
+% Mostrar componentes del backend:
+% - Controllers (LibrosController, AutorController, RecommendationController)
+% - Services (LibrosService, RecommendationService, AIServiceClient)
+% - Repositories (LibrosRepository, AutorRepository, EmbeddingRepository)
+% - DTOs y Entities
+% - Relaciones entre componentes
+\end{center}
+
+\textbf{Componentes Principales:}
+\begin{itemize}
+\item \textbf{Controllers:} LibrosController, AutorController, RecommendationController
+\item \textbf{Services:} LibrosService, RecommendationService, AIServiceClient, HeuristicRecommender
+\item \textbf{Repositories:} LibrosRepository, AutorRepository, EmbeddingRepository
+\item \textbf{DTOs:} LibroDTO, AutorDTO, RecomendacionDTO
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C4 Model - Nivel 4: Código}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama C4 Nivel 4 (Código)
+% Mostrar métodos específicos:
+% - RecommendationController.obtenerRecomendaciones(bookId)
+% - RecommendationService.obtenerRecomendaciones(bookId)
+% - AIServiceClient.calcularSimilitud(bookId)
+% - HeuristicRecommender.recomendar(bookId)
+% - Flujo de llamadas entre métodos
+\end{center}
+
+\textbf{Métodos Clave:}
+\begin{itemize}
+\item \textbf{RecommendationController:} obtenerRecomendaciones(bookId)
+\item \textbf{RecommendationService:} obtenerRecomendaciones(bookId), decidirMetodo()
+\item \textbf{AIServiceClient:} calcularSimilitud(bookId), verificarDisponibilidad()
+\item \textbf{HeuristicRecommender:} recomendar(bookId), calcularPuntuacion()
+\end{itemize}
+
+\end{frame}
+
+\section{Patrones de Diseño}
+
+\begin{frame}
+\frametitle{Patrón Strategy: Recomendaciones}
+
+\textbf{Aplicación:} Sistema de recomendaciones (IA vs Heurísticas)
+
+\textbf{Implementación:}
+\begin{itemize}
+\item \textbf{Interfaz:} RecommenderStrategy
+\item \textbf{Implementaciones:} AIRecommender, HeuristicRecommender
+\item \textbf{Contexto:} RecommendationService decide qué estrategia usar
+\end{itemize}
+
+\textbf{Ventajas:}
+\begin{itemize}
+\item Facilita agregar nuevos algoritmos
+\item Permite cambiar estrategia sin modificar código cliente
+\item Fallback automático a heurísticas si IA falla
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama del patrón Strategy
+% Mostrar: RecommendationService → AIRecommender / HeuristicRecommender
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Patrón Repository: Acceso a Datos}
+
+\textbf{Aplicación:} Abstracción de acceso a base de datos
+
+\textbf{Implementación:}
+\begin{itemize}
+\item Interfaces Spring Data JPA
+\item Implementación automática por Spring
+\item Consultas derivadas de métodos
+\end{itemize}
+
+\textbf{Ejemplo:}
+\begin{verbatim}
+public interface LibrosRepository 
+    extends JpaRepository<Libro, Long> {
+    List<Libro> findByTituloContaining(String titulo);
+    List<Libro> findByAutorId(Long autorId);
+    Page<Libro> findAll(Pageable pageable);
+}
+\end{verbatim}
+
+\textbf{Ventajas:}
+\begin{itemize}
+\item Separa lógica de negocio de persistencia
+\item Facilita testing (mocks)
+\item Reduce código boilerplate
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Patrón Service Layer: Lógica de Negocio}
+
+\textbf{Aplicación:} Capa intermedia entre controllers y repositories
+
+\textbf{Responsabilidades:}
+\begin{itemize}
+\item Lógica de negocio
+\item Coordinación entre componentes
+\item Transformación Entidad → DTO
+\item Aplicación de reglas de negocio
+\end{itemize}
+
+\textbf{Ejemplo:}
+\begin{verbatim}
+@Service
+public class RecommendationService {
+    public List<LibroDTO> obtenerRecomendaciones(Long bookId) {
+        // Lógica de negocio
+        // Decisión de método
+        // Transformación a DTOs
+    }
+}
+\end{verbatim}
+
+\textbf{Ventajas:}
+\begin{itemize}
+\item Separa lógica de negocio de presentación
+\item Facilita reutilización
+\item Facilita testing
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Patrón DTO: Transferencia de Datos}
+
+\textbf{Aplicación:} Transferencia de datos entre capas
+
+\textbf{Propósito:}
+\begin{itemize}
+\item Controlar qué datos se exponen
+\item Evitar problemas de lazy loading
+\item Facilitar versionado de API
+\end{itemize}
+
+\textbf{Ejemplo:}
+\begin{verbatim}
+public class LibroDTO {
+    private Long id;
+    private String titulo;
+    private String autorNombre;
+    // Solo campos necesarios
+}
+\end{verbatim}
+
+\textbf{Ventajas:}
+\begin{itemize}
+\item Control de exposición de datos
+\item Evita problemas de serialización
+\item Facilita evolución de API
+\end{itemize}
+
+\end{frame}
+
+\section{Decisiones Arquitectónicas}
+
+\begin{frame}
+\frametitle{Decisión 1: Microservicio Python Separado}
+
+\textbf{Decisión:} Implementar servicio de IA como microservicio Python separado
+
+\textbf{Justificación:}
+\begin{itemize}
+\item Separación de responsabilidades (IA es dominio diferente)
+\item Escalabilidad independiente
+\item Tecnología adecuada (Python mejor para ML/NLP)
+\item Aislamiento de fallos (fallback a heurísticas)
+\end{itemize}
+
+\textbf{Trade-offs:}
+\begin{itemize}
+\item ✅ Ventajas: Separación clara, escalabilidad, tecnología adecuada
+\item ❌ Desventajas: Complejidad de despliegue, latencia de red
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de microservicios
+% Mostrar: Backend Spring Boot ↔ Servicio Python IA
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Decisión 2: Fallback Automático a Heurísticas}
+
+\textbf{Decisión:} Si servicio IA no disponible, usar automáticamente heurísticas
+
+\textbf{Justificación:}
+\begin{itemize}
+\item Alta disponibilidad (sistema siempre retorna recomendaciones)
+\item Resiliencia (no depende completamente de servicio externo)
+\item Experiencia de usuario (siempre recibe resultados)
+\end{itemize}
+
+\textbf{Implementación:}
+\begin{itemize}
+\item Strategy pattern para seleccionar método
+\item Health check del servicio IA
+\item Fallback transparente
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Resultado:} Sistema siempre funcional, incluso si servicio IA falla.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Decisión 3: Flyway para Migraciones}
+
+\textbf{Decisión:} Usar Flyway para versionado y migración de esquema de BD
+
+\textbf{Justificación:}
+\begin{itemize}
+\item Control de versiones del esquema
+\item Migraciones automáticas al iniciar aplicación
+\item Historial completo de cambios
+\item Rollback de migraciones
+\end{itemize}
+
+\textbf{Estructura:}
+\begin{verbatim}
+src/main/resources/db/migration/
+├── V1__Initial_schema.sql
+├── V2__Add_authors_table.sql
+└── V3__Add_embeddings_table.sql
+\end{verbatim}
+
+\textbf{Ventajas:}
+\begin{itemize}
+\item Reproducibilidad (mismo esquema en todos los entornos)
+\item Control de cambios
+\item Integración nativa con Spring Boot
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Decisión 4: Docker Compose para Orquestación}
+
+\textbf{Decisión:} Usar Docker Compose para orquestar los 3 servicios
+
+\textbf{Justificación:}
+\begin{itemize}
+\item Desarrollo local fácil (un comando para levantar todo)
+\item Reproducibilidad (mismo entorno en todos los desarrolladores)
+\item Aislamiento (cada servicio en su contenedor)
+\item Configuración declarativa (docker-compose.yml documenta arquitectura)
+\end{itemize}
+
+\textbf{Servicios:}
+\begin{itemize}
+\item Backend Spring Boot (puerto 8080)
+\item PostgreSQL (puerto 5432)
+\item Servicio Python IA (puerto 5000)
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama Docker Compose
+% Mostrar: 3 contenedores, red, volúmenes
+\end{center}
+
+\end{frame}
+
+\section{Comunicación Entre Servicios}
+
+\begin{frame}
+\frametitle{Backend ↔ Frontend}
+
+\textbf{Protocolo:} HTTP REST  
+\textbf{Formato:} JSON  
+\textbf{Autenticación:} JWT tokens
+
+\textbf{Endpoints principales:}
+\begin{itemize}
+\item \texttt{GET /api/books} - Listar libros
+\item \texttt{GET /api/books/\{id\}} - Detalle de libro
+\item \texttt{GET /api/recommendations/\{bookId\}} - Recomendaciones
+\item \texttt{POST /api/auth/login} - Autenticación
+\end{itemize}
+
+\textbf{Ejemplo de petición:}
+\begin{verbatim}
+GET /api/recommendations/123 HTTP/1.1
+Host: localhost:8080
+Authorization: Bearer {jwt_token}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Backend ↔ Servicio IA}
+
+\textbf{Protocolo:} HTTP REST  
+\textbf{Formato:} JSON  
+\textbf{Timeout:} 5 segundos  
+\textbf{Retry:} 1 intento
+
+\textbf{Endpoints del servicio IA:}
+\begin{itemize}
+\item \texttt{POST /api/embeddings/generate} - Generar embedding
+\item \texttt{GET /api/similarity/\{bookId\}} - Calcular similitud
+\item \texttt{GET /health} - Health check
+\end{itemize}
+
+\textbf{Manejo de errores:}
+\begin{itemize}
+\item Timeout: Usar heurísticas
+\item Error de conexión: Usar heurísticas
+\item Fallback automático transparente
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama de flujo de comunicación
+% Mostrar: Backend → IA → Backend, con manejo de errores
+\end{center}
+
+\end{frame}
+
+\section{Seguridad}
+
+\begin{frame}
+\frametitle{Autenticación y Autorización}
+
+\textbf{Tecnología:} Spring Security + JWT
+
+\textbf{Flujo:}
+\begin{enumerate}
+\item Usuario envía credenciales (\texttt{POST /api/auth/login})
+\item Backend valida credenciales
+\item Backend genera JWT token
+\item Frontend almacena token
+\item Frontend envía token en headers
+\item Backend valida token en cada petición
+\end{enumerate}
+
+\textbf{Roles:}
+\begin{itemize}
+\item \textbf{USER:} Usuario estándar (buscar, ver detalles, recomendaciones)
+\item \textbf{ADMIN:} Administrador (CRUD de libros y autores)
+\end{itemize}
+
+\textbf{Implementación:}
+\begin{itemize}
+\item \texttt{@PreAuthorize("hasRole('ADMIN')")} en métodos
+\item Filtros de Spring Security
+\item Tokens JWT con expiración
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Validación de Entrada}
+
+\textbf{Tecnología:} Bean Validation (\texttt{@Valid}, \texttt{@NotNull}, \texttt{@Size})
+
+\textbf{Ejemplo:}
+\begin{verbatim}
+public class CrearLibroDTO {
+    @NotBlank(message = "Título es obligatorio")
+    @Size(max = 200)
+    private String titulo;
+    
+    @NotNull
+    @DecimalMin(value = "0.0")
+    private BigDecimal precio;
+}
+\end{verbatim}
+
+\textbf{Protección:}
+\begin{itemize}
+\item SQL Injection: Prevenido por JPA (prepared statements)
+\item XSS: Validación de entrada + escapado HTML
+\item CSRF: Tokens JWT + CORS configurado
+\end{itemize}
+
+\end{frame}
+
+\section{Resumen y Conclusiones}
+
+\begin{frame}
+\frametitle{Resumen del Diseño Arquitectónico}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Stack Tecnológico:}
+\begin{itemize}
+\item Backend: Spring Boot 3.2.0
+\item Base de datos: PostgreSQL 16
+\item Servicio IA: Python 3.11 + Flask
+\item Frontend: HTML5/CSS3/JS
+\item Containerización: Docker Compose
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Arquitectura:}
+\begin{itemize}
+\item Microservicios ligero (2 servicios)
+\item Arquitectura C4 completa (4 niveles)
+\item Patrones: Strategy, Repository, Service Layer, DTO
+\item Fallback automático a heurísticas
+\item Alta disponibilidad y resiliencia
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50, title=Objetivo Cumplido]
+Hemos definido CÓMO se implementará el sistema con tecnologías específicas, arquitectura detallada y patrones de diseño aplicados. Esto proporciona una base sólida para el diseño detallado (Semana 15).
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Logros del Diseño Arquitectónico}
+
+\begin{enumerate}
+\item ✅ \textbf{Stack tecnológico} definido y justificado
+\item ✅ \textbf{Arquitectura C4} niveles 1-4 documentada
+\item ✅ \textbf{Patrones de diseño} identificados y aplicados
+\item ✅ \textbf{Decisiones arquitectónicas} documentadas
+\item ✅ \textbf{Comunicación entre servicios} especificada
+\item ✅ \textbf{Seguridad} planificada (JWT, validación)
+\item ✅ \textbf{Containerización} con Docker Compose
+\item ✅ \textbf{Plan de desarrollo} actualizado
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50, title=Próximos Pasos]
+Semana 15: Diseño detallado con clases de implementación, diagramas de secuencia, componentes y despliegue.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{¡Preguntas?}
+
+\begin{center}
+\Large ¡Gracias por su atención! \\
+
+\vspace{1cm}
+
+\textbf{¿Preguntas sobre el diseño arquitectónico?}
+
+\vspace{1cm}
+
+\normalsize
+\textbf{Grupo 6}\\
+Universidad Nacional de Ingeniería\\
+CC341 - Ingeniería de Software\\
+Ciclo 2025-2
+
+\vspace{0.5cm}
+
+\textbf{Próxima entrega:} Semana 15 - Diseño Detallado (clases de implementación)
+
+\end{center}
+
+\end{frame}
+
+\end{document}
+

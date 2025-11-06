@@ -1,0 +1,661 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{moreverb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+% Configuración de TikZ
+\tikzstyle{block} = [
+  rectangle, draw, rounded corners,
+  text centered, minimum height=1cm,
+  minimum width=2.5cm, font=\small, fill=gray!5
+]
+\tikzstyle{arrow} = [->, thick]
+
+% Configuración de tcolorbox
+\tcbset{
+  colback=gray!5, colframe=gray!50,
+  boxrule=0.4pt, sharp corners,
+}
+
+\title[BookMate]{BookMate — Sistema de Recomendación de Libros Académicos}
+\subtitle{Charter del Proyecto y Modelo de Negocio}
+\author[GRUPO 6]{Delgado R., G. \and Osorio M., A. \and Rojas A., J. \and Torres R., J. \and Valverde G., Y. \and Villanueva A., F.}
+\institute[FC-UNI]{UNIVERSIDAD NACIONAL DE INGENIERÍA}
+\titlegraphic{\includegraphics[height=1.4cm]{example-image}}
+% NOTA: Reemplazar 'example-image' con 'Imagenes/logo_uni.png' cuando esté disponible
+
+\date{Octubre 2025}
+
+\begin{document}
+
+% Portada
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Agenda
+\begin{frame}
+\frametitle{Agenda}
+\tableofcontents
+\end{frame}
+
+\section{Introducción al Proyecto}
+
+\begin{frame}
+\frametitle{¿Qué es BookMate?}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Descripción:}
+\begin{itemize}
+\item Sistema de gestión de libros académicos
+\item Recomendaciones inteligentes con IA
+\item Análisis semántico de contenido
+\item Interfaz web moderna
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Objetivo Principal:}
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+Facilitar el descubrimiento de libros académicos mediante recomendaciones basadas en similitud semántica.
+\end{tcolorbox}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{example-image-a}
+% NOTA: Reemplazar con captura de pantalla del sistema
+% o diagrama conceptual de BookMate
+\end{center}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Problema a Resolver}
+
+\textbf{Desafíos actuales en búsqueda de libros académicos:}
+
+\begin{enumerate}
+\item \textbf{Sobrecarga de información}
+  \begin{itemize}
+  \item Miles de libros disponibles
+  \item Difícil identificar los más relevantes
+  \end{itemize}
+
+\item \textbf{Búsquedas limitadas}
+  \begin{itemize}
+  \item Solo coincidencias exactas de texto
+  \item No comprenden el contenido real
+  \end{itemize}
+
+\item \textbf{Recomendaciones superficiales}
+  \begin{itemize}
+  \item Basadas únicamente en género o autor
+  \item No analizan similitud de contenido
+  \end{itemize}
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=red!5, colframe=red!50]
+\textbf{Resultado:} Tiempo desperdiciado y libros relevantes no descubiertos
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solución Propuesta}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\textbf{Recomendaciones con IA:}
+\begin{itemize}
+\item Análisis de sinopsis con NLP
+\item Embeddings semánticos
+\item Similitud de coseno
+\item Recomendaciones relevantes
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Sistema Híbrido:}
+\begin{itemize}
+\item Recomendaciones heurísticas
+\item Fallback automático
+\item Alta disponibilidad
+\end{itemize}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+\node[block] (usuario) {Usuario};
+\node[block, right=of usuario] (sistema) {Sistema BookMate};
+\node[block, above right=1cm and 0.5cm of sistema] (ia) {Servicio IA};
+\node[block, below right=1cm and 0.5cm of sistema] (heur) {Heurísticas};
+\draw[arrow] (usuario) -- (sistema);
+\draw[arrow] (sistema) -- node[above, sloped] {primario} (ia);
+\draw[arrow] (sistema) -- node[below, sloped] {fallback} (heur);
+\end{tikzpicture}
+% NOTA: Este diagrama representa la arquitectura de recomendaciones
+\end{center}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\section{Charter del Proyecto}
+
+\begin{frame}
+\frametitle{Propósito y Visión}
+
+\textbf{Propósito del Proyecto:}
+\begin{itemize}
+\item Desarrollar un sistema de recomendación de libros académicos
+\item Utilizar inteligencia artificial para análisis semántico
+\item Proporcionar recomendaciones personalizadas
+\item Facilitar la gestión eficiente del catálogo
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Visión:}
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+BookMate será la plataforma de referencia para el descubrimiento de libros académicos, distinguiéndose por su capacidad de comprender el contenido semántico y proporcionar recomendaciones altamente relevantes.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Alcance del Proyecto}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Funcionalidades Incluidas:}
+\begin{itemize}
+\item[\checkmark] Gestión de catálogo (CRUD)
+\item[\checkmark] Búsqueda avanzada
+\item[\checkmark] Recomendaciones con IA
+\item[\checkmark] Recomendaciones heurísticas
+\item[\checkmark] Interfaz web responsive
+\item[\checkmark] Panel de administración
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Fuera de Alcance:}
+\begin{itemize}
+\item[\ding{55}] Autenticación completa
+\item[\ding{55}] Sistema de compras
+\item[\ding{55}] APIs externas de libros
+\item[\ding{55}] Notificaciones por email
+\item[\ding{55}] Aplicación móvil nativa
+\item[\ding{55}] Sistema de reseñas
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Stakeholders}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{3cm}p{3cm}p{5cm}}
+\toprule
+\textbf{Stakeholder} & \textbf{Rol} & \textbf{Expectativas} \\
+\midrule
+Equipo de Desarrollo & Desarrolladores & Producto funcional y bien documentado \\
+Profesor del Curso & Cliente/Evaluador & Cumplimiento de objetivos académicos \\
+Usuarios Finales & Usuarios del sistema & Sistema intuitivo y recomendaciones relevantes \\
+Administradores & Gestores & Herramientas eficientes para gestión \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Requisitos de Alto Nivel}
+
+\textbf{Requisitos Funcionales Principales:}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{1.5cm}p{7cm}p{2cm}}
+\toprule
+\textbf{ID} & \textbf{Requisito} & \textbf{Prioridad} \\
+\midrule
+RF-01 & Gestionar libros (CRUD completo) & Alta \\
+RF-02 & Gestionar autores (CRUD completo) & Alta \\
+RF-03 & Búsqueda por título, autor, género & Alta \\
+RF-04 & Generar recomendaciones personalizadas & \textbf{Muy Alta} \\
+RF-05 & Mostrar detalles completos de libros & Media \\
+RF-06 & Filtrar libros por precio & Media \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{RF-04} es el requisito más crítico del proyecto
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Requisitos No Funcionales}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{4cm}p{4.5cm}p{2cm}}
+\toprule
+\textbf{Categoría} & \textbf{Requisito} & \textbf{Objetivo} \\
+\midrule
+Rendimiento & Búsquedas & <1s (p95) \\
+Rendimiento & Recomendaciones IA & <3s (p95) \\
+Usabilidad & Interfaz intuitiva & <5 clicks \\
+Usabilidad & Responsive design & Todos los dispositivos \\
+Fiabilidad & Disponibilidad & 95\% \\
+Seguridad & HTTPS & Producción \\
+Mantenibilidad & Cobertura tests & >80\% \\
+Escalabilidad & Usuarios concurrentes & 100 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Restricciones y Supuestos}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Restricciones:}
+\begin{itemize}
+\item \textbf{Tiempo:} 10 semanas (S7-S16)
+\item \textbf{Equipo:} 6 integrantes
+\item \textbf{Recursos:} Entorno local
+\item \textbf{Fases:}
+  \begin{itemize}
+  \item Análisis: S7-S11
+  \item Diseño: S13-S16
+  \end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Supuestos:}
+\begin{itemize}
+\item Disponibilidad del equipo: 8-10h/semana
+\item Acceso a herramientas de desarrollo
+\item Uso de modelo preentrenado (no entrenamiento)
+\item Datos ingresados manualmente
+\item Prioridad: prototipo funcional
+\end{itemize}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Riesgos Principales}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{3.5cm}p{1.5cm}p{1.5cm}p{4.5cm}}
+\toprule
+\textbf{Riesgo} & \textbf{Prob.} & \textbf{Impacto} & \textbf{Mitigación} \\
+\midrule
+Complejidad servicio IA & Media & Alto & Fallback a heurísticas; modelo preentrenado \\
+Integración microservicios & Media & Medio & Documentar APIs; Docker Compose \\
+Tiempo insuficiente & Alta & Alto & Priorizar features core \\
+Problemas de rendimiento IA & Media & Medio & Caché de embeddings \\
+Disponibilidad del equipo & Media & Medio & Reuniones semanales \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\section{Visión del Producto}
+
+\begin{frame}
+\frametitle{Declaración de Visión}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50, title=Visión de BookMate]
+\large
+BookMate será la plataforma líder en gestión y descubrimiento inteligente de libros académicos, transformando la manera en que estudiantes y profesionales encuentran contenido relevante mediante el poder de la inteligencia artificial y el análisis semántico.
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\textbf{Valor Diferencial:}
+\begin{itemize}
+\item Comprensión del contenido real, no solo metadatos
+\item Descubrimiento serendípico de libros relacionados
+\item Sistema confiable con fallback automático
+\item Enfoque específico en literatura académica
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Usuarios Objetivo}
+
+\begin{columns}
+\begin{column}{0.33\textwidth}
+\textbf{Estudiantes}
+\begin{itemize}
+\item Buscan bibliografía
+\item Para tesis/proyectos
+\item Aprendizaje autodirigido
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Beneficio:}
+Descubrir libros relevantes que no conocían
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\textbf{Profesores}
+\begin{itemize}
+\item Bibliografía para cursos
+\item Material de investigación
+\item Literatura relacionada
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Beneficio:}
+Identificar rápidamente material complementario
+\end{column}
+
+\begin{column}{0.33\textwidth}
+\textbf{Bibliotecarios}
+\begin{itemize}
+\item Gestionar catálogos
+\item Ayudar a usuarios
+\item Mantener actualizado
+\end{itemize}
+
+\vspace{0.3cm}
+
+\textbf{Beneficio:}
+Herramientas eficientes de administración
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Escenario de Uso: Estudiante}
+
+\textbf{Contexto:} María investiga sobre "arquitectura de microservicios" para su tesis
+
+\vspace{0.3cm}
+
+\begin{enumerate}
+\item Busca un libro conocido sobre microservicios
+\item Visualiza detalles del libro
+\item Solicita recomendaciones con IA
+\item BookMate analiza la sinopsis con NLP
+\item Calcula similitud semántica
+\item Sugiere 6 libros relacionados:
+  \begin{itemize}
+  \item Patrones de diseño distribuido
+  \item Docker y contenedores
+  \item Event-driven architecture
+  \item Domain-driven design
+  \end{itemize}
+\item María descubre 4 libros relevantes que no conocía
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Resultado:} 70\% de reducción en tiempo de búsqueda de bibliografía
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Modelo de Negocio (BPMN)}
+
+\begin{frame}
+\frametitle{Proceso de Recomendación - Vista General}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-b}
+% NOTA: Reemplazar con el diagrama BPMN generado desde bpmn.puml
+% Mostrar el proceso simplificado de recomendación:
+% Usuario → Sistema → IA/Heurísticas → Resultados
+\end{center}
+
+\textbf{Flujo principal:}
+\begin{enumerate}
+\item Usuario explora catálogo y selecciona libro
+\item Sistema solicita recomendaciones al servicio IA
+\item Servicio IA genera embeddings y calcula similitud
+\item Sistema retorna top 6 libros más similares
+\item Usuario visualiza recomendaciones
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Proceso de Recomendación con IA}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image-c}
+% NOTA: Reemplazar con el diagrama BPMN de interacción con IA
+% Mostrar el flujo detallado:
+% 1. Sistema recibe solicitud
+% 2. Consulta datos del libro
+% 3. Envía a servicio IA
+% 4. IA genera embeddings
+% 5. Calcula similitud de coseno
+% 6. Retorna recomendaciones
+% 7. Sistema consulta detalles
+% 8. Retorna al usuario
+\end{center}
+
+\textbf{Fallback:} Si IA no disponible → Recomendaciones heurísticas
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Proceso de Administración del Catálogo}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image}
+% NOTA: Reemplazar con el diagrama BPMN de administración
+% Mostrar las operaciones CRUD:
+% - Agregar libro
+% - Editar libro
+% - Eliminar libro
+% - Listar libros
+\end{center}
+
+\textbf{Operaciones disponibles:}
+\begin{itemize}
+\item Agregar libro (con validación y generación de embedding)
+\item Editar libro (regenera embedding si sinopsis cambió)
+\item Eliminar libro (elimina también el embedding)
+\item Listar todos los libros del catálogo
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Proceso de Búsqueda}
+
+\textbf{Flujo de búsqueda:}
+
+\begin{enumerate}
+\item Usuario ingresa término de búsqueda
+\item Sistema busca coincidencias en:
+  \begin{itemize}
+  \item Título
+  \item Autor
+  \item Género
+  \end{itemize}
+\item Aplica filtros opcionales:
+  \begin{itemize}
+  \item Precio (min/max)
+  \item Género
+  \item Año de publicación
+  \item Rating
+  \end{itemize}
+\item Ordena por relevancia
+\item Retorna resultados
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+\textbf{Objetivo:} Búsquedas en <1 segundo (p95)
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Hitos del Proyecto}
+
+\begin{frame}
+\frametitle{Cronograma de Entregables}
+
+\begin{table}
+\centering
+\small
+\begin{tabular}{p{1.5cm}p{3.5cm}p{6cm}}
+\toprule
+\textbf{Semana} & \textbf{Hito} & \textbf{Entregable Principal} \\
+\midrule
+\textbf{7} & Inicio del proyecto & Charter, Visión, Glosario, BPMN \\
+\textbf{8} & Análisis de requisitos & SRS, Casos de Uso, Prototipo UC \\
+\textbf{11} & Análisis conceptual & Modelo de Análisis, C4 C1-C2, Robustez, CRC \\
+\textbf{13} & Diseño arquitectónico & Arquitectura, C4 C3-C4, Plan de desarrollo \\
+\textbf{15} & Diseño detallado & Clases, Secuencia, Despliegue \\
+\textbf{16} & Entrega final & Demo, Planes de pruebas/despliegue/configuración \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Nota:} Semanas 7-11 = Análisis (sin tecnologías) | Semanas 13-16 = Diseño (con implementación)
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Criterios de Éxito}
+
+El proyecto será exitoso si cumple:
+
+\begin{enumerate}
+\item \checkmark \textbf{Funcionalidad core:} CRUD + Recomendaciones IA funcionando
+\item \checkmark \textbf{RNF cumplidos:} Búsquedas <1s, Recomendaciones <3s
+\item \checkmark \textbf{Documentación completa:} Todos los entregables presentados
+\item \checkmark \textbf{Calidad de código:} Cobertura >80\%, código limpio
+\item \checkmark \textbf{Demo funcional:} Demostración exitosa en semana 16
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50, title=Meta Principal]
+Sistema de recomendaciones con >70\% de precisión y respuesta en <3 segundos
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Conclusiones}
+
+\begin{frame}
+\frametitle{Resumen}
+
+\textbf{BookMate en síntesis:}
+
+\begin{itemize}
+\item Sistema de gestión y recomendación de libros académicos
+\item Utiliza IA y NLP para análisis semántico
+\item Sistema híbrido (IA + heurísticas) para confiabilidad
+\item Interfaz web responsive e intuitiva
+\item Proyecto académico de 10 semanas (S7-S16)
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Valor principal:}
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50]
+Transformar la búsqueda pasiva de libros en un descubrimiento activo e inteligente mediante IA
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Próximos Pasos}
+
+\textbf{Semana 8 - Análisis de Requisitos:}
+
+\begin{itemize}
+\item Elaborar Software Requirements Specification (SRS) completo
+\item Definir todos los casos de uso (UC-01 a UC-15)
+\item Crear modelo de casos de uso en UML
+\item Desarrollar prototipo UC funcional
+\item Establecer matriz de trazabilidad Requisitos-UC-Clases
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=yellow!5, colframe=yellow!50]
+\textbf{Enfoque:} Continuar en fase de análisis sin mencionar tecnologías específicas hasta Semana 13
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{¡Preguntas?}
+
+\begin{center}
+\Large ¡Gracias por su atención! \\
+
+\vspace{1cm}
+
+\textbf{¿Preguntas?}
+
+\vspace{1cm}
+
+\normalsize
+\textbf{Grupo 6}\\
+Universidad Nacional de Ingeniería\\
+CC341 - Ingeniería de Software\\
+Ciclo 2025-2
+
+\end{center}
+
+\end{frame}
+
+\end{document}
+

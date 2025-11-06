@@ -1,0 +1,409 @@
+@startuml robustez_uc06_recomendaciones
+' ============================================================================
+' DIAGRAMA DE ROBUSTEZ - UC-06: OBTENER RECOMENDACIONES
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: ANÁLISIS (sin tecnologías específicas)
+' ============================================================================
+
+title Diagrama de Robustez: UC-06 Obtener Recomendaciones\n(Caso de Uso Crítico)
+
+' Definición de estereotipos
+skinparam actor {
+  BorderColor Black
+  BackgroundColor White
+}
+
+skinparam boundary {
+  BorderColor Blue
+  BackgroundColor LightBlue
+}
+
+skinparam control {
+  BorderColor Green
+  BackgroundColor LightGreen
+}
+
+skinparam entity {
+  BorderColor Red
+  BackgroundColor Pink
+}
+
+' ACTORES
+actor ":Usuario" as Usuario
+
+' BOUNDARIES (Fronteras - Interfaces)
+boundary "Interfaz de\nDetalle de Libro" as InterfazDetalle <<boundary>>
+boundary "Interfaz con\nComponente de IA" as InterfazIA <<boundary>>
+
+' CONTROLS (Controladores - Lógica)
+control "Generador de\nRecomendaciones" as Generador <<control>>
+control "Analizador\nSemántico" as AnalizadorSem <<control>>
+control "Calculador\nHeurístico" as CalculadorHeur <<control>>
+
+' ENTITIES (Entidades - Datos)
+entity "Libro\n(referencia)" as LibroRef <<entity>>
+entity "Catálogo\nde Libros" as Catalogo <<entity>>
+entity "Representación\nSemántica" as RepSem <<entity>>
+entity "Recomendación" as Recomendacion <<entity>>
+
+' FLUJO PRINCIPAL (IA disponible)
+Usuario --> InterfazDetalle : 1. Solicita\nrecomendaciones
+InterfazDetalle --> Generador : 2. Solicitud\n(ID libro)
+Generador --> LibroRef : 3. Consulta\ndatos libro
+LibroRef --> Generador : 4. Datos completos
+
+note right of Generador
+  **Decisión:**
+  ¿Analizador Semántico
+  disponible?
+end note
+
+Generador --> AnalizadorSem : 5. Solicita\nanálisis (IA)
+AnalizadorSem --> LibroRef : 6. Obtiene\nsinopsis
+AnalizadorSem --> InterfazIA : 7. Envía a\ncomponente IA
+InterfazIA --> AnalizadorSem : 8. Retorna\nIDs similares
+AnalizadorSem --> RepSem : 9. Consulta\nrepresentaciones
+RepSem --> AnalizadorSem : 10. Vectores\nsemánticos
+AnalizadorSem --> Generador : 11. Top 6\nlibros similares
+
+' FLUJO ALTERNATIVO (Heurísticas)
+Generador ..> CalculadorHeur : 5a. Activa\nmodo respaldo
+CalculadorHeur --> Catalogo : 6a. Consulta\ntodos los libros
+Catalogo --> CalculadorHeur : 7a. Lista\nde libros
+CalculadorHeur --> CalculadorHeur : 8a. Aplica\nreglas similitud
+CalculadorHeur --> Generador : 9a. Top 6\nlibros heurísticos
+
+' FLUJO FINAL COMÚN
+Generador --> Catalogo : 12. Obtiene\ndetalles libros
+Catalogo --> Generador : 13. Datos\ncompletos
+Generador --> Recomendacion : 14. Crea entidades\nRecomendación
+Recomendacion --> Generador : 15. Conjunto\nde recomendaciones
+Generador --> InterfazDetalle : 16. Retorna\nrecomendaciones
+InterfazDetalle --> Usuario : 17. Muestra 6\nlibros similares
+
+note bottom of InterfazDetalle
+  **Muestra:**
+  - 6 libros con portadas
+  - Puntuación de similitud
+  - Método usado (IA o heurístico)
+end note
+
+@enduml
+
+@startuml robustez_uc01_crear_libro
+' ============================================================================
+' DIAGRAMA DE ROBUSTEZ - UC-01: CREAR LIBRO
+' ============================================================================
+
+title Diagrama de Robustez: UC-01 Crear Libro
+
+' ACTORES
+actor ":Administrador" as Admin
+
+' BOUNDARIES
+boundary "Interfaz de\nAdministración" as InterfazAdmin <<boundary>>
+boundary "Interfaz con\nComponente de IA" as InterfazIA <<boundary>>
+
+' CONTROLS
+control "Gestor de\nCatálogo" as GestorCatalogo <<control>>
+control "Validador\nde Datos" as Validador <<control>>
+control "Analizador\nSemántico" as AnalizadorSem <<control>>
+
+' ENTITIES
+entity "Libro\n(nuevo)" as LibroNuevo <<entity>>
+entity "Autor" as Autor <<entity>>
+entity "Representación\nSemántica" as RepSem <<entity>>
+
+' FLUJO
+Admin --> InterfazAdmin : 1. Selecciona\n"Agregar Libro"
+InterfazAdmin --> Admin : 2. Muestra\nformulario vacío
+Admin --> InterfazAdmin : 3. Completa\ndatos del libro
+InterfazAdmin --> GestorCatalogo : 4. Envía datos\npara crear
+
+GestorCatalogo --> Validador : 5. Solicita\nvalidación
+Validador --> Autor : 6. Verifica\nexistencia autor
+Autor --> Validador : 7. Autor existe
+Validador --> Validador : 8. Valida campos:\n- Título no vacío\n- Precio > 0\n- Fecha válida
+Validador --> GestorCatalogo : 9. Datos válidos
+
+note right of Validador
+  **Validaciones:**
+  - Campos obligatorios completos
+  - Formatos correctos
+  - ISBN único
+  - Autor existe
+  - Rangos válidos
+end note
+
+GestorCatalogo --> LibroNuevo : 10. Crea entidad\nLibro
+LibroNuevo --> GestorCatalogo : 11. Libro creado
+
+GestorCatalogo --> AnalizadorSem : 12. Notifica\npara generar embedding
+AnalizadorSem --> LibroNuevo : 13. Obtiene\nsinopsis
+AnalizadorSem --> InterfazIA : 14. Solicita\nrepresentación
+InterfazIA --> AnalizadorSem : 15. Retorna\nvector semántico
+AnalizadorSem --> RepSem : 16. Almacena\nrepresentación
+RepSem --> AnalizadorSem : 17. Confirmación
+AnalizadorSem --> GestorCatalogo : 18. Embedding\ngenerado
+
+GestorCatalogo --> InterfazAdmin : 19. Confirmación:\n"Libro creado"
+InterfazAdmin --> Admin : 20. Muestra mensaje\ny libro en lista
+
+@enduml
+
+@startuml robustez_uc05_buscar_libros
+' ============================================================================
+' DIAGRAMA DE ROBUSTEZ - UC-05: BUSCAR LIBROS
+' ============================================================================
+
+title Diagrama de Robustez: UC-05 Buscar Libros
+
+' ACTORES
+actor ":Usuario" as Usuario
+
+' BOUNDARIES
+boundary "Interfaz de\nBúsqueda" as InterfazBusqueda <<boundary>>
+
+' CONTROLS
+control "Gestor de\nBúsqueda" as GestorBusqueda <<control>>
+
+' ENTITIES
+entity "Catálogo\nde Libros" as Catalogo <<entity>>
+entity "Autor" as Autor <<entity>>
+entity "Resultado de\nBúsqueda" as ResultadoBusqueda <<entity>>
+
+' FLUJO
+Usuario --> InterfazBusqueda : 1. Ingresa query:\n"arquitectura"
+InterfazBusqueda --> GestorBusqueda : 2. Solicita\nbúsqueda
+GestorBusqueda --> Catalogo : 3. Busca en:\ntítulo, género
+Catalogo --> GestorBusqueda : 4. Libros que\ncoinciden
+GestorBusqueda --> Autor : 5. Busca en:\nnombre autor
+Autor --> GestorBusqueda : 6. Autores que\ncoinciden
+
+note right of GestorBusqueda
+  **Cálculo de Relevancia:**
+  - Coincidencia exacta título: prioridad 1
+  - Coincidencia parcial título: prioridad 2
+  - Coincidencia en autor: prioridad 3
+  - Coincidencia en género: prioridad 4
+  - Coincidencia en etiquetas: prioridad 5
+end note
+
+GestorBusqueda --> GestorBusqueda : 7. Calcula\nrelevancia
+GestorBusqueda --> GestorBusqueda : 8. Ordena por\nrelevancia
+GestorBusqueda --> ResultadoBusqueda : 9. Crea entidad\nResultado
+ResultadoBusqueda --> GestorBusqueda : 10. Conjunto\nde resultados
+GestorBusqueda --> InterfazBusqueda : 11. Retorna\nresultados
+InterfazBusqueda --> Usuario : 12. Muestra libros\nencontrados
+
+' FLUJO ALTERNATIVO: Sin resultados
+GestorBusqueda ..> Catalogo : 9a. Sin coincidencias:\nObtiene populares
+Catalogo ..> GestorBusqueda : 10a. Libros con\nalto rating
+GestorBusqueda ..> InterfazBusqueda : 11a. Mensaje +\nsugerencias
+InterfazBusqueda ..> Usuario : 12a. "Sin resultados"\n+ libros populares
+
+@enduml
+
+@startuml robustez_uc03_actualizar_libro
+' ============================================================================
+' DIAGRAMA DE ROBUSTEZ - UC-03: ACTUALIZAR LIBRO
+' ============================================================================
+
+title Diagrama de Robustez: UC-03 Actualizar Libro
+
+' ACTORES
+actor ":Administrador" as Admin
+
+' BOUNDARIES
+boundary "Interfaz de\nAdministración" as InterfazAdmin <<boundary>>
+boundary "Interfaz con\nComponente de IA" as InterfazIA <<boundary>>
+
+' CONTROLS
+control "Gestor de\nCatálogo" as GestorCatalogo <<control>>
+control "Validador\nde Datos" as Validador <<control>>
+control "Analizador\nSemántico" as AnalizadorSem <<control>>
+
+' ENTITIES
+entity "Libro\n(existente)" as LibroExistente <<entity>>
+entity "Representación\nSemántica" as RepSem <<entity>>
+
+' FLUJO
+Admin --> InterfazAdmin : 1. Selecciona libro\ny "Editar"
+InterfazAdmin --> GestorCatalogo : 2. Solicita datos\nlibroactual
+GestorCatalogo --> LibroExistente : 3. Consulta\ndatos
+LibroExistente --> GestorCatalogo : 4. Datos actuales
+GestorCatalogo --> InterfazAdmin : 5. Retorna datos
+InterfazAdmin --> Admin : 6. Muestra formulario\ncon datos actuales
+Admin --> InterfazAdmin : 7. Modifica campos:\nej. actualiza precio
+InterfazAdmin --> GestorCatalogo : 8. Envía datos\nmodificados
+
+GestorCatalogo --> Validador : 9. Valida\nnuevos datos
+Validador --> GestorCatalogo : 10. Datos válidos
+
+GestorCatalogo --> GestorCatalogo : 11. Compara:\n¿Sinopsis cambió?
+
+' FLUJO: Sinopsis NO cambió
+GestorCatalogo ..> LibroExistente : 12a. Actualiza\nsolo metadatos
+LibroExistente ..> GestorCatalogo : 13a. Libro\nactualizado
+GestorCatalogo ..> InterfazAdmin : 14a. Confirmación
+InterfazAdmin ..> Admin : 15a. Mensaje éxito
+
+' FLUJO: Sinopsis SÍ cambió
+GestorCatalogo --> LibroExistente : 12b. Actualiza\nincluida sinopsis
+LibroExistente --> GestorCatalogo : 13b. Libro\nactualizado
+GestorCatalogo --> AnalizadorSem : 14b. Notifica\nregener ar embedding
+AnalizadorSem --> LibroExistente : 15b. Obtiene\nnueva sinopsis
+AnalizadorSem --> InterfazIA : 16b. Solicita nueva\nrepresentación
+InterfazIA --> AnalizadorSem : 17b. Retorna\nnuevo vector
+AnalizadorSem --> RepSem : 18b. Actualiza\nrepresentación
+RepSem --> AnalizadorSem : 19b. Confirmación
+AnalizadorSem --> GestorCatalogo : 20b. Embedding\nactualizado
+GestorCatalogo --> InterfazAdmin : 21b. Confirmación
+InterfazAdmin --> Admin : 22b. Mensaje éxito
+
+note bottom of GestorCatalogo
+  **Decisión importante:**
+  Solo regenerar representación
+  semántica si la sinopsis cambió
+  (optimización de recursos)
+end note
+
+@enduml
+
+@startuml robustez_uc04_eliminar_libro
+' ============================================================================
+' DIAGRAMA DE ROBUSTEZ - UC-04: ELIMINAR LIBRO
+' ============================================================================
+
+title Diagrama de Robustez: UC-04 Eliminar Libro
+
+' ACTORES
+actor ":Administrador" as Admin
+
+' BOUNDARIES
+boundary "Interfaz de\nAdministración" as InterfazAdmin <<boundary>>
+
+' CONTROLS
+control "Gestor de\nCatálogo" as GestorCatalogo <<control>>
+
+' ENTITIES
+entity "Libro" as Libro <<entity>>
+entity "Representación\nSemántica" as RepSem <<entity>>
+
+' FLUJO
+Admin --> InterfazAdmin : 1. Selecciona libro\ny "Eliminar"
+InterfazAdmin --> GestorCatalogo : 2. Solicita\neliminación (ID)
+GestorCatalogo --> Libro : 3. Verifica\nexistencia
+Libro --> GestorCatalogo : 4. Libro existe
+GestorCatalogo --> InterfazAdmin : 5. Solicita\nconfirmación
+InterfazAdmin --> Admin : 6. Muestra diálogo:\n"¿Eliminar [título]?"
+Admin --> InterfazAdmin : 7. Confirma
+
+InterfazAdmin --> GestorCatalogo : 8. Confirmación\nrecibida
+GestorCatalogo --> RepSem : 9. Elimina\nrepresentación
+RepSem --> GestorCatalogo : 10. Confirmación
+GestorCatalogo --> Libro : 11. Elimina\nlibro
+Libro --> GestorCatalogo : 12. Confirmación
+GestorCatalogo --> InterfazAdmin : 13. Libro\neliminado
+InterfazAdmin --> Admin : 14. Mensaje:\n"Eliminado\nexitosamente"
+
+' FLUJO ALTERNATIVO: Cancelar
+Admin ..> InterfazAdmin : 7a. Cancela
+InterfazAdmin ..> GestorCatalogo : 8a. Cancelación
+GestorCatalogo ..> InterfazAdmin : 9a. Operación\nabortada
+InterfazAdmin ..> Admin : 10a. Mantiene\nlibro en lista
+
+@enduml
+
+@startuml robustez_resumen
+' ============================================================================
+' DIAGRAMA DE ROBUSTEZ - VISTA GENERAL DEL SISTEMA
+' ============================================================================
+
+title Vista General de Robustez: Sistema BookMate
+
+' ACTORES
+actor ":Usuario" as Usuario
+actor ":Administrador" as Admin
+
+' BOUNDARIES
+package "Boundaries (Fronteras)" {
+  boundary "Interfaz de\nCatálogo" as InterfazCatalogo <<boundary>>
+  boundary "Interfaz de\nBúsqueda" as InterfazBusqueda <<boundary>>
+  boundary "Interfaz de\nDetalle" as InterfazDetalle <<boundary>>
+  boundary "Interfaz de\nAdministración" as InterfazAdmin <<boundary>>
+  boundary "Interfaz con\nIA" as InterfazIA <<boundary>>
+}
+
+' CONTROLS
+package "Controls (Controladores)" {
+  control "Gestor de\nCatálogo" as GestorCatalogo <<control>>
+  control "Gestor de\nBúsqueda" as GestorBusqueda <<control>>
+  control "Generador de\nRecomendaciones" as Generador <<control>>
+  control "Analizador\nSemántico" as AnalizadorSem <<control>>
+  control "Calculador\nHeurístico" as CalculadorHeur <<control>>
+  control "Validador\nde Datos" as Validador <<control>>
+}
+
+' ENTITIES
+package "Entities (Entidades)" {
+  entity "Libro" as Libro <<entity>>
+  entity "Autor" as Autor <<entity>>
+  entity "Representación\nSemántica" as RepSem <<entity>>
+  entity "Recomendación" as Recomendacion <<entity>>
+  entity "Resultado de\nBúsqueda" as ResultadoBusqueda <<entity>>
+}
+
+' RELACIONES PRINCIPALES
+Usuario --> InterfazCatalogo
+Usuario --> InterfazBusqueda
+Usuario --> InterfazDetalle
+
+Admin --> InterfazAdmin
+
+InterfazCatalogo --> GestorBusqueda
+InterfazBusqueda --> GestorBusqueda
+InterfazDetalle --> Generador
+InterfazAdmin --> GestorCatalogo
+
+GestorBusqueda --> Libro
+GestorBusqueda --> Autor
+GestorBusqueda --> ResultadoBusqueda
+
+GestorCatalogo --> Libro
+GestorCatalogo --> Autor
+GestorCatalogo --> Validador
+GestorCatalogo --> AnalizadorSem
+
+Generador --> AnalizadorSem
+Generador --> CalculadorHeur
+Generador --> Libro
+Generador --> Recomendacion
+
+AnalizadorSem --> RepSem
+AnalizadorSem --> InterfazIA
+
+note right of InterfazIA
+  Comunicación con
+  sistema externo de IA
+end note
+
+note bottom of Usuario
+  **Casos de Uso Usuario:**
+  - Explorar catálogo
+  - Buscar libros
+  - Ver detalles
+  - Obtener recomendaciones
+end note
+
+note bottom of Admin
+  **Casos de Uso Admin:**
+  - CRUD de libros
+  - CRUD de autores
+  - Todos los del Usuario
+end note
+
+@enduml
+

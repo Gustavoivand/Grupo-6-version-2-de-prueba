@@ -1,0 +1,588 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{moreverb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+% Configuración de TikZ
+\tikzstyle{block} = [
+  rectangle, draw, rounded corners,
+  text centered, minimum height=1cm,
+  minimum width=2.5cm, font=\small, fill=gray!5
+]
+\tikzstyle{arrow} = [->, thick]
+
+% Configuración de tcolorbox
+\tcbset{
+  colback=gray!5, colframe=gray!50,
+  boxrule=0.4pt, sharp corners,
+}
+
+\title[BookMate]{BookMate — Sistema de Recomendación de Libros Académicos}
+\subtitle{Diseño Detallado: Clases, Secuencias, Componentes y Despliegue}
+\author[GRUPO 6]{Delgado R., G. \and Osorio M., A. \and Rojas A., J. \and Torres R., J. \and Valverde G., Y. \and Villanueva A., F.}
+\institute[FC-UNI]{UNIVERSIDAD NACIONAL DE INGENIERÍA}
+\titlegraphic{\includegraphics[height=1.4cm]{example-image}}
+% NOTA: Reemplazar 'example-image' con 'Imagenes/logo_uni.png' cuando esté disponible
+
+\date{Noviembre 2025}
+
+\begin{document}
+
+% Portada
+\begin{frame}
+\titlepage
+\end{frame}
+
+% Agenda
+\begin{frame}
+\frametitle{Agenda}
+\tableofcontents
+\end{frame}
+
+\section{Modelo de Diseño}
+
+\begin{frame}
+\frametitle{Transformación: Análisis → Diseño}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Análisis (S11):}
+\begin{itemize}
+\item Entidades conceptuales
+\item Controladores conceptuales
+\item Sin tecnologías específicas
+\item Arquitectura conceptual
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Diseño (S15):}
+\begin{itemize}
+\item Clases JPA con anotaciones
+\item Services y Controllers reales
+\item Repositories Spring Data
+\item DTOs para transferencia
+\item Métodos con firmas completas
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{center}
+\begin{tikzpicture}[node distance=3cm]
+\node[block, fill=LightBlue] (analisis) {Análisis\\Conceptual};
+\node[block, fill=LightGreen, right=of analisis] (diseno) {Diseño\\Detallado};
+\draw[arrow] (analisis) -- node[above] {Transformación} (diseno);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mapeo: Entidades Conceptuales → Clases JPA}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{3cm}p{4cm}p{4cm}}
+\toprule
+\textbf{Entidad Conceptual} & \textbf{Clase JPA} & \textbf{Anotaciones Principales} \\
+\midrule
+Libro & \texttt{Libro} & \texttt{@Entity}, \texttt{@ManyToOne}, \texttt{@OneToOne} \\
+Autor & \texttt{Autor} & \texttt{@Entity}, \texttt{@OneToMany} \\
+Representación Semántica & \texttt{Embedding} & \texttt{@Entity}, \texttt{@OneToOne} \\
+Usuario & \texttt{Usuario} & \texttt{@Entity}, \texttt{@Enumerated} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Ejemplo: Libro}
+\begin{verbatim}
+@Entity
+@Table(name = "libros")
+public class Libro {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+    
+    @ManyToOne(fetch = LAZY)
+    private Autor autor;
+    
+    @OneToOne(mappedBy = "libro")
+    private Embedding embedding;
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mapeo: Controladores → Services/Controllers}
+
+\begin{table}
+\centering
+\tiny
+\begin{tabular}{p{3.5cm}p{3.5cm}p{3.5cm}}
+\toprule
+\textbf{Controlador Conceptual} & \textbf{Service} & \textbf{Controller} \\
+\midrule
+Gestor de Catálogo & \texttt{LibrosService} & \texttt{LibrosController} \\
+Generador de Recomendaciones & \texttt{RecommendationService} & \texttt{RecommendationController} \\
+Analizador Semántico & \texttt{AIServiceClient} & (Cliente HTTP) \\
+Calculador Heurístico & \texttt{HeuristicRecommender} & (Service) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.3cm}
+
+\textbf{Separación de responsabilidades:}
+\begin{itemize}
+\item \textbf{Controller:} Maneja HTTP, validación, respuestas
+\item \textbf{Service:} Lógica de negocio, coordinación
+\item \textbf{Repository:} Acceso a datos
+\end{itemize}
+
+\end{frame}
+
+\section{Diagrama de Clases de Diseño}
+
+\begin{frame}
+\frametitle{Diagrama de Clases Completo}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama de clases de diseño completo
+% Mostrar:
+% - Entidades JPA (Libro, Autor, Embedding, Usuario)
+% - Repositories (interfaces Spring Data)
+% - Services (LibrosService, RecommendationService, etc.)
+% - Controllers (LibrosController, RecommendationController, etc.)
+% - DTOs (LibroDTO, AutorDTO, RecomendacionDTO)
+% - Relaciones entre clases
+% - Anotaciones JPA y Spring
+\end{center}
+
+\textbf{Clases principales:}
+\begin{itemize}
+\item \textbf{Entidades:} Libro, Autor, Embedding, Usuario
+\item \textbf{Repositories:} LibrosRepository, AutorRepository, EmbeddingRepository
+\item \textbf{Services:} LibrosService, RecommendationService, AIServiceClient, HeuristicRecommender
+\item \textbf{Controllers:} LibrosController, AutorController, RecommendationController
+\item \textbf{DTOs:} LibroDTO, AutorDTO, RecomendacionDTO
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Relaciones Entre Clases}
+
+\textbf{Relaciones principales:}
+
+\begin{itemize}
+\item \textbf{Libro → Autor:} \texttt{@ManyToOne} (muchos libros por autor)
+\item \textbf{Autor → Libro:} \texttt{@OneToMany} (un autor tiene muchos libros)
+\item \textbf{Libro → Embedding:} \texttt{@OneToOne} (un embedding por libro)
+\item \textbf{Controller → Service:} Inyección de dependencias
+\item \textbf{Service → Repository:} Inyección de dependencias
+\end{itemize}
+
+\vspace{0.3cm}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de relaciones entre clases
+% Mostrar relaciones ManyToOne, OneToMany, OneToOne
+\end{center}
+
+\end{frame}
+
+\section{Diagrama de Secuencia de Diseño}
+
+\begin{frame}
+\frametitle{Secuencia: UC-06 Obtener Recomendaciones (IA)}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama de secuencia de diseño de UC-06
+% Mostrar flujo completo:
+% Usuario → Frontend → RecommendationController → RecommendationService
+% → AIServiceClient → Servicio IA → AIServiceClient → RecommendationService
+% → LibrosRepository → PostgreSQL → RecommendationService → Controller → Frontend → Usuario
+\end{center}
+
+\textbf{Flujo principal:}
+\begin{enumerate}
+\item Usuario solicita recomendaciones
+\item Controller invoca Service
+\item Service verifica disponibilidad de IA
+\item Service solicita similitud a IA
+\item Service consulta libros en BD
+\item Service transforma a DTOs
+\item Controller retorna JSON
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Secuencia: Fallback a Heurísticas}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama de secuencia del flujo alternativo
+% Mostrar:
+% RecommendationService → AIServiceClient (verificar) → false
+% → HeuristicRecommender → LibrosRepository → cálculo de puntuaciones
+% → RecommendationService → Controller → Frontend
+\end{center}
+
+\textbf{Flujo alternativo:}
+\begin{enumerate}
+\item Service verifica IA → no disponible
+\item Service activa HeuristicRecommender
+\item HeuristicRecommender calcula puntuaciones
+\item HeuristicRecommender ordena y selecciona top 6
+\item Service retorna recomendaciones heurísticas
+\end{enumerate}
+
+\vspace{0.3cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50]
+\textbf{Ventaja:} Sistema siempre retorna recomendaciones, garantizando alta disponibilidad.
+\end{tcolorbox}
+
+\end{frame}
+
+\section{Diagrama de Colaboración}
+
+\begin{frame}
+\frametitle{Colaboración: UC-06}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama de colaboración de UC-06
+% Mostrar objetos y mensajes entre ellos:
+% recController → recService → aiClient → librosRepo → libro123, libro456, etc.
+\end{center}
+
+\textbf{Objetos participantes:}
+\begin{itemize}
+\item \textbf{recController:} RecommendationController
+\item \textbf{recService:} RecommendationService
+\item \textbf{aiClient:} AIServiceClient
+\item \textbf{heuristic:} HeuristicRecommender
+\item \textbf{librosRepo:} LibrosRepository
+\item \textbf{libro123, libro456, etc.:} Instancias de Libro
+\end{itemize}
+
+\textbf{Enfoque:}
+- Interacción entre objetos en tiempo de ejecución
+- Mensajes entre objetos
+- Colaboración para cumplir caso de uso
+
+\end{frame}
+
+\section{Diagrama de Componentes}
+
+\begin{frame}
+\frametitle{Componentes del Sistema}
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de componentes UML
+% Mostrar:
+% - Frontend (HTML/CSS/JS, Bootstrap)
+% - Backend Spring Boot (Controllers, Services, Repositories, Entities, DTOs, Security)
+% - Base de Datos (PostgreSQL)
+% - Servicio IA (Flask App, Sentence Transformers, Embeddings Module, Similarity Module)
+% - Interfaces (HTTP REST, JDBC, JPA)
+\end{center}
+
+\textbf{Componentes principales:}
+\begin{itemize}
+\item \textbf{Frontend:} HTML/CSS/JS, Bootstrap 5.1.3
+\item \textbf{Backend:} Controllers, Services, Repositories, Entities, DTOs, Security
+\item \textbf{Base de Datos:} PostgreSQL 16
+\item \textbf{Servicio IA:} Flask App, Sentence Transformers, Embeddings, Similarity
+\end{itemize}
+
+\end{frame}
+
+\section{Diagrama de Despliegue}
+
+\begin{frame}
+\frametitle{Arquitectura de Despliegue}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{example-image-b}
+% NOTA: Reemplazar con diagrama de despliegue completo
+% Mostrar:
+% - Docker Host
+% - Red: bookmate-network
+% - Contenedor: bookmate-backend (puerto 8080)
+% - Contenedor: postgresql (puerto 5432, volumen postgres-data)
+% - Contenedor: bookmate-ai-service (puerto 5000)
+% - Usuario (navegador) conectándose al backend
+\end{center}
+
+\textbf{Contenedores Docker:}
+\begin{itemize}
+\item \textbf{bookmate-backend:} Spring Boot (puerto 8080)
+\item \textbf{postgresql:} PostgreSQL 16 (puerto 5432, volumen persistente)
+\item \textbf{bookmate-ai-service:} Python Flask (puerto 5000)
+\end{itemize}
+
+\textbf{Orquestación:}
+- Docker Compose
+- Red: bookmate-network
+- Volúmenes: postgres-data
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Configuración de Despliegue}
+
+\textbf{Docker Compose:}
+\begin{verbatim}
+services:
+  backend:
+    image: bookmate-backend:1.0.0
+    ports: ["8080:8080"]
+    depends_on: [postgres, ai-service]
+  
+  postgres:
+    image: postgres:16
+    ports: ["5432:5432"]
+    volumes: [postgres-data:/var/lib/postgresql/data]
+  
+  ai-service:
+    image: bookmate-ai-service:1.0.0
+    ports: ["5000:5000"]
+\end{verbatim}
+
+\textbf{Características:}
+\begin{itemize}
+\item Red compartida: bookmate-network
+\item Volumen persistente para PostgreSQL
+\item Health checks configurados
+\item Variables de entorno para configuración
+\end{itemize}
+
+\end{frame}
+
+\section{Diagramas de Estados}
+
+\begin{frame}
+\frametitle{Estados: Ciclo de Vida JPA (Libro)}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{example-image-c}
+% NOTA: Reemplazar con diagrama de estados del ciclo de vida JPA
+% Mostrar:
+% Transient → Managed (save/persist)
+% Managed → Detached (clear/close)
+% Detached → Managed (merge)
+% Managed → Removed (remove)
+% Removed → [*] (commit)
+\end{center}
+
+\textbf{Estados JPA:}
+\begin{itemize}
+\item \textbf{Transient:} Objeto nuevo, no persistido
+\item \textbf{Managed:} Asociado a EntityManager, sincronizado con BD
+\item \textbf{Detached:} Desasociado pero existe en BD
+\item \textbf{Removed:} Marcado para eliminación
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Estados: Embedding}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image}
+% NOTA: Reemplazar con diagrama de estados de Embedding
+% Mostrar:
+% Pendiente → Generando → Almacenado
+% Almacenado → Actualizando → Almacenado
+% Generando → Error → Generando (reintento)
+\end{center}
+
+\textbf{Estados:}
+\begin{itemize}
+\item \textbf{Pendiente:} Libro creado, esperando generación
+\item \textbf{Generando:} Procesando sinopsis con Sentence Transformers
+\item \textbf{Almacenado:} Embedding disponible en BD
+\item \textbf{Actualizando:} Regenerando (sinopsis cambió)
+\item \textbf{Error:} Fallo en generación (reintento programado)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Estados: Solicitud de Recomendación}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{example-image-a}
+% NOTA: Reemplazar con diagrama de estados de solicitud de recomendación
+% Mostrar:
+% Solicitada → VerificandoIA → ProcesandoConIA/ProcesandoHeuristico
+% → Completada → Entregada
+\end{center}
+
+\textbf{Estados:}
+\begin{enumerate}
+\item \textbf{Solicitada:} Petición recibida
+\item \textbf{VerificandoIA:} Health check del servicio IA
+\item \textbf{ProcesandoConIA:} Cálculo de similitud semántica
+\item \textbf{ProcesandoHeuristico:} Cálculo de puntuaciones (fallback)
+\item \textbf{Completada:} Recomendaciones generadas
+\item \textbf{Entregada:} Respuesta enviada al usuario
+\end{enumerate}
+
+\end{frame}
+
+\section{Patrones de Diseño Aplicados}
+
+\begin{frame}
+\frametitle{Resumen de Patrones}
+
+\textbf{Patrones implementados:}
+
+\begin{enumerate}
+\item \textbf{Strategy Pattern:}
+   \begin{itemize}
+   \item Recomendaciones: IA vs Heurísticas
+   \item Permite cambiar algoritmo en tiempo de ejecución
+   \end{itemize}
+
+\item \textbf{Repository Pattern:}
+   \begin{itemize}
+   \item Abstracción de acceso a datos
+   \item Spring Data JPA implementa automáticamente
+   \end{itemize}
+
+\item \textbf{Service Layer Pattern:}
+   \begin{itemize}
+   \item Separación de lógica de negocio
+   \item Facilita testing y reutilización
+   \end{itemize}
+
+\item \textbf{DTO Pattern:}
+   \begin{itemize}
+   \item Transferencia de datos entre capas
+   \item Control de qué datos se exponen
+   \end{itemize}
+
+\item \textbf{Dependency Injection:}
+   \begin{itemize}
+   \item Spring inyecta dependencias automáticamente
+   \item Reduce acoplamiento
+   \end{itemize}
+\end{enumerate}
+
+\end{frame}
+
+\section{Resumen y Conclusiones}
+
+\begin{frame}
+\frametitle{Resumen del Diseño Detallado}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Clases de Diseño:}
+\begin{itemize}
+\item 4 entidades JPA
+\item 3 repositories
+\item 6 services
+\item 3 controllers
+\item 3+ DTOs
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\textbf{Diagramas Generados:}
+\begin{itemize}
+\item Diagrama de clases
+\item Diagrama de secuencia
+\item Diagrama de colaboración
+\item Diagrama de componentes
+\item Diagrama de despliegue
+\item Diagramas de estados
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=blue!5, colframe=blue!50, title=Objetivo Cumplido]
+Hemos transformado el modelo de análisis conceptual en un diseño de implementación completo con clases reales, métodos específicos y arquitectura física detallada. El sistema está listo para implementación.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Logros del Diseño Detallado}
+
+\begin{enumerate}
+\item ✅ \textbf{Modelo de diseño} completo con transformación análisis→diseño
+\item ✅ \textbf{Diagrama de clases} con clases Java reales y relaciones
+\item ✅ \textbf{Diagrama de secuencia} con llamadas reales y flujos alternativos
+\item ✅ \textbf{Diagrama de colaboración} mostrando interacción entre objetos
+\item ✅ \textbf{Diagrama de componentes} con tecnologías específicas
+\item ✅ \textbf{Diagrama de despliegue} con Docker Compose
+\item ✅ \textbf{Diagramas de estados} para entidades JPA y procesos
+\item ✅ \textbf{Patrones de diseño} aplicados y justificados
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=green!5, colframe=green!50, title=Próximos Pasos]
+Semana 16: Implementación final, pruebas, despliegue y demo completa del sistema.
+\end{tcolorbox}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{¡Preguntas?}
+
+\begin{center}
+\Large ¡Gracias por su atención! \\
+
+\vspace{1cm}
+
+\textbf{¿Preguntas sobre el diseño detallado?}
+
+\vspace{1cm}
+
+\normalsize
+\textbf{Grupo 6}\\
+Universidad Nacional de Ingeniería\\
+CC341 - Ingeniería de Software\\
+Ciclo 2025-2
+
+\vspace{0.5cm}
+
+\textbf{Próxima entrega:} Semana 16 - Examen Final (Demo, Planes, Sistema Completo)
+
+\end{center}
+
+\end{frame}
+
+\end{document}
+

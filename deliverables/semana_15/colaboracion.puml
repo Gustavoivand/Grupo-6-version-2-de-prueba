@@ -1,0 +1,67 @@
+@startuml colaboracion_uc06
+' ============================================================================
+' DIAGRAMA DE COLABORACIÓN - UC-06: Obtener Recomendaciones
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+title Diagrama de Colaboración - UC-06: Obtener Recomendaciones
+
+object "recController\n:RecommendationController" as recController
+object "recService\n:RecommendationService" as recService
+object "aiClient\n:AIServiceClient" as aiClient
+object "heuristic\n:HeuristicRecommender" as aiHeuristic
+object "librosRepo\n:LibrosRepository" as librosRepo
+object "libro123\n:Libro" as libro123
+object "libro456\n:Libro" as libro456
+object "libro789\n:Libro" as libro789
+
+recController -> recService : 1: obtenerRecomendaciones(123)
+recService -> aiClient : 2: verificarDisponibilidad()
+aiClient --> recService : 3: true
+
+recService -> aiClient : 4: calcularSimilitud(123)
+aiClient --> recService : 5: [456, 789, 101, 202, 303, 404]
+
+recService -> librosRepo : 6: findAllById([456, 789, ...])
+librosRepo -> libro456 : 7: get()
+librosRepo -> libro789 : 8: get()
+librosRepo --> recService : 9: List<Libro>
+
+recService --> recController : 10: List<LibroDTO>
+
+note right of recService
+  **Colaboración:**
+  • Coordina con AIServiceClient
+  • Consulta LibrosRepository
+  • Transforma a DTOs
+end note
+
+note right of aiClient
+  **Comunicación Externa:**
+  • HTTP REST con servicio IA
+  • Timeout: 5 segundos
+  • Retry: 1 intento
+end note
+
+' Flujo alternativo: Heurísticas
+recService -> aiHeuristic : 11: recomendar(123) [si IA no disponible]
+aiHeuristic -> librosRepo : 12: findById(123)
+librosRepo -> libro123 : 13: get()
+librosRepo --> aiHeuristic : 14: Libro
+
+aiHeuristic -> librosRepo : 15: findAll()
+librosRepo --> aiHeuristic : 16: List<Libro>
+
+aiHeuristic -> aiHeuristic : 17: calcularPuntuacion() [para cada libro]
+aiHeuristic -> aiHeuristic : 18: ordenarPorPuntuacion()
+aiHeuristic --> recService : 19: List<LibroDTO> [top 6]
+
+@enduml
+

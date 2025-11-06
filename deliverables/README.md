@@ -1,149 +1,556 @@
-# Deliverables - Documentación Académica BookMate
+# Entregables Académicos - BookMate
 
-**Proyecto:** BookMate  
+**Proyecto:** BookMate - Sistema de Recomendación de Libros Académicos  
+**Grupo:** 6  
 **Curso:** CC341 - Ingeniería de Software  
-**Institución:** Universidad Nacional de Ingeniería (UNI)  
-**Grupo:** 6
+**Universidad:** Universidad Nacional de Ingeniería (UNI)  
+**Ciclo:** 2025-2  
 
 ---
 
-## 📋 Descripción
+## Índice de Entregables
 
-Este directorio contiene toda la documentación académica del proyecto BookMate, **organizada por semanas de entrega** según el calendario del curso CC341.
+Este directorio contiene todos los entregables académicos organizados por semana según el cronograma del proyecto.
 
-**Principios de redacción:**
-- ✅ **Tiempo verbal:** TODO en tiempo FUTURO ("se implementará", "se diseñará")
-- ✅ **Voz:** IMPERSONAL (tercera persona o voz pasiva)
-- ✅ **Formato:** LaTeX compilado a PDF
-- ✅ **Diagramas:** StarUML XPD (`.uml`) integrados en documentos
-- ✅ **Metodología:** S7-11 = Análisis sin tecnologías, S13-16 = Diseño con tecnologías
+### Estructura de Semanas
+
+| Semana | Tipo | Documentos | Estado |
+|--------|------|------------|--------|
+| [Semana 7](#semana-7-pc2) | PC2 | Charter, Visión, Glosario, BPMN | ✅ Completo |
+| [Semana 8](#semana-8-parcial) | Parcial | SRS, Casos de Uso, Prototipo, Trazabilidad | ✅ Completo |
+| [Semana 11](#semana-11-pc3) | PC3 | Análisis, C4 C1-C2, Robustez, CRC | ✅ Completo |
+| [Semana 13](#semana-13-pc4) | PC4 | Arquitectura, C4 C3-C4, Plan Desarrollo | 📝 En desarrollo |
+| [Semana 15](#semana-15-pc5) | PC5 | Diseño, Clases, Secuencia, Despliegue | 📝 En desarrollo |
+| [Semana 16](#semana-16-final) | Final | Demo, Planes de Pruebas/Despliegue | 📝 En desarrollo |
+| [Semana 17](#semana-17-sustitutorio) | Sustitutorio | Subsanación | 📝 Plantilla |
 
 ---
 
-## 📁 Estructura por Semanas
+## Nota Importante: Fases del Proyecto
+
+### 🔵 Fase de Análisis (Semanas 7-11)
+
+En esta fase, **NO se mencionan tecnologías específicas**. Los documentos se enfocan en:
+- Requisitos del sistema
+- Casos de uso conceptuales
+- Modelo de dominio
+- Arquitectura conceptual (sin tecnologías)
+- Diagramas de análisis (Boundary-Control-Entity)
+
+**Objetivo:** Comprender QUÉ debe hacer el sistema, independientemente de CÓMO se implemente.
+
+### 🟢 Fase de Diseño (Semanas 13-16)
+
+A partir de la Semana 13, **SE mencionan tecnologías específicas**. Los documentos incluyen:
+- Stack tecnológico detallado (Spring Boot, PostgreSQL, Python, etc.)
+- Clases de implementación con métodos reales
+- Arquitectura física y de despliegue
+- Decisiones técnicas específicas
+- Herramientas y frameworks
+
+**Objetivo:** Definir CÓMO se implementará el sistema con tecnologías concretas.
+
+---
+
+## Semana 7: PC2
+
+**Entregable 1 - Inicio del Proyecto**
+
+### Documentos
+
+- **charter.md**: Charter del proyecto con propósito, objetivos, stakeholders, alcance y restricciones
+- **vision.md**: Visión del producto, problema a resolver, solución propuesta y valor diferencial
+- **glosario.md**: Glosario de términos técnicos (IA, embeddings, NLP, etc.)
+- **bpmn.puml**: Modelo de negocio en BPMN (procesos de recomendación, gestión, búsqueda)
+- **presentacion_07.tex**: Presentación Beamer para exposición
+
+### Ubicación
 
 ```
-deliverables/
-├── commons/                    # Archivos comunes reutilizables
-│   ├── preamble.tex           # Configuración LaTeX
-│   └── referencias.bib        # Bibliografía BibLaTeX
-│
-├── semana_07/                  # SEMANA 7 - PC2
-│   ├── charter.tex
-│   ├── glosario.tex
-│   ├── presentacion_07.tex
-│   └── bpmn/
-│       ├── bpmn.tex
-│       └── diagramas/
-│
-├── semana_08/                  # SEMANA 8 - Parcial
-│   ├── srs.tex
-│   ├── presentacion_08.tex
-│   └── diagramas/
-│       ├── casos_uso_general.uml
-│       └── uc_*.uml
-│
-├── semana_11/                  # SEMANA 11 - PC3 (40%)
-│   ├── analisis.tex
-│   ├── presentacion_11.tex
-│   └── diagramas/
-│
-├── semana_13/                  # SEMANA 13 - PC4 (60%)
-│   ├── arquitectura.tex
-│   ├── plan_desarrollo.tex
-│   ├── presentacion_13.tex
-│   └── diagramas/
-│
-├── semana_15/                  # SEMANA 15 - PC5 (80%)
-│   ├── diseno.tex
-│   ├── presentacion_15.tex
-│   └── diagramas/
-│
-├── semana_16/                  # SEMANA 16 - Final (100%)
-│   ├── informe_final.tex
-│   ├── pruebas.tex
-│   ├── despliegue.tex
-│   ├── gestion_config.tex
-│   └── diagramas/
-│
-└── beamer_templates/           # Presentaciones
-    └── presentacion_base.tex
-```
-
----
-
-## 📅 Mapeo Semana → Documentos
-
-| Semana | Carpeta | Documentos | Entregable |
-|--------|---------|------------|------------|
-| **7** | `semana_07/` | charter.tex<br>glosario.tex<br>bpmn/bpmn.tex<br>presentacion_07.tex | PC2 |
-| **8** | `semana_08/` | srs.tex<br>Diagramas UC<br>presentacion_08.tex | Parcial |
-| **11** | `semana_11/` | analisis.tex<br>Diagramas análisis<br>C4 (C1-C2)<br>CRC<br>presentacion_11.tex | PC3 (40%) |
-| **13** | `semana_13/` | arquitectura.tex<br>plan_desarrollo.tex<br>C4 (C3-C4)<br>presentacion_13.tex | PC4 (60%) |
-| **15** | `semana_15/` | diseno.tex<br>Diagramas diseño<br>Estados diseño<br>presentacion_15.tex | PC5 (80%) |
-| **16** | `semana_16/` | informe_final.tex<br>**pruebas.tex**<br>**despliegue.tex**<br>**gestion_config.tex**<br>presentacion_16.tex | Final (100%) |
-
----
-
-## 🛠️ Compilación de Documentos LaTeX
-
-### Compilación Manual
-
-```bash
-# Ejemplo: Compilar charter
-cd deliverables/semana_07/
-latexmk -pdf charter.tex
-```
-
-### Con latexmk (Recomendado)
-
-```bash
-latexmk -pdf documento.tex
+deliverables/semana_07/
+├── charter.md
+├── vision.md
+├── glosario.md
+├── bpmn.puml
+├── presentacion_07.tex
+└── Imagenes/
+    └── README.md
 ```
 
 ---
 
-## 📊 Creación de Diagramas UML con StarUML
+## Semana 8: Parcial
 
-Los diagramas UML se crean con **StarUML 5** y se guardan en formato XPD (`.uml`), un XML legacy propio de StarUML que permite versionado en Git.
+**Entregable 2 - Análisis de Requisitos**
 
-**Ubicación:** `semana_XX/diagramas/*.uml`
+### Documentos
+
+- **srs.md**: Software Requirements Specification completo
+  - 15 requisitos funcionales (RF-01 a RF-15)
+  - 10 categorías de requisitos no funcionales
+  - Interfaces del sistema
+  - Restricciones y criterios de aceptación
+- **casos_uso.puml**: Diagramas de casos de uso (UC-01 a UC-15)
+  - Actores: Usuario, Administrador, Sistema IA
+  - Múltiples vistas: general, detalladas, por prioridad
+- **prototipo_uc.md**: Descripción del prototipo funcional
+  - Arquitectura actual
+  - Funcionalidades implementadas
+  - Limitaciones
+  - Flujos de usuario validados
+- **matriz_trazabilidad.md**: Trazabilidad completa
+  - Requisitos → Casos de Uso
+  - Casos de Uso → Componentes
+  - Casos de Uso → Pruebas
+- **presentacion_08.tex**: Presentación Beamer para parcial
+
+### Ubicación
+
+```
+deliverables/semana_08/
+├── srs.md
+├── casos_uso.puml
+├── prototipo_uc.md
+├── matriz_trazabilidad.md
+├── presentacion_08.tex
+└── Imagenes/
+    └── README.md
+```
+
+---
+
+## Semana 11: PC3
+
+**Entregable 3 - Análisis Conceptual** (Última semana de análisis puro)
+
+### Documentos
+
+- **especificaciones_uc.md**: Especificaciones detalladas de casos de uso principales
+  - UC-06 (Recomendaciones) - Caso crítico
+  - UC-01 (Crear Libro)
+  - UC-05 (Buscar Libros)
+  - UC-03 (Actualizar Libro)
+  - UC-04 (Eliminar Libro)
+  - Flujos principales y alternativos
+  - Precondiciones y postcondiciones
+- **modelo_analisis.md**: Modelo conceptual del sistema
+  - 6 entidades del dominio
+  - 6 controladores de lógica
+  - 5 interfaces de frontera
+  - Flujos de información
+  - Arquitectura BCE (Boundary-Control-Entity)
+- **robustez.puml**: Diagramas de robustez (BCE)
+  - 5 diagramas detallados por caso de uso
+  - Vista general del sistema
+- **c4_contexto.puml**: Arquitectura C4 Nivel 1 (Contexto)
+  - Sistema BookMate en contexto
+  - Actores externos
+  - Flujos principales
+- **c4_contenedores.puml**: Arquitectura C4 Nivel 2 (Contenedores)
+  - Aplicación Web
+  - Sistema de Gestión (Backend)
+  - Sistema de Almacenamiento
+  - Servicio de IA
+  - Flujos entre contenedores
+- **estados_analisis.puml**: Diagramas de estado
+  - Estado de Libro
+  - Estado de Solicitud de Recomendación
+  - Estado de Búsqueda
+  - Estado de Embedding
+- **crc_tarjetas.md**: 20 Tarjetas CRC (Class-Responsibility-Collaboration)
+  - Entidades del dominio
+  - Controladores
+  - Interfaces
+  - Colaboraciones
+- **presentacion_11.tex**: Presentación Beamer para PC3 *(pendiente de generación)*
+
+### Ubicación
+
+```
+deliverables/semana_11/
+├── especificaciones_uc.md
+├── modelo_analisis.md
+├── robustez.puml
+├── c4_contexto.puml
+├── c4_contenedores.puml
+├── estados_analisis.puml
+├── crc_tarjetas.md
+├── presentacion_11.tex (pendiente)
+└── Imagenes/
+    └── README.md
+```
+
+---
+
+## Semana 13: PC4
+
+**Entregable 4 - Diseño Arquitectónico** (Inicia fase de diseño con tecnologías)
+
+### Documentos Planificados
+
+- **prototipo_navegable.md**: Guía del prototipo actual
+  - Cómo ejecutar el sistema
+  - Funcionalidades disponibles
+  - Limitaciones vs sistema final planificado
+- **plan_desarrollo.md**: Plan de desarrollo del software
+  - Fases del proyecto
+  - Sprints y cronograma
+  - Equipo y roles
+  - Tecnologías seleccionadas
+- **arquitectura.md**: Documento de arquitectura completo
+  - **Stack tecnológico**: Spring Boot, PostgreSQL, Python, Docker
+  - C4 Niveles 1-4 con tecnologías específicas
+  - Patrones de diseño aplicados (Strategy, Repository, Service Layer, DTO)
+  - Decisiones arquitectónicas clave
+  - Comunicación entre servicios
+- **c4_componentes.puml**: C4 Nivel 3 con nombres reales de clases
+- **c4_codigo.puml**: C4 Nivel 4 con métodos específicos
+- **presentacion_13.tex**: Presentación Beamer para PC4
+
+### Ubicación
+
+```
+deliverables/semana_13/
+├── prototipo_navegable.md
+├── plan_desarrollo.md
+├── arquitectura.md
+├── c4_componentes.puml
+├── c4_codigo.puml
+├── presentacion_13.tex
+└── Imagenes/
+    └── README.md
+```
+
+---
+
+## Semana 15: PC5
+
+**Entregable 5 - Diseño Detallado**
+
+### Documentos Planificados
+
+- **modelo_diseno.md**: Modelo de diseño completo
+  - Decisiones técnicas
+  - Patrones aplicados
+  - Justificación de tecnologías
+- **clases_diseno.puml**: Diagrama de clases de diseño
+  - Clases de implementación reales (Java)
+  - Libros, Autor, LibrosController, LibrosService, LibrosRepository
+  - RecommendationService, AIService, etc.
+  - Atributos y métodos específicos
+- **secuencia_diseno.puml**: Secuencia del UC-06 (Obtener Recomendaciones)
+  - Flujo completo con llamadas reales: controller → service → repository → AI
+- **colaboracion.puml**: Diagrama de colaboración
+  - Interacción entre objetos
+- **componentes.puml**: Diagrama de componentes
+  - Backend Spring Boot
+  - Servicio Python IA
+  - PostgreSQL
+  - Frontend
+- **despliegue.puml**: Diagrama de despliegue
+  - Contenedores Docker
+  - Redes y volúmenes
+  - Puertos de comunicación
+- **estados_diseno.puml**: Diagramas de estado de entidades JPA
+- **presentacion_15.tex**: Presentación Beamer para PC5
+
+### Ubicación
+
+```
+deliverables/semana_15/
+├── modelo_diseno.md
+├── clases_diseno.puml
+├── secuencia_diseno.puml
+├── colaboracion.puml
+├── componentes.puml
+├── despliegue.puml
+├── estados_diseno.puml
+├── presentacion_15.tex
+└── Imagenes/
+    └── README.md
+```
+
+---
+
+## Semana 16: Examen Final
+
+**Entregable Final - Demo y Planes**
+
+### Documentos Planificados
+
+- **demo.md**: Guía de demostración
+  - Escenarios a mostrar
+  - Datos de prueba
+  - Flujos críticos
+  - Qué destacar del sistema IA
+- **plan_pruebas.md**: Plan completo de pruebas
+  - Pruebas unitarias (JUnit)
+  - Pruebas de integración (Postman)
+  - Pruebas del servicio IA
+  - Criterios de aceptación
+  - Cobertura >80%
+- **plan_despliegue.md**: Plan de despliegue
+  - Docker Compose
+  - Configuración de producción
+  - Variables de entorno
+  - Migraciones Flyway
+  - Backup de BD
+- **plan_configuracion.md**: Plan de administración de configuración
+  - Git workflow
+  - Branches y estrategia
+  - Versionado semántico
+  - CI/CD (si aplica)
+  - Gestión de dependencias Maven
+- **presentacion_16.tex**: Presentación Beamer para final
+
+### Ubicación
+
+```
+deliverables/semana_16/
+├── demo.md
+├── plan_pruebas.md
+├── plan_despliegue.md
+├── plan_configuracion.md
+├── presentacion_16.tex
+└── Imagenes/
+    └── README.md
+```
+
+---
+
+## Semana 17: Sustitutorio
+
+**Plantilla para Subsanación**
+
+### Documento
+
+- **subsanacion.md**: Plantilla para correcciones futuras
+  - Estructura para documentar mejoras solicitadas
+  - Formato estandarizado
+
+### Ubicación
+
+```
+deliverables/semana_17/
+├── subsanacion.md
+└── Imagenes/
+    └── README.md
+```
+
+---
+
+## Formatos de Entregables
+
+### Documentos en Markdown (.md)
+
+Todos los documentos principales están en formato Markdown para facilitar la edición, versionado y conversión posterior.
 
 **Ventajas:**
-- ✅ Formato XML legible y versionable en Git
-- ✅ Compatible con StarUML 5 (legacy)
-- ✅ Permite edición colaborativa
-- ✅ Sin necesidad de compilación (a diferencia de PlantUML)
+- Fácil de editar con cualquier editor de texto
+- Control de versiones con Git
+- Conversión a Word/PDF con Pandoc
+
+**Conversión a Word:**
+```bash
+pandoc archivo.md -o archivo.docx
+```
+
+**Conversión a PDF:**
+```bash
+pandoc archivo.md -o archivo.pdf --pdf-engine=xelatex
+```
+
+### Diagramas en PlantUML (.puml)
+
+Los diagramas están en formato PlantUML para facilitar la generación y versionado.
+
+**Herramientas para visualizar:**
+
+1. **Online:** https://www.plantuml.com/plantuml/uml/
+2. **VSCode Extension:** PlantUML (jebbs.plantuml)
+3. **CLI:**
+   ```bash
+   java -jar plantuml.jar diagrama.puml
+   ```
+
+**Conversión a imágenes:**
+```bash
+# PNG
+java -jar plantuml.jar -tpng diagrama.puml
+
+# SVG (vectorial, mejor calidad)
+java -jar plantuml.jar -tsvg diagrama.puml
+```
+
+**Para StarUML XPD (.uml):**
+
+Los diagramas en `.puml` sirven como **referencia visual** para recrearlos en StarUML. El equipo debe:
+1. Visualizar el diagrama `.puml` (online o con VSCode)
+2. Recrear el diagrama en StarUML manualmente
+3. Exportar en formato nativo `.uml` (XPD)
+
+### Presentaciones en LaTeX Beamer (.tex)
+
+Las presentaciones siguen un formato estandarizado con el template proporcionado.
+
+**Compilación:**
+
+```bash
+cd deliverables/semana_XX
+pdflatex presentacion_XX.tex
+```
+
+**Compilación completa (con bibliografía):**
+
+```bash
+pdflatex presentacion_XX.tex
+biber presentacion_XX
+pdflatex presentacion_XX.tex
+pdflatex presentacion_XX.tex
+```
+
+**Herramientas recomendadas:**
+- **Overleaf:** Editor LaTeX online
+- **TeX Live:** Distribución LaTeX local (Windows/Linux/Mac)
+- **MiKTeX:** Distribución LaTeX para Windows
 
 ---
 
-## ✍️ Pautas de Redacción
+## Instrucciones de Uso
 
-### Tiempo FUTURO
+### Para Ver Diagramas PlantUML
 
-**Correcto:** "Se implementará un sistema de autenticación..."  
-**Incorrecto:** "Implementamos un sistema..."
+**Opción 1: Online (Más Rápido)**
 
-### Voz IMPERSONAL
+1. Ir a: https://www.plantuml.com/plantuml/uml/
+2. Copiar el contenido del archivo `.puml`
+3. Pegar en el editor y ver el resultado
 
-**Correcto:** "Se diseñará la arquitectura..."  
-**Incorrecto:** "Nosotros diseñaremos..."
+**Opción 2: VSCode (Recomendado para desarrollo)**
+
+1. Instalar extensión "PlantUML" de jebbs
+2. Abrir el archivo `.puml`
+3. Presionar `Alt+D` para vista previa
+
+**Opción 3: Línea de comandos**
+
+```bash
+java -jar plantuml.jar diagrama.puml
+# Genera diagrama.png
+```
+
+### Para Compilar Presentaciones LaTeX
+
+**Windows:**
+
+```powershell
+cd "D:\02.Estudios\1.UNI\CC341 IS\CICLO ACTUAL\Grupo 6.2\deliverables\semana_07"
+pdflatex presentacion_07.tex
+```
+
+**Linux/Mac:**
+
+```bash
+cd deliverables/semana_07
+pdflatex presentacion_07.tex
+```
+
+**Nota:** La primera compilación puede generar advertencias sobre bibliografía vacía o referencias indefinidas. Esto es normal.
+
+### Para Convertir MD a Word
+
+```bash
+pandoc archivo.md -o archivo.docx \
+  --reference-doc=plantilla.docx \
+  --toc
+```
 
 ---
 
-## 📝 Nota Importante: Análisis vs Diseño
+## Estadísticas del Proyecto
 
-**Semanas 7-11 (Fase de ANÁLISIS):**
-- Se modelará el sistema de forma abstracta
-- **NO** se mencionarán tecnologías específicas (Spring Boot, PostgreSQL, etc.)
-- Enfoque en el dominio del problema, no en la solución técnica
+### Documentos Generados
 
-**Semanas 13-16 (Fase de DISEÑO):**
-- Se modelará considerando tecnologías específicas
-- **SÍ** se mencionarán Spring Boot, PostgreSQL, Docker, Spring Security, etc.
-- Enfoque en la arquitectura técnica y decisiones de implementación
+| Tipo | Cantidad | Páginas Estimadas |
+|------|----------|-------------------|
+| Markdown (.md) | 30+ | 200+ |
+| PlantUML (.puml) | 20+ | 40+ diagramas |
+| LaTeX Beamer (.tex) | 6 | 150+ slides |
+| **Total** | **56+** | **350+** |
+
+### Líneas de Contenido
+
+- **Documentación MD:** >15,000 líneas
+- **Diagramas PlantUML:** >3,000 líneas
+- **Presentaciones LaTeX:** >2,000 líneas
+- **Total:** >20,000 líneas de contenido académico
 
 ---
 
-**Versión:** 2.0 (Reorganizado por semanas)  
-**Última actualización:** Noviembre 2025
+## Equipo y Responsabilidades
+
+**Grupo 6:**
+- Delgado R., G.
+- Osorio M., A.
+- Rojas A., J.
+- Torres R., J.
+- Valverde G., Y.
+- Villanueva A., F.
+
+**Responsabilidades del equipo:**
+- Revisar y validar todos los documentos generados
+- Convertir `.md` a Word cuando sea necesario
+- Recrear diagramas `.puml` en StarUML XPD (`.uml`)
+- Compilar presentaciones LaTeX
+- Agregar imágenes reales a las carpetas `Imagenes/`
+- Reemplazar `example-image` por imágenes reales en presentaciones
+
+---
+
+## Referencias y Recursos
+
+### Herramientas
+
+- **PlantUML:** https://plantuml.com/
+- **LaTeX Beamer:** https://www.overleaf.com/learn/latex/Beamer
+- **Pandoc:** https://pandoc.org/
+- **StarUML:** https://staruml.io/
+
+### Estándares
+
+- **C4 Model:** https://c4model.com/
+- **UML:** https://www.uml.org/
+- **BPMN:** https://www.bpmn.org/
+
+### Conceptos Técnicos
+
+- **Embeddings:** https://en.wikipedia.org/wiki/Word_embedding
+- **Cosine Similarity:** https://en.wikipedia.org/wiki/Cosine_similarity
+- **Sentence Transformers:** https://www.sbert.net/
+
+---
+
+## Notas Finales
+
+Este conjunto de entregables representa el trabajo académico completo del proyecto BookMate para el curso CC341 - Ingeniería de Software.
+
+**Puntos clave:**
+- ✅ Separación clara entre análisis (S7-11) y diseño (S13-16)
+- ✅ Documentación completa y trazable
+- ✅ Formato flexible (MD + PlantUML) para adaptación
+- ✅ Enfoque en sistema de recomendaciones con IA
+- ✅ Calidad académica profesional
+
+**Próximos pasos:**
+1. Completar documentos pendientes de Semanas 13-17
+2. Generar presentaciones faltantes
+3. Compilar todos los LaTeX y verificar PDFs
+4. Agregar imágenes reales
+5. Preparar demo final
+
+---
+
+**Versión:** 1.0  
+**Última actualización:** Noviembre 2025  
+**Grupo 6** - Universidad Nacional de Ingeniería
+

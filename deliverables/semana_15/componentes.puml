@@ -1,0 +1,93 @@
+@startuml componentes_bookmate
+' ============================================================================
+' DIAGRAMA DE COMPONENTES UML
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+title Diagrama de Componentes - BookMate
+
+package "Frontend" {
+  component [HTML/CSS/JS] as Frontend
+  component [Bootstrap 5.1.3] as Bootstrap
+}
+
+package "Backend Spring Boot" {
+  component [Controllers] as Controllers
+  component [Services] as Services
+  component [Repositories] as Repositories
+  component [Entities JPA] as Entities
+  component [DTOs] as DTOs
+  component [Spring Security] as Security
+}
+
+package "Base de Datos" {
+  database [PostgreSQL 16] as PostgreSQL
+}
+
+package "Servicio IA" {
+  component [Flask App] as FlaskApp
+  component [Sentence Transformers] as SentenceTransformers
+  component [Embeddings Module] as EmbeddingsModule
+  component [Similarity Module] as SimilarityModule
+}
+
+' Interfaces
+interface "HTTP REST" as HTTPInterface
+interface "JDBC" as JDBCInterface
+interface "JPA" as JPAInterface
+
+' Relaciones Frontend
+Frontend --> HTTPInterface
+Bootstrap --> Frontend
+
+' Relaciones Backend
+Controllers --> HTTPInterface
+Controllers --> Services
+Services --> Repositories
+Services --> DTOs
+Repositories --> JPAInterface
+Repositories --> JDBCInterface
+Entities --> JPAInterface
+Security --> Controllers
+
+' Relaciones Base de Datos
+JDBCInterface --> PostgreSQL
+JPAInterface --> PostgreSQL
+
+' Relaciones Servicio IA
+FlaskApp --> HTTPInterface
+FlaskApp --> SentenceTransformers
+SentenceTransformers --> EmbeddingsModule
+SentenceTransformers --> SimilarityModule
+
+' Comunicación entre componentes
+Services ..> FlaskApp : HTTP REST
+Services ..> PostgreSQL : JDBC
+
+note right of Backend
+  **Componentes:**
+  • Controllers: REST endpoints
+  • Services: Lógica de negocio
+  • Repositories: Acceso a datos
+  • Entities: Mapeo ORM
+  • DTOs: Transferencia de datos
+  • Security: Autenticación/autorización
+end note
+
+note right of Servicio
+  **Componentes:**
+  • Flask App: API REST
+  • Sentence Transformers: Modelos NLP
+  • Embeddings Module: Generación de vectores
+  • Similarity Module: Cálculo de similitud
+end note
+
+@enduml
+

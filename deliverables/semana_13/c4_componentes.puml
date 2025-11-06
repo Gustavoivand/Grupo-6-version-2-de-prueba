@@ -1,0 +1,151 @@
+@startuml c4_componentes_bookmate
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 3: COMPONENTES
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama C4 - Nivel 3: Componentes\nBackend Spring Boot - BookMate
+
+LAYOUT_WITH_LEGEND()
+
+Container(webapp, "Aplicación Web", "HTML5/CSS3/JavaScript", "Interfaz de usuario responsive")
+Container(backend, "Sistema de Gestión", "Spring Boot 3.2.0", "Backend principal con lógica de negocio")
+ContainerDb(database, "Base de Datos", "PostgreSQL 16", "Almacenamiento persistente")
+System_Ext(ai_service, "Servicio IA", "Python 3.11/Flask", "Análisis semántico y embeddings")
+
+' Componentes del Backend
+Container_Boundary(backend_boundary, "Backend Spring Boot") {
+    Component(controllers, "Controllers", "Spring MVC", "Recibe peticiones HTTP REST")
+    Component(services, "Services", "Spring @Service", "Lógica de negocio")
+    Component(repositories, "Repositories", "Spring Data JPA", "Acceso a base de datos")
+    Component(dtos, "DTOs", "Java Classes", "Transferencia de datos")
+    Component(entities, "Entities", "JPA @Entity", "Mapeo objeto-relacional")
+    Component(security, "Security", "Spring Security", "Autenticación y autorización")
+}
+
+' Componentes específicos de Services
+Container_Boundary(services_boundary, "Services Layer") {
+    Component(libros_service, "LibrosService", "Spring @Service", "Gestión de libros")
+    Component(autor_service, "AutorService", "Spring @Service", "Gestión de autores")
+    Component(recommendation_service, "RecommendationService", "Spring @Service", "Coordinación de recomendaciones")
+    Component(ai_client, "AIServiceClient", "Spring @Service", "Cliente HTTP para servicio IA")
+    Component(heuristic_recommender, "HeuristicRecommender", "Spring @Service", "Recomendaciones heurísticas")
+    Component(search_service, "SearchService", "Spring @Service", "Búsquedas avanzadas")
+}
+
+' Componentes específicos de Controllers
+Container_Boundary(controllers_boundary, "Controllers Layer") {
+    Component(libros_controller, "LibrosController", "@RestController", "Endpoints CRUD de libros")
+    Component(autor_controller, "AutorController", "@RestController", "Endpoints CRUD de autores")
+    Component(recommendation_controller, "RecommendationController", "@RestController", "Endpoints de recomendaciones")
+    Component(search_controller, "SearchController", "@RestController", "Endpoints de búsqueda")
+    Component(auth_controller, "AuthController", "@RestController", "Endpoints de autenticación")
+}
+
+' Componentes específicos de Repositories
+Container_Boundary(repositories_boundary, "Repositories Layer") {
+    Component(libros_repo, "LibrosRepository", "Spring Data JPA", "Acceso a tabla libros")
+    Component(autor_repo, "AutorRepository", "Spring Data JPA", "Acceso a tabla autores")
+    Component(embedding_repo, "EmbeddingRepository", "Spring Data JPA", "Acceso a tabla embeddings")
+    Component(usuario_repo, "UsuarioRepository", "Spring Data JPA", "Acceso a tabla usuarios")
+}
+
+' Relaciones Frontend -> Backend
+Rel(webapp, libros_controller, "HTTP REST", "JSON")
+Rel(webapp, autor_controller, "HTTP REST", "JSON")
+Rel(webapp, recommendation_controller, "HTTP REST", "JSON")
+Rel(webapp, search_controller, "HTTP REST", "JSON")
+Rel(webapp, auth_controller, "HTTP REST", "JSON")
+
+' Relaciones Controllers -> Services
+Rel(libros_controller, libros_service, "Invoca", "Java method calls")
+Rel(autor_controller, autor_service, "Invoca", "Java method calls")
+Rel(recommendation_controller, recommendation_service, "Invoca", "Java method calls")
+Rel(search_controller, search_service, "Invoca", "Java method calls")
+Rel(auth_controller, security, "Usa", "Spring Security")
+
+' Relaciones Services -> Repositories
+Rel(libros_service, libros_repo, "Usa", "Spring Data JPA")
+Rel(autor_service, autor_repo, "Usa", "Spring Data JPA")
+Rel(recommendation_service, libros_repo, "Usa", "Spring Data JPA")
+Rel(recommendation_service, embedding_repo, "Usa", "Spring Data JPA")
+Rel(search_service, libros_repo, "Usa", "Spring Data JPA")
+
+' Relaciones Services -> Services
+Rel(recommendation_service, ai_client, "Usa", "Strategy pattern")
+Rel(recommendation_service, heuristic_recommender, "Usa", "Strategy pattern")
+Rel(ai_client, ai_service, "HTTP REST", "JSON")
+
+' Relaciones Repositories -> Database
+Rel(libros_repo, database, "JDBC", "SQL queries")
+Rel(autor_repo, database, "JDBC", "SQL queries")
+Rel(embedding_repo, database, "JDBC", "SQL queries")
+Rel(usuario_repo, database, "JDBC", "SQL queries")
+
+' Relaciones Entities
+Rel(entities, database, "Mapea", "JPA ORM")
+Rel(dtos, webapp, "Transfiere", "JSON serialization")
+Rel(services, dtos, "Usa", "Transformación")
+
+' Notas
+note right of controllers
+  **Responsabilidades:**
+  • Recibir peticiones HTTP
+  • Validar entrada
+  • Invocar servicios
+  • Retornar respuestas HTTP
+  • Manejar excepciones
+  
+  **Tecnología:**
+  • Spring MVC @RestController
+  • @RequestMapping, @GetMapping, @PostMapping
+end note
+
+note right of services
+  **Responsabilidades:**
+  • Lógica de negocio
+  • Coordinación entre componentes
+  • Aplicación de reglas
+  • Transformación Entidad → DTO
+  
+  **Tecnología:**
+  • Spring @Service
+  • Dependency Injection
+  • @Transactional
+end note
+
+note right of repositories
+  **Responsabilidades:**
+  • Acceso a base de datos
+  • Consultas optimizadas
+  • Manejo de transacciones
+  
+  **Tecnología:**
+  • Spring Data JPA
+  • Interfaces que extienden JpaRepository
+  • Consultas derivadas de métodos
+end note
+
+note bottom of recommendation_service
+  **Strategy Pattern:**
+  • Decide método de recomendación
+  • Verifica disponibilidad de IA
+  • Fallback a heurísticas si IA no disponible
+  • Coordina con AIServiceClient y HeuristicRecommender
+end note
+
+note bottom of ai_client
+  **Comunicación con IA:**
+  • HTTP REST con servicio Python
+  • Timeout: 5 segundos
+  • Retry: 1 intento
+  • Manejo de errores y fallback
+end note
+
+@enduml
+

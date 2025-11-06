@@ -1,0 +1,284 @@
+@startuml clases_diseno_bookmate
+' ============================================================================
+' DIAGRAMA DE CLASES DE DISEÑO
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' Fase: DISEÑO (con tecnologías específicas)
+' ============================================================================
+
+skinparam handwritten true
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+title Diagrama de Clases de Diseño - BookMate
+
+' Entidades JPA
+class Libro {
+  -Long id
+  -String titulo
+  -String genero
+  -BigDecimal precio
+  -String sinopsis
+  -String isbn
+  -LocalDate fechaEdicion
+  -Integer numeroPaginas
+  -Double rating
+  -List<String> tags
+  +Long getId()
+  +String getTitulo()
+  +void setTitulo(String)
+  +Autor getAutor()
+  +void setAutor(Autor)
+  +BigDecimal getPrecio()
+  +void setPrecio(BigDecimal)
+  +String getSinopsis()
+  +void setSinopsis(String)
+}
+
+class Autor {
+  -Long id
+  -String nombre
+  -String biografia
+  -String nacionalidad
+  +Long getId()
+  +String getNombre()
+  +void setNombre(String)
+  +String getBiografia()
+  +void setBiografia(String)
+  +List<Libro> getLibros()
+}
+
+class Embedding {
+  -Long id
+  -float[] vector
+  -LocalDateTime fechaGeneracion
+  +Long getId()
+  +float[] getVector()
+  +void setVector(float[])
+  +Libro getLibro()
+  +void setLibro(Libro)
+  +LocalDateTime getFechaGeneracion()
+}
+
+class Usuario {
+  -Long id
+  -String email
+  -String passwordHash
+  -Rol rol
+  -LocalDateTime fechaCreacion
+  +Long getId()
+  +String getEmail()
+  +void setEmail(String)
+  +Rol getRol()
+  +void setRol(Rol)
+}
+
+enum Rol {
+  USER
+  ADMIN
+}
+
+' Repositories
+interface LibrosRepository {
+  +List<Libro> findByTituloContaining(String)
+  +List<Libro> findByAutorId(Long)
+  +List<Libro> findByGenero(String)
+  +Page<Libro> findAll(Pageable)
+  +Optional<Libro> findById(Long)
+  +Libro save(Libro)
+  +void deleteById(Long)
+}
+
+interface AutorRepository {
+  +List<Autor> findAll()
+  +Optional<Autor> findById(Long)
+  +Optional<Autor> findByNombre(String)
+  +Autor save(Autor)
+  +void deleteById(Long)
+}
+
+interface EmbeddingRepository {
+  +Optional<Embedding> findByLibroId(Long)
+  +Embedding save(Embedding)
+  +void deleteById(Long)
+}
+
+' Services
+class LibrosService {
+  -LibrosRepository librosRepository
+  -AIServiceClient aiServiceClient
+  +List<LibroDTO> listarLibros(FiltrosLibro)
+  +LibroDTO obtenerLibro(Long)
+  +LibroDTO crearLibro(CrearLibroDTO)
+  +LibroDTO actualizarLibro(Long, ActualizarLibroDTO)
+  +void eliminarLibro(Long)
+  -LibroDTO toDTO(Libro)
+  -Libro toEntity(CrearLibroDTO)
+}
+
+class AutorService {
+  -AutorRepository autorRepository
+  +List<AutorDTO> listarAutores()
+  +AutorDTO obtenerAutor(Long)
+  +AutorDTO crearAutor(CrearAutorDTO)
+  +AutorDTO actualizarAutor(Long, ActualizarAutorDTO)
+  +void eliminarAutor(Long)
+  -AutorDTO toDTO(Autor)
+}
+
+class RecommendationService {
+  -AIServiceClient aiServiceClient
+  -HeuristicRecommender heuristicRecommender
+  -LibrosRepository librosRepository
+  +List<LibroDTO> obtenerRecomendaciones(Long)
+  -List<LibroDTO> obtenerRecomendacionesIA(Long)
+  -List<LibroDTO> obtenerRecomendacionesHeuristicas(Long)
+}
+
+class AIServiceClient {
+  -RestTemplate restTemplate
+  -String aiServiceUrl
+  +float[] generarEmbedding(String)
+  +List<Long> calcularSimilitud(Long)
+  +boolean verificarDisponibilidad()
+}
+
+class HeuristicRecommender {
+  -LibrosRepository librosRepository
+  +List<LibroDTO> recomendar(Long)
+  -int calcularPuntuacion(Libro, Libro)
+  -boolean esPrecioSimilar(BigDecimal, BigDecimal)
+  -LibroDTO toDTO(Libro)
+}
+
+' Controllers
+class LibrosController {
+  -LibrosService librosService
+  +ResponseEntity<List<LibroDTO>> listarLibros(String, Long, String)
+  +ResponseEntity<LibroDTO> obtenerLibro(Long)
+  +ResponseEntity<LibroDTO> crearLibro(CrearLibroDTO)
+  +ResponseEntity<LibroDTO> actualizarLibro(Long, ActualizarLibroDTO)
+  +ResponseEntity<Void> eliminarLibro(Long)
+}
+
+class AutorController {
+  -AutorService autorService
+  +ResponseEntity<List<AutorDTO>> listarAutores()
+  +ResponseEntity<AutorDTO> obtenerAutor(Long)
+  +ResponseEntity<AutorDTO> crearAutor(CrearAutorDTO)
+  +ResponseEntity<AutorDTO> actualizarAutor(Long, ActualizarAutorDTO)
+  +ResponseEntity<Void> eliminarAutor(Long)
+}
+
+class RecommendationController {
+  -RecommendationService recommendationService
+  +ResponseEntity<List<LibroDTO>> obtenerRecomendaciones(Long)
+  +ResponseEntity<List<LibroDTO>> obtenerRecomendacionesPersonalizadas(Long)
+}
+
+' DTOs
+class LibroDTO {
+  -Long id
+  -String titulo
+  -String autorNombre
+  -Long autorId
+  -String genero
+  -BigDecimal precio
+  -String sinopsis
+  -String isbn
+  -LocalDate fechaEdicion
+  -Integer numeroPaginas
+  -Double rating
+  -List<String> tags
+}
+
+class AutorDTO {
+  -Long id
+  -String nombre
+  -String biografia
+  -String nacionalidad
+}
+
+class RecomendacionDTO {
+  -LibroDTO libro
+  -Double similitud
+  -String metodo
+}
+
+class CrearLibroDTO {
+  -String titulo
+  -Long autorId
+  -String genero
+  -BigDecimal precio
+  -String sinopsis
+  -String isbn
+  -LocalDate fechaEdicion
+  -Integer numeroPaginas
+  -Double rating
+  -List<String> tags
+}
+
+' Relaciones
+Libro "1" --> "0..1" Embedding : tiene
+Libro "N" --> "1" Autor : pertenece a
+Usuario "1" --> "*" Rol : tiene
+
+LibrosRepository ..|> Libro : accede a
+AutorRepository ..|> Autor : accede a
+EmbeddingRepository ..|> Embedding : accede a
+
+LibrosService --> LibrosRepository : usa
+LibrosService --> AIServiceClient : usa
+AutorService --> AutorRepository : usa
+RecommendationService --> AIServiceClient : usa
+RecommendationService --> HeuristicRecommender : usa
+RecommendationService --> LibrosRepository : usa
+HeuristicRecommender --> LibrosRepository : usa
+
+LibrosController --> LibrosService : invoca
+AutorController --> AutorService : invoca
+RecommendationController --> RecommendationService : invoca
+
+LibrosService ..> LibroDTO : retorna
+AutorService ..> AutorDTO : retorna
+RecommendationService ..> LibroDTO : retorna
+HeuristicRecommender ..> LibroDTO : retorna
+
+LibrosController ..> LibroDTO : usa
+AutorController ..> AutorDTO : usa
+RecommendationController ..> LibroDTO : usa
+
+LibrosController ..> CrearLibroDTO : recibe
+
+note right of Libro
+  **Anotaciones JPA:**
+  @Entity
+  @Table(name = "libros")
+  @ManyToOne(fetch = LAZY)
+  @OneToOne(mappedBy = "libro")
+  @ElementCollection
+end note
+
+note right of LibrosService
+  **Anotaciones Spring:**
+  @Service
+  @Transactional
+  @Autowired (constructor)
+end note
+
+note right of LibrosController
+  **Anotaciones Spring:**
+  @RestController
+  @RequestMapping("/api/books")
+  @PreAuthorize("hasRole('ADMIN')")
+end note
+
+note right of RecommendationService
+  **Strategy Pattern:**
+  Decide entre IA y heurísticas
+  Fallback automático
+end note
+
+@enduml
+
