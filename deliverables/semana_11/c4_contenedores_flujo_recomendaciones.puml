@@ -1,0 +1,57 @@
+@startuml c4_contenedores_flujo_recomendaciones
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: CONTENEDORES CON FLUJOS
+' Flujo de Recomendaciones (UC-06)
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Flujos Entre Contenedores\nFlujo de Recomendaciones (UC-06)
+
+LAYOUT_TOP_DOWN()
+
+Person(usuario, "Usuario")
+
+System_Boundary(bookmate, "Sistema BookMate") {
+    Container(webapp, "Aplicación Web", "Interfaz de Usuario")
+    Container(backend, "Sistema de Gestión", "Lógica de Negocio")
+    ContainerDb(database, "Sistema de Almacenamiento", "Base de Datos")
+}
+
+System_Ext(ia_service, "Servicio de IA")
+
+' FLUJO DE RECOMENDACIONES
+Rel(usuario, webapp, "1. Click en 'Ver libros similares'")
+Rel(webapp, backend, "2. Solicita recomendaciones (ID: 123)")
+
+Rel(backend, database, "3. Consulta datos del libro 123")
+Rel(database, backend, "4. Retorna: título, sinopsis, etc.")
+
+Rel(backend, ia_service, "5. Solicita recomendaciones\n(ID: 123, sinopsis: '...', top: 6)")
+
+note right of ia_service
+  **Procesamiento IA:**
+  • Genera embedding de sinopsis
+  • Calcula similitud con catálogo
+  • Ordena por relevancia
+  • Selecciona top 6
+end note
+
+Rel(ia_service, backend, "6. Retorna IDs: [45, 12, 78, 34, 56, 23]\n+ scores: [0.92, 0.87, ...]")
+
+Rel(backend, database, "7. Consulta detalles de libros\n[45, 12, 78, 34, 56, 23]")
+Rel(database, backend, "8. Retorna datos completos de 6 libros")
+
+Rel(backend, webapp, "9. Retorna recomendaciones formateadas")
+Rel(webapp, usuario, "10. Muestra 6 libros similares\ncon puntuaciones")
+
+' FLUJO ALTERNATIVO (Heurísticas)
+Rel(backend, database, "5a. IA no disponible:\nConsulta todo el catálogo", "Fallback")
+Rel(backend, backend, "6a. Aplica reglas heurísticas\n(género, autor, tags, precio)")
+Rel(backend, webapp, "7a. Retorna recomendaciones heurísticas")
+
+@enduml
+

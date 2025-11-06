@@ -1,0 +1,61 @@
+@startuml c4_contenedores_descomposicion
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: DESCOMPOSICIÓN DEL BACKEND
+' Vista de Componentes Conceptuales
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama C4 - Nivel 2: Descomposición del Backend\n(Vista de Componentes Conceptuales)
+
+Person(usuario, "Usuario")
+
+Container(webapp, "Aplicación Web", "Interfaz de Usuario")
+
+System_Boundary(backend_detail, "Sistema de Gestión (Backend)") {
+    Component(gestor_catalogo, "Gestor de\nCatálogo", "Control", "Coordina CRUD de libros y autores")
+    Component(gestor_busqueda, "Gestor de\nBúsqueda", "Control", "Coordina búsquedas y filtros")
+    Component(generador_rec, "Generador de\nRecomendaciones", "Control", "Coordina recomendaciones IA/heurísticas")
+    Component(analizador_sem, "Analizador\nSemántico", "Control", "Procesa texto con IA")
+    Component(calculador_heur, "Calculador\nHeurístico", "Control", "Aplica reglas de similitud")
+    Component(validador, "Validador de\nDatos", "Control", "Valida integridad de datos")
+}
+
+ContainerDb(database, "Sistema de Almacenamiento", "BD")
+System_Ext(ia_service, "Servicio de IA")
+
+' Relaciones
+Rel(usuario, webapp, "Usa")
+Rel(webapp, gestor_catalogo, "CRUD libros/autores")
+Rel(webapp, gestor_busqueda, "Búsquedas")
+Rel(webapp, generador_rec, "Solicita recomendaciones")
+
+Rel(gestor_catalogo, validador, "Valida datos")
+Rel(gestor_catalogo, database, "Persiste")
+Rel(gestor_catalogo, analizador_sem, "Notifica nuevo libro")
+
+Rel(gestor_busqueda, database, "Consulta")
+
+Rel(generador_rec, analizador_sem, "Solicita análisis IA")
+Rel(generador_rec, calculador_heur, "Activa heurísticas (fallback)")
+Rel(generador_rec, database, "Consulta detalles")
+
+Rel(analizador_sem, ia_service, "Comunica")
+Rel(analizador_sem, database, "Lee/escribe embeddings")
+
+Rel(calculador_heur, database, "Consulta catálogo")
+
+note bottom of generador_rec
+  **Responsabilidad Crítica:**
+  • Determinar método (IA o heurístico)
+  • Coordinar generación de recomendaciones
+  • Manejar fallback transparente
+  • Garantizar respuesta menor a 3s
+end note
+
+@enduml
+

@@ -1,0 +1,55 @@
+@startuml c4_contenedores_flujo_crud
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: FLUJO DE CREACIÓN DE LIBRO
+' Caso de Uso: UC-01
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Flujo de Creación de Libro (UC-01)
+
+LAYOUT_TOP_DOWN()
+
+Person(admin, "Administrador")
+
+System_Boundary(bookmate, "Sistema BookMate") {
+    Container(webapp, "Aplicación Web", "Interfaz de Admin")
+    Container(backend, "Sistema de Gestión", "Gestor de Catálogo")
+    ContainerDb(database, "Sistema de Almacenamiento", "BD")
+}
+
+System_Ext(ia_service, "Servicio de IA")
+
+' FLUJO
+Rel(admin, webapp, "1. Completa formulario:\n• Título: 'Clean Code'\n• Autor: 'Robert Martin'\n• Sinopsis: '...'")
+Rel(webapp, backend, "2. Envía datos del nuevo libro")
+
+Rel(backend, backend, "3. Valida datos:\n• Campos obligatorios\n• Precio mayor a 0\n• ISBN único")
+
+Rel(backend, database, "4. Verifica que autor existe")
+Rel(database, backend, "5. Autor encontrado")
+
+Rel(backend, database, "6. Inserta nuevo libro\n(ID: 456, título: 'Clean Code', ...)")
+Rel(database, backend, "7. Confirmación: Libro creado")
+
+Rel(backend, ia_service, "8. Notifica: Generar embedding\n(ID: 456, sinopsis: '...')")
+Rel(ia_service, ia_service, "9. Genera vector semántico")
+Rel(ia_service, database, "10. Almacena embedding\n(libro_id: 456, vector: [...])")
+
+Rel(backend, webapp, "11. Retorna éxito")
+Rel(webapp, admin, "12. Muestra: 'Libro agregado exitosamente'")
+
+note bottom of backend
+  **Validaciones:**
+  • Título no vacío
+  • Autor existe en BD
+  • Precio mayor a 0
+  • ISBN único (si se proporciona)
+  • Fecha válida
+end note
+
+@enduml
+

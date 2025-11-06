@@ -1,0 +1,52 @@
+@startuml c4_contenedores_flujo_busqueda
+' ============================================================================
+' DIAGRAMA C4 - NIVEL 2: FLUJO DE BÚSQUEDA
+' Caso de Uso: UC-05
+' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
+' Grupo: 6
+' Universidad: UNI
+' ============================================================================
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Diagrama C4 - Nivel 2: Flujo de Búsqueda (UC-05)
+
+LAYOUT_TOP_DOWN()
+
+Person(usuario, "Usuario")
+
+System_Boundary(bookmate, "Sistema BookMate") {
+    Container(webapp, "Aplicación Web", "Interfaz de Búsqueda")
+    Container(backend, "Sistema de Gestión", "Gestor de Búsqueda")
+    ContainerDb(database, "Sistema de Almacenamiento", "BD")
+}
+
+' FLUJO
+Rel(usuario, webapp, "1. Ingresa:\n'arquitectura microservicios'")
+Rel(webapp, backend, "2. Solicita búsqueda\n(query: 'arquitectura microservicios')")
+
+Rel(backend, database, "3. Busca en:\n• Título LIKE '%arquitectura%'\n• Autor LIKE '%arquitectura%'\n• Género LIKE '%arquitectura%'")
+Rel(database, backend, "4. Retorna libros que coinciden\n(15 libros encontrados)")
+
+Rel(backend, backend, "5. Calcula relevancia:\n• Coincidencia en título: prioridad 1\n• Coincidencia en autor: prioridad 2\n• Coincidencia en género: prioridad 3")
+
+Rel(backend, backend, "6. Ordena por relevancia\ndescendente")
+
+Rel(backend, webapp, "7. Retorna resultados ordenados\n(15 libros)")
+Rel(webapp, usuario, "8. Muestra grid de libros")
+
+note right of backend
+  **Optimizaciones:**
+  • Búsqueda insensible a mayúsculas
+  • Búsqueda en múltiples campos
+  • Cálculo de relevancia
+  • Latencia objetivo: menor a 1s (p95)
+end note
+
+' FLUJO ALTERNATIVO: Sin resultados
+Rel(backend, database, "3a. Sin coincidencias:\nConsulta libros populares", "Fallback")
+Rel(database, backend, "4a. Retorna top 6\npor rating")
+Rel(backend, webapp, "5a. Mensaje:\n'Sin resultados' + sugerencias")
+
+@enduml
+
