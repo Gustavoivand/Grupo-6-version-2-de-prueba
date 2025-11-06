@@ -1,11 +1,5 @@
-@startuml c4_contenedores_flujo_crud
-' ============================================================================
-' DIAGRAMA C4 - NIVEL 2: FLUJO DE CREACIÓN DE LIBRO
-' Caso de Uso: UC-01
-' Proyecto: BookMate - Sistema de Recomendación de Libros Académicos
-' Grupo: 6
-' Universidad: UNI
-' ============================================================================
+@startuml
+
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
@@ -27,7 +21,7 @@ System_Ext(ia_service, "Servicio de IA")
 Rel(admin, webapp, "1. Completa formulario:\n• Título: 'Clean Code'\n• Autor: 'Robert Martin'\n• Sinopsis: '...'")
 Rel(webapp, backend, "2. Envía datos del nuevo libro")
 
-Rel(backend, backend, "3. Valida datos:\n• Campos obligatorios\n• Precio mayor a 0\n• ISBN único")
+Rel(backend, backend, "3. Valida datos ingresados")
 
 Rel(backend, database, "4. Verifica que autor existe")
 Rel(database, backend, "5. Autor encontrado")
@@ -46,10 +40,8 @@ note bottom of backend
   **Validaciones:**
   • Título no vacío
   • Autor existe en BD
-  • Precio mayor a 0
+  • Precio > 0
   • ISBN único (si se proporciona)
   • Fecha válida
 end note
-
 @enduml
-
